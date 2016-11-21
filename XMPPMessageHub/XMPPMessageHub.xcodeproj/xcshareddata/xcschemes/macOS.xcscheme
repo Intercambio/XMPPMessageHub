@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F673D1F11DE1C02C009B3C99"
-               BuildableName = "macOS.framework"
+               BuildableName = "XMPPMessageHub.framework"
                BlueprintName = "macOS"
                ReferencedContainer = "container:XMPPMessageHub.xcodeproj">
             </BuildableReference>
@@ -34,7 +34,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F673D1F91DE1C02D009B3C99"
-               BuildableName = "macOSTests.xctest"
+               BuildableName = "XMPPMessageHubTests.xctest"
                BlueprintName = "macOSTests"
                ReferencedContainer = "container:XMPPMessageHub.xcodeproj">
             </BuildableReference>
@@ -44,7 +44,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F673D1F11DE1C02C009B3C99"
-            BuildableName = "macOS.framework"
+            BuildableName = "XMPPMessageHub.framework"
             BlueprintName = "macOS"
             ReferencedContainer = "container:XMPPMessageHub.xcodeproj">
          </BuildableReference>
@@ -66,7 +66,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F673D1F11DE1C02C009B3C99"
-            BuildableName = "macOS.framework"
+            BuildableName = "XMPPMessageHub.framework"
             BlueprintName = "macOS"
             ReferencedContainer = "container:XMPPMessageHub.xcodeproj">
          </BuildableReference>
@@ -84,7 +84,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F673D1F11DE1C02C009B3C99"
-            BuildableName = "macOS.framework"
+            BuildableName = "XMPPMessageHub.framework"
             BlueprintName = "macOS"
             ReferencedContainer = "container:XMPPMessageHub.xcodeproj">
          </BuildableReference>

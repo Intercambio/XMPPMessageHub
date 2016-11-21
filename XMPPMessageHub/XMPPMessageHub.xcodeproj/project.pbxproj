@@ -39,6 +39,12 @@
 		F673D2381DE1C30B009B3C99 /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F673D2221DE1C2AA009B3C99 /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F673D23B1DE1C352009B3C99 /* ArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */; };
 		F673D23C1DE1C352009B3C99 /* ArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */; };
+		F6FCE96C1DE1C87F0088A662 /* TestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE96B1DE1C87F0088A662 /* TestCase.swift */; };
+		F6FCE96D1DE1C87F0088A662 /* TestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE96B1DE1C87F0088A662 /* TestCase.swift */; };
+		F6FCE9721DE3B1AA0088A662 /* ArchiveSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9711DE3B1AA0088A662 /* ArchiveSetup.swift */; };
+		F6FCE9731DE3B1AA0088A662 /* ArchiveSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9711DE3B1AA0088A662 /* ArchiveSetup.swift */; };
+		F6FCE9751DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */; };
+		F6FCE9761DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,6 +101,9 @@
 		F673D2211DE1C2AA009B3C99 /* SASLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SASLKit.framework; path = ../Carthage/Build/Mac/SASLKit.framework; sourceTree = "<group>"; };
 		F673D2221DE1C2AA009B3C99 /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = ../Carthage/Build/Mac/SocketRocket.framework; sourceTree = "<group>"; };
 		F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveTests.swift; sourceTree = "<group>"; };
+		F6FCE96B1DE1C87F0088A662 /* TestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCase.swift; sourceTree = "<group>"; };
+		F6FCE9711DE3B1AA0088A662 /* ArchiveSetup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveSetup.swift; sourceTree = "<group>"; };
+		F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveSetupTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,6 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				F673D21B1DE1C245009B3C99 /* Archive.swift */,
+				F6FCE9711DE3B1AA0088A662 /* ArchiveSetup.swift */,
 				F673D23E1DE1C460009B3C99 /* Supporting Files */,
 			);
 			path = XMPPMessageHub;
@@ -184,7 +194,9 @@
 		F673D1FE1DE1C02D009B3C99 /* XMPPMessageHubTests */ = {
 			isa = PBXGroup;
 			children = (
+				F6FCE96B1DE1C87F0088A662 /* TestCase.swift */,
 				F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */,
+				F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */,
 				F673D23D1DE1C435009B3C99 /* Supporting Files */,
 			);
 			path = XMPPMessageHubTests;
@@ -447,6 +459,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6FCE9721DE3B1AA0088A662 /* ArchiveSetup.swift in Sources */,
 				F673D21C1DE1C245009B3C99 /* Archive.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -456,6 +469,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F673D23B1DE1C352009B3C99 /* ArchiveTests.swift in Sources */,
+				F6FCE9751DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */,
+				F6FCE96C1DE1C87F0088A662 /* TestCase.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -463,6 +478,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6FCE9731DE3B1AA0088A662 /* ArchiveSetup.swift in Sources */,
 				F673D21D1DE1C245009B3C99 /* Archive.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -472,6 +488,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F673D23C1DE1C352009B3C99 /* ArchiveTests.swift in Sources */,
+				F6FCE9761DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */,
+				F6FCE96D1DE1C87F0088A662 /* TestCase.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -790,6 +808,7 @@
 				F673D2051DE1C02D009B3C99 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F673D2061DE1C02D009B3C99 /* Build configuration list for PBXNativeTarget "macOSTests" */ = {
 			isa = XCConfigurationList;
@@ -798,6 +817,7 @@
 				F673D2081DE1C02D009B3C99 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

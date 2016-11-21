@@ -9,19 +9,36 @@
 import XCTest
 @testable import XMPPMessageHub
 
-class ArchiveTests: XCTestCase {
-    
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-    
-    func testExample() {
-        let _ = Archive()
+class ArchiveTests: TestCase {
+
+    func testOpenArchive() {
+        
+        // After opening the archive, the folder should contain a file
+        // named 'version.txt' with the current version number of the
+        // archive format.
+        
+        guard let directory = self.directory else { return }
+        
+        let archive = Archive(directory: directory)
+
+        let wait = expectation(description: "Open Archive")
+        archive.open {
+            error in
+            XCTAssertNil(error, "Failed to open the archive: \(error?.localizedDescription)")
+            wait.fulfill()
+        }
+        waitForExpectations(timeout: 1, handler: nil)
+        
+        
+        XCTAssertEqual(archive.version, Archive.Setup.version)
+        
+        let versionFileURL = directory.appendingPathComponent("version.txt")
+        let versionFileText = try? String(contentsOf: versionFileURL)
+        XCTAssertNotNil(versionFileText)
+        
+        guard let text = versionFileText else { return }
+        
+        let version = Int(text)
+        XCTAssertEqual(version, Archive.Setup.version)
     }
 }
