@@ -45,6 +45,8 @@
 		F6FCE9731DE3B1AA0088A662 /* ArchiveSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9711DE3B1AA0088A662 /* ArchiveSetup.swift */; };
 		F6FCE9751DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */; };
 		F6FCE9761DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */; };
+		F6FCE9781DE3C4810088A662 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9771DE3C4810088A662 /* Message.swift */; };
+		F6FCE9791DE3C4810088A662 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9771DE3C4810088A662 /* Message.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +106,7 @@
 		F6FCE96B1DE1C87F0088A662 /* TestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCase.swift; sourceTree = "<group>"; };
 		F6FCE9711DE3B1AA0088A662 /* ArchiveSetup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveSetup.swift; sourceTree = "<group>"; };
 		F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveSetupTests.swift; sourceTree = "<group>"; };
+		F6FCE9771DE3C4810088A662 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,8 +187,8 @@
 		F673D1D51DE1BB55009B3C99 /* XMPPMessageHub */ = {
 			isa = PBXGroup;
 			children = (
-				F673D21B1DE1C245009B3C99 /* Archive.swift */,
-				F6FCE9711DE3B1AA0088A662 /* ArchiveSetup.swift */,
+				F6FCE9771DE3C4810088A662 /* Message.swift */,
+				F6FCE97A1DEB416D0088A662 /* Archive */,
 				F673D23E1DE1C460009B3C99 /* Supporting Files */,
 			);
 			path = XMPPMessageHub;
@@ -250,6 +253,15 @@
 				F673D1D71DE1BB55009B3C99 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F6FCE97A1DEB416D0088A662 /* Archive */ = {
+			isa = PBXGroup;
+			children = (
+				F673D21B1DE1C245009B3C99 /* Archive.swift */,
+				F6FCE9711DE3B1AA0088A662 /* ArchiveSetup.swift */,
+			);
+			name = Archive;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -460,6 +472,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F6FCE9721DE3B1AA0088A662 /* ArchiveSetup.swift in Sources */,
+				F6FCE9781DE3C4810088A662 /* Message.swift in Sources */,
 				F673D21C1DE1C245009B3C99 /* Archive.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -479,6 +492,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F6FCE9731DE3B1AA0088A662 /* ArchiveSetup.swift in Sources */,
+				F6FCE9791DE3C4810088A662 /* Message.swift in Sources */,
 				F673D21D1DE1C245009B3C99 /* Archive.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
