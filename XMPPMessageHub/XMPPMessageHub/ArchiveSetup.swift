@@ -14,11 +14,9 @@ extension Archive {
         
         static let version: Int = 1
         
-        class func makeSetup(from current: Int, directory url: URL) -> Setup? {
-            if current == 0 {
-                return Setup(directory: url)
-            } else {
-                return nil
+        var version: Int {
+            get {
+                return readCurrentVersion()
             }
         }
         
@@ -27,18 +25,41 @@ extension Archive {
             self.directory = directory
         }
         
-        func run() throws -> Int {
-            try createMessageDirectory()
-            return Setup.version
+        var messageDirectory: URL {
+            return directory.appendingPathComponent("messages", isDirectory: true)
+        }
+        
+        func run() throws -> ArchiveDocumentStore {
+            if readCurrentVersion() == 0 {
+                try createMessageDirectory()
+                try writeCurrentVersion(Setup.version)
+            }
+            return ArchiveFileDocumentStore(directory: messageDirectory)
         }
         
         private func createMessageDirectory() throws {
-            let url = directory.appendingPathComponent("messages", isDirectory: true)
             let fileManager = FileManager.default
             try fileManager.createDirectory(
-                at: url,
+                at: messageDirectory,
                 withIntermediateDirectories: false,
                 attributes: [:])
+        }
+        
+        private func readCurrentVersion() -> Int {
+            let url = directory.appendingPathComponent("version.txt")
+            do {
+                let versionText = try String(contentsOf: url)
+                guard let version = Int(versionText) else { return 0 }
+                return version
+            } catch {
+                return 0
+            }
+        }
+        
+        private func writeCurrentVersion(_ version: Int) throws {
+            let url = directory.appendingPathComponent("version.txt")
+            let versionData = String(version).data(using: .utf8)
+            try versionData?.write(to: url)
         }
     }
 }

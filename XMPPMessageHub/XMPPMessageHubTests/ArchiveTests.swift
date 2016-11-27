@@ -48,8 +48,6 @@ class ArchiveTests: TestCase {
         
         guard let archive = self.archive else { return }
         
-        XCTAssertEqual(archive.version, Archive.Setup.version)
-        
         let versionFileURL = archive.directory.appendingPathComponent("version.txt")
         let versionFileText = try? String(contentsOf: versionFileURL)
         XCTAssertNotNil(versionFileText)

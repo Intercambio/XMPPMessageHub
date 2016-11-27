@@ -23,7 +23,7 @@ public struct Metadata {
 }
 
 public struct MessageID {
-    let uuid: NSUUID
+    let uuid: UUID
     let from: JID
     let to: JID
     let type: MessageType

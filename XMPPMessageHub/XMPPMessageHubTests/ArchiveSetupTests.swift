@@ -15,9 +15,10 @@ class ArchiveSetupTests: TestCase {
         guard let directory = self.directory else { return }
         
         let setup = Archive.Setup(directory: directory)
-        let version = try? setup.run()
+        let store = try? setup.run()
         
-        XCTAssertEqual(version, 1)
+        XCTAssertEqual(setup.version, 1)
+        XCTAssertNotNil(store)
         
         let messageDirectory = directory.appendingPathComponent("messages", isDirectory: true)
         let fileManager = FileManager.default
