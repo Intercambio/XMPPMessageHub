@@ -47,6 +47,10 @@
 		F6FCE9761DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */; };
 		F6FCE9781DE3C4810088A662 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9771DE3C4810088A662 /* Message.swift */; };
 		F6FCE9791DE3C4810088A662 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9771DE3C4810088A662 /* Message.swift */; };
+		F6FCE9831DEB6AEE0088A662 /* ArchiveDocumentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9821DEB6AEE0088A662 /* ArchiveDocumentStore.swift */; };
+		F6FCE9841DEB6AEE0088A662 /* ArchiveDocumentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9821DEB6AEE0088A662 /* ArchiveDocumentStore.swift */; };
+		F6FCE9861DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9851DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift */; };
+		F6FCE9871DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9851DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +111,8 @@
 		F6FCE9711DE3B1AA0088A662 /* ArchiveSetup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveSetup.swift; sourceTree = "<group>"; };
 		F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveSetupTests.swift; sourceTree = "<group>"; };
 		F6FCE9771DE3C4810088A662 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		F6FCE9821DEB6AEE0088A662 /* ArchiveDocumentStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveDocumentStore.swift; sourceTree = "<group>"; };
+		F6FCE9851DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveDocumentStoreTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,6 +206,7 @@
 				F6FCE96B1DE1C87F0088A662 /* TestCase.swift */,
 				F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */,
 				F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */,
+				F6FCE9851DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift */,
 				F673D23D1DE1C435009B3C99 /* Supporting Files */,
 			);
 			path = XMPPMessageHubTests;
@@ -260,6 +267,7 @@
 			children = (
 				F673D21B1DE1C245009B3C99 /* Archive.swift */,
 				F6FCE9711DE3B1AA0088A662 /* ArchiveSetup.swift */,
+				F6FCE9821DEB6AEE0088A662 /* ArchiveDocumentStore.swift */,
 			);
 			name = Archive;
 			sourceTree = "<group>";
@@ -474,6 +482,7 @@
 				F6FCE9721DE3B1AA0088A662 /* ArchiveSetup.swift in Sources */,
 				F6FCE9781DE3C4810088A662 /* Message.swift in Sources */,
 				F673D21C1DE1C245009B3C99 /* Archive.swift in Sources */,
+				F6FCE9831DEB6AEE0088A662 /* ArchiveDocumentStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -484,6 +493,7 @@
 				F673D23B1DE1C352009B3C99 /* ArchiveTests.swift in Sources */,
 				F6FCE9751DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */,
 				F6FCE96C1DE1C87F0088A662 /* TestCase.swift in Sources */,
+				F6FCE9861DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -494,6 +504,7 @@
 				F6FCE9731DE3B1AA0088A662 /* ArchiveSetup.swift in Sources */,
 				F6FCE9791DE3C4810088A662 /* Message.swift in Sources */,
 				F673D21D1DE1C245009B3C99 /* Archive.swift in Sources */,
+				F6FCE9841DEB6AEE0088A662 /* ArchiveDocumentStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -504,6 +515,7 @@
 				F673D23C1DE1C352009B3C99 /* ArchiveTests.swift in Sources */,
 				F6FCE9761DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */,
 				F6FCE96D1DE1C87F0088A662 /* TestCase.swift in Sources */,
+				F6FCE9871DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
