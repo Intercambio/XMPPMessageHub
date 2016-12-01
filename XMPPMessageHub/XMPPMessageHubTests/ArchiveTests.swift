@@ -76,6 +76,10 @@ class ArchiveTests: TestCase {
             let document = try archive.document(for: message.messageID)
             XCTAssertNotNil(document)
             XCTAssertEqual(document.root.value(forAttribute: "id") as? String, "123")
+            
+            try archive.enumerateAll({ (message, idx, stop) in
+                print("\(message)")
+            })
         } catch {
             XCTFail("\(error)")
         }

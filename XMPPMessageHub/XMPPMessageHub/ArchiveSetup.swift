@@ -7,6 +7,27 @@
 //
 
 import Foundation
+import SQLite
+import  CoreXMPP
+
+extension Archive {
+    struct Schema {
+        
+        static let message = Table("message")
+        static let message_uuid = Expression<UUID>("uuid")
+        static let message_from = Expression<JID>("from")
+        static let message_to = Expression<JID>("to")
+        static let message_type = Expression<MessageType>("type")
+        
+        static let metadata = Table("metadata")
+        static let metadata_uuid = Expression<UUID>("uuid")
+        static let metadata_created = Expression<Date?>("created")
+        static let metadata_transmitted = Expression<Date?>("transmitted")
+        static let metadata_read = Expression<Date?>("read")
+        static let metadata_thrashed = Expression<Date?>("thrashed")
+        static let metadata_error = Expression<NSError?>("error")
+    }
+}
 
 extension Archive {
     
@@ -25,24 +46,63 @@ extension Archive {
             self.directory = directory
         }
         
-        var messageDirectory: URL {
+        var messagesLocation: URL {
             return directory.appendingPathComponent("messages", isDirectory: true)
         }
         
-        func run() throws -> ArchiveDocumentStore {
+        var databaseLocation: URL {
+            return directory.appendingPathComponent("db.sqlite", isDirectory: false)
+        }
+        
+        func run() throws -> (store: ArchiveDocumentStore, db: SQLite.Connection) {
+            let db = try createDatabase()
             if readCurrentVersion() == 0 {
                 try createMessageDirectory()
+                try setup(db)
                 try writeCurrentVersion(Setup.version)
             }
-            return ArchiveFileDocumentStore(directory: messageDirectory)
+            let store = ArchiveFileDocumentStore(directory: messagesLocation)
+            return (store, db)
         }
         
         private func createMessageDirectory() throws {
             let fileManager = FileManager.default
             try fileManager.createDirectory(
-                at: messageDirectory,
+                at: messagesLocation,
                 withIntermediateDirectories: false,
                 attributes: [:])
+        }
+        
+        private func createDatabase() throws -> SQLite.Connection {
+            let db = try Connection(databaseLocation.path)
+            
+            db.busyTimeout = 5
+            db.busyHandler({ tries in
+                if tries >= 3 {
+                    return false
+                }
+                return true
+            })
+            
+            return db
+        }
+        
+        private func setup(_ db: SQLite.Connection) throws {
+            try db.run(Schema.message.create { t in
+                t.column(Schema.message_uuid, primaryKey: true)
+                t.column(Schema.message_from)
+                t.column(Schema.message_to)
+                t.column(Schema.message_type)
+            })
+            try db.run(Schema.metadata.create { t in
+                t.column(Schema.metadata_uuid, primaryKey: true)
+                t.column(Schema.metadata_created)
+                t.column(Schema.metadata_transmitted)
+                t.column(Schema.metadata_read)
+                t.column(Schema.metadata_thrashed)
+                t.column(Schema.metadata_error)
+                t.foreignKey(Schema.metadata_uuid, references: Schema.message, Schema.message_uuid)
+            })
         }
         
         private func readCurrentVersion() -> Int {
@@ -63,3 +123,5 @@ extension Archive {
         }
     }
 }
+
+
