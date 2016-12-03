@@ -128,6 +128,15 @@ public class Archive {
         }
     }
     
+    public func message(with messageID: MessageID) throws -> Message {
+        return try queue.sync {
+            let condition = Schema.metadata[Schema.metadata_uuid] == Schema.message[Schema.message_uuid]
+            let query = Schema.message.join(Schema.metadata, on: condition)
+            let filter = query.filter(Schema.metadata[Schema.metadata_uuid] == messageID.uuid)
+            return try firstMessage(with: filter)
+        }
+    }
+    
     public func document(for messageID: MessageID) throws -> PXDocument {
         return try queue.sync {
             guard let store = self.store else { throw ArchiveError.notSetup }
@@ -140,40 +149,21 @@ public class Archive {
             let condition = Schema.metadata[Schema.metadata_uuid] == Schema.message[Schema.message_uuid]
             let query = Schema.message.join(Schema.metadata, on: condition)
             
-            try enumerate(with: query, block: block)
+            try enumerateMessages(with: query, block: block)
         }
     }
     
-    private func enumerate(with query: QueryType, block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws {
+    private func enumerateMessages(with query: QueryType, block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws {
         guard
             let db = self.db
             else { throw ArchiveError.notSetup }
         
         try db.transaction {
             var index = 0
+            var stop: ObjCBool = false
             for row in try db.prepare(query) {
-                
-                let uuid = row.get(Schema.message[Schema.message_uuid])
-                let account = row.get(Schema.message[Schema.message_account])
-                let counterpart = row.get(Schema.message[Schema.message_counterpart])
-                let direction = row.get(Schema.message[Schema.message_direction])
-                let type = row.get(Schema.message[Schema.message_type])
-                
-                let messageID = MessageID(uuid: uuid, account: account, counterpart: counterpart, direction: direction, type: type)
-                
-                var metadata = Metadata()
-                metadata.created = row.get(Schema.metadata[Schema.metadata_created])
-                metadata.transmitted = row.get(Schema.metadata[Schema.metadata_transmitted])
-                metadata.read = row.get(Schema.metadata[Schema.metadata_read])
-                metadata.thrashed = row.get(Schema.metadata[Schema.metadata_thrashed])
-                metadata.error = row.get(Schema.metadata[Schema.metadata_error])
-                
-                let message = Message(messageID: messageID, metadata: metadata)
-                
-                var stop: ObjCBool = false
-                
+                let message = try self.makeMessage(from: row)
                 block(message, index, &stop)
-                
                 if stop.boolValue {
                     break
                 } else {
@@ -181,6 +171,45 @@ public class Archive {
                 }
             }
         }
+    }
+    
+    private func firstMessage(with query: QueryType) throws -> Message {
+        guard
+            let db = self.db
+            else { throw ArchiveError.notSetup }
+        
+        var message: Message? = nil
+        
+        try db.transaction {
+            if let row = try db.pluck(query) {
+                message = try self.makeMessage(from: row)
+            }
+        }
+        
+        if let message = message {
+            return message
+        } else {
+            throw ArchiveError.doesNotExist
+        }
+    }
+    
+    private func makeMessage(from row: SQLite.Row) throws -> Message {
+        let uuid = row.get(Schema.message[Schema.message_uuid])
+        let account = row.get(Schema.message[Schema.message_account])
+        let counterpart = row.get(Schema.message[Schema.message_counterpart])
+        let direction = row.get(Schema.message[Schema.message_direction])
+        let type = row.get(Schema.message[Schema.message_type])
+        
+        let messageID = MessageID(uuid: uuid, account: account, counterpart: counterpart, direction: direction, type: type)
+        
+        var metadata = Metadata()
+        metadata.created = row.get(Schema.metadata[Schema.metadata_created])
+        metadata.transmitted = row.get(Schema.metadata[Schema.metadata_transmitted])
+        metadata.read = row.get(Schema.metadata[Schema.metadata_read])
+        metadata.thrashed = row.get(Schema.metadata[Schema.metadata_thrashed])
+        metadata.error = row.get(Schema.metadata[Schema.metadata_error])
+        
+        return Message(messageID: messageID, metadata: metadata)
     }
     
     // MARK: - Helper
