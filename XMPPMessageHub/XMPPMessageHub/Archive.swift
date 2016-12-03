@@ -26,8 +26,13 @@ public class Archive {
     public let directory: URL
     public let account: JID
     
-    private let queue: DispatchQueue = DispatchQueue(label: "org.intercambio.XMPPMessageHub.Archive")
+    private let queue: DispatchQueue
+    
     required public init(directory: URL, account: JID) {
+        queue = DispatchQueue(
+            label: "Archive (\(account.stringValue))",
+            attributes: [.concurrent])
+        
         self.directory = directory
         self.account = account.bare()
     }
@@ -37,8 +42,8 @@ public class Archive {
     
     // MARK: - Open Archive
     
-    public func open(completion: @escaping (Error?) ->Void) {
-        queue.async {
+    public func open(completion: @escaping (Error?) -> Void) {
+        queue.async(flags: [.barrier]) {
             do {
                 try self.open()
                 completion(nil)
@@ -58,76 +63,85 @@ public class Archive {
     // MARK: - Manage
     
     public func insert(_ document: PXDocument, metadata: Metadata) throws -> Message {
-        guard
-            let store = self.store,
-            let db = self.db
-            else { throw ArchiveError.notSetup }
-        
-
-        let uuid = UUID()
-        let messageID = try self.makeMessageID(for: document, with: uuid)
-        
-        try store.write(document, with: uuid)
-        try db.transaction {
-            let _ = try db.run(
-                Schema.message.insert(
-                    Schema.message_uuid <- messageID.uuid,
-                    Schema.message_account <- messageID.account,
-                    Schema.message_counterpart <- messageID.counterpart,
-                    Schema.message_direction <- messageID.direction,
-                    Schema.message_type <- messageID.type
+        return try queue.sync {
+            
+            guard
+                let store = self.store,
+                let db = self.db
+                else { throw ArchiveError.notSetup }
+            
+            
+            let uuid = UUID()
+            let messageID = try self.makeMessageID(for: document, with: uuid)
+            
+            try store.write(document, with: uuid)
+            try db.transaction {
+                let _ = try db.run(
+                    Schema.message.insert(
+                        Schema.message_uuid <- messageID.uuid,
+                        Schema.message_account <- messageID.account,
+                        Schema.message_counterpart <- messageID.counterpart,
+                        Schema.message_direction <- messageID.direction,
+                        Schema.message_type <- messageID.type
+                    )
                 )
-            )
-            let _ = try db.run(
-                Schema.metadata.insert(
+                let _ = try db.run(
+                    Schema.metadata.insert(
+                        Schema.metadata_uuid <- messageID.uuid,
+                        Schema.metadata_created <- metadata.created,
+                        Schema.metadata_transmitted <- metadata.transmitted,
+                        Schema.metadata_read <- metadata.read,
+                        Schema.metadata_thrashed <- metadata.thrashed,
+                        Schema.metadata_error <- metadata.error as? NSError
+                    )
+                )
+            }
+            
+            let message = Message(messageID: messageID, metadata: metadata)
+            return message
+        }
+    }
+    
+    public func update(_ metadata: Metadata, for messageID: MessageID) throws -> Message {
+        return try queue.sync {
+            guard
+                let db = self.db
+                else { throw ArchiveError.notSetup }
+            
+            try db.transaction {
+                let query = Schema.metadata.filter(Schema.metadata_uuid == messageID.uuid)
+                let updated = try db.run(query.update(
                     Schema.metadata_uuid <- messageID.uuid,
                     Schema.metadata_created <- metadata.created,
                     Schema.metadata_transmitted <- metadata.transmitted,
                     Schema.metadata_read <- metadata.read,
                     Schema.metadata_thrashed <- metadata.thrashed,
                     Schema.metadata_error <- metadata.error as? NSError
-                )
-            )
-        }
-        
-        let message = Message(messageID: messageID, metadata: metadata)
-        return message
-    }
-    
-    public func update(_ metadata: Metadata, for messageID: MessageID) throws -> Message {
-        guard
-            let db = self.db
-            else { throw ArchiveError.notSetup }
-        
-        try db.transaction {
-            let query = Schema.metadata.filter(Schema.metadata_uuid == messageID.uuid)
-            let updated = try db.run(query.update(
-                Schema.metadata_uuid <- messageID.uuid,
-                Schema.metadata_created <- metadata.created,
-                Schema.metadata_transmitted <- metadata.transmitted,
-                Schema.metadata_read <- metadata.read,
-                Schema.metadata_thrashed <- metadata.thrashed,
-                Schema.metadata_error <- metadata.error as? NSError
-            ))
-            if updated != 1 {
-                throw ArchiveError.doesNotExist
+                ))
+                if updated != 1 {
+                    throw ArchiveError.doesNotExist
+                }
             }
+            
+            let message = Message(messageID: messageID, metadata: metadata)
+            return message
         }
-        
-        let message = Message(messageID: messageID, metadata: metadata)
-        return message
     }
     
     public func document(for messageID: MessageID) throws -> PXDocument {
-        guard let store = self.store else { throw ArchiveError.notSetup }
-        return try store.read(documentWith: messageID.uuid)
+        return try queue.sync {
+            guard let store = self.store else { throw ArchiveError.notSetup }
+            return try store.read(documentWith: messageID.uuid)
+        }
     }
 
     public func enumerateAll(_ block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws {
-        let condition = Schema.metadata[Schema.metadata_uuid] == Schema.message[Schema.message_uuid]
-        let query = Schema.message.join(Schema.metadata, on: condition)
-        
-        try enumerate(with: query, block: block)
+        return try queue.sync {
+            let condition = Schema.metadata[Schema.metadata_uuid] == Schema.message[Schema.message_uuid]
+            let query = Schema.message.join(Schema.metadata, on: condition)
+            
+            try enumerate(with: query, block: block)
+        }
     }
     
     private func enumerate(with query: QueryType, block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws {
@@ -172,7 +186,6 @@ public class Archive {
     // MARK: - Helper
     
     private func makeMessageID(for document: PXDocument, with uuid: UUID) throws -> MessageID {
-        
         guard
             let message = document.root, message.qualifiedName == PXQName(name: "message", namespace: "jabber:client")
             else { throw ArchiveError.invalidDocument }
