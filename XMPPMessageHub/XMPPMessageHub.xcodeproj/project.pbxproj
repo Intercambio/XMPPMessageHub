@@ -20,8 +20,8 @@
 		F673D2171DE1C130009B3C99 /* PureXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D20C1DE1C107009B3C99 /* PureXML.framework */; };
 		F673D2181DE1C130009B3C99 /* SASLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D20D1DE1C107009B3C99 /* SASLKit.framework */; };
 		F673D2191DE1C130009B3C99 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D20E1DE1C107009B3C99 /* SocketRocket.framework */; };
-		F673D21C1DE1C245009B3C99 /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = F673D21B1DE1C245009B3C99 /* Archive.swift */; };
-		F673D21D1DE1C245009B3C99 /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = F673D21B1DE1C245009B3C99 /* Archive.swift */; };
+		F673D21C1DE1C245009B3C99 /* FileArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = F673D21B1DE1C245009B3C99 /* FileArchive.swift */; };
+		F673D21D1DE1C245009B3C99 /* FileArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = F673D21B1DE1C245009B3C99 /* FileArchive.swift */; };
 		F673D2231DE1C2AA009B3C99 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D21E1DE1C2AA009B3C99 /* CocoaLumberjack.framework */; };
 		F673D2241DE1C2AA009B3C99 /* CoreXMPP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D21F1DE1C2AA009B3C99 /* CoreXMPP.framework */; };
 		F673D2251DE1C2AA009B3C99 /* PureXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D2201DE1C2AA009B3C99 /* PureXML.framework */; };
@@ -39,16 +39,18 @@
 		F673D2381DE1C30B009B3C99 /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F673D2221DE1C2AA009B3C99 /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F673D23B1DE1C352009B3C99 /* ArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */; };
 		F673D23C1DE1C352009B3C99 /* ArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */; };
+		F688F46F1DF304E400B4D3B4 /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = F688F46E1DF304E400B4D3B4 /* Archive.swift */; };
+		F688F4701DF304E400B4D3B4 /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = F688F46E1DF304E400B4D3B4 /* Archive.swift */; };
 		F6FCE96C1DE1C87F0088A662 /* TestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE96B1DE1C87F0088A662 /* TestCase.swift */; };
 		F6FCE96D1DE1C87F0088A662 /* TestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE96B1DE1C87F0088A662 /* TestCase.swift */; };
-		F6FCE9721DE3B1AA0088A662 /* ArchiveSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9711DE3B1AA0088A662 /* ArchiveSetup.swift */; };
-		F6FCE9731DE3B1AA0088A662 /* ArchiveSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9711DE3B1AA0088A662 /* ArchiveSetup.swift */; };
+		F6FCE9721DE3B1AA0088A662 /* FileArchiveSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9711DE3B1AA0088A662 /* FileArchiveSetup.swift */; };
+		F6FCE9731DE3B1AA0088A662 /* FileArchiveSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9711DE3B1AA0088A662 /* FileArchiveSetup.swift */; };
 		F6FCE9751DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */; };
 		F6FCE9761DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */; };
 		F6FCE9781DE3C4810088A662 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9771DE3C4810088A662 /* Message.swift */; };
 		F6FCE9791DE3C4810088A662 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9771DE3C4810088A662 /* Message.swift */; };
-		F6FCE9831DEB6AEE0088A662 /* ArchiveDocumentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9821DEB6AEE0088A662 /* ArchiveDocumentStore.swift */; };
-		F6FCE9841DEB6AEE0088A662 /* ArchiveDocumentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9821DEB6AEE0088A662 /* ArchiveDocumentStore.swift */; };
+		F6FCE9831DEB6AEE0088A662 /* FileArchiveDocumentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9821DEB6AEE0088A662 /* FileArchiveDocumentStore.swift */; };
+		F6FCE9841DEB6AEE0088A662 /* FileArchiveDocumentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9821DEB6AEE0088A662 /* FileArchiveDocumentStore.swift */; };
 		F6FCE9861DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9851DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift */; };
 		F6FCE9871DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9851DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift */; };
 		F6FCE9891DEB74080088A662 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6FCE9881DEB74080088A662 /* SQLite.framework */; };
@@ -56,8 +58,8 @@
 		F6FCE98C1DEB742C0088A662 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6FCE98B1DEB742C0088A662 /* SQLite.framework */; };
 		F6FCE98D1DEB74340088A662 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6FCE98B1DEB742C0088A662 /* SQLite.framework */; };
 		F6FCE98E1DEB74380088A662 /* SQLite.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F6FCE98B1DEB742C0088A662 /* SQLite.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F6FCE9901DF0D68F0088A662 /* Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE98F1DF0D68F0088A662 /* Values.swift */; };
-		F6FCE9911DF0D68F0088A662 /* Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE98F1DF0D68F0088A662 /* Values.swift */; };
+		F6FCE9901DF0D68F0088A662 /* SQLiteValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE98F1DF0D68F0088A662 /* SQLiteValues.swift */; };
+		F6FCE9911DF0D68F0088A662 /* SQLiteValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE98F1DF0D68F0088A662 /* SQLiteValues.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,22 +110,23 @@
 		F673D20C1DE1C107009B3C99 /* PureXML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PureXML.framework; path = ../Carthage/Build/iOS/PureXML.framework; sourceTree = "<group>"; };
 		F673D20D1DE1C107009B3C99 /* SASLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SASLKit.framework; path = ../Carthage/Build/iOS/SASLKit.framework; sourceTree = "<group>"; };
 		F673D20E1DE1C107009B3C99 /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = ../Carthage/Build/iOS/SocketRocket.framework; sourceTree = "<group>"; };
-		F673D21B1DE1C245009B3C99 /* Archive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Archive.swift; sourceTree = "<group>"; };
+		F673D21B1DE1C245009B3C99 /* FileArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileArchive.swift; sourceTree = "<group>"; };
 		F673D21E1DE1C2AA009B3C99 /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = ../Carthage/Build/Mac/CocoaLumberjack.framework; sourceTree = "<group>"; };
 		F673D21F1DE1C2AA009B3C99 /* CoreXMPP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreXMPP.framework; path = ../Carthage/Build/Mac/CoreXMPP.framework; sourceTree = "<group>"; };
 		F673D2201DE1C2AA009B3C99 /* PureXML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PureXML.framework; path = ../Carthage/Build/Mac/PureXML.framework; sourceTree = "<group>"; };
 		F673D2211DE1C2AA009B3C99 /* SASLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SASLKit.framework; path = ../Carthage/Build/Mac/SASLKit.framework; sourceTree = "<group>"; };
 		F673D2221DE1C2AA009B3C99 /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = ../Carthage/Build/Mac/SocketRocket.framework; sourceTree = "<group>"; };
 		F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveTests.swift; sourceTree = "<group>"; };
+		F688F46E1DF304E400B4D3B4 /* Archive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Archive.swift; sourceTree = "<group>"; };
 		F6FCE96B1DE1C87F0088A662 /* TestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCase.swift; sourceTree = "<group>"; };
-		F6FCE9711DE3B1AA0088A662 /* ArchiveSetup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveSetup.swift; sourceTree = "<group>"; };
+		F6FCE9711DE3B1AA0088A662 /* FileArchiveSetup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileArchiveSetup.swift; sourceTree = "<group>"; };
 		F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveSetupTests.swift; sourceTree = "<group>"; };
 		F6FCE9771DE3C4810088A662 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		F6FCE9821DEB6AEE0088A662 /* ArchiveDocumentStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveDocumentStore.swift; sourceTree = "<group>"; };
+		F6FCE9821DEB6AEE0088A662 /* FileArchiveDocumentStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileArchiveDocumentStore.swift; sourceTree = "<group>"; };
 		F6FCE9851DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveDocumentStoreTests.swift; sourceTree = "<group>"; };
 		F6FCE9881DEB74080088A662 /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = ../Carthage/Build/iOS/SQLite.framework; sourceTree = "<group>"; };
 		F6FCE98B1DEB742C0088A662 /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = ../Carthage/Build/Mac/SQLite.framework; sourceTree = "<group>"; };
-		F6FCE98F1DF0D68F0088A662 /* Values.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Values.swift; sourceTree = "<group>"; };
+		F6FCE98F1DF0D68F0088A662 /* SQLiteValues.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteValues.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -279,13 +282,22 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		F688F46D1DF304BC00B4D3B4 /* File Archive */ = {
+			isa = PBXGroup;
+			children = (
+				F673D21B1DE1C245009B3C99 /* FileArchive.swift */,
+				F6FCE9711DE3B1AA0088A662 /* FileArchiveSetup.swift */,
+				F6FCE9821DEB6AEE0088A662 /* FileArchiveDocumentStore.swift */,
+				F6FCE98F1DF0D68F0088A662 /* SQLiteValues.swift */,
+			);
+			name = "File Archive";
+			sourceTree = "<group>";
+		};
 		F6FCE97A1DEB416D0088A662 /* Archive */ = {
 			isa = PBXGroup;
 			children = (
-				F673D21B1DE1C245009B3C99 /* Archive.swift */,
-				F6FCE9711DE3B1AA0088A662 /* ArchiveSetup.swift */,
-				F6FCE9821DEB6AEE0088A662 /* ArchiveDocumentStore.swift */,
-				F6FCE98F1DF0D68F0088A662 /* Values.swift */,
+				F688F46E1DF304E400B4D3B4 /* Archive.swift */,
+				F688F46D1DF304BC00B4D3B4 /* File Archive */,
 			);
 			name = Archive;
 			sourceTree = "<group>";
@@ -498,11 +510,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F6FCE9721DE3B1AA0088A662 /* ArchiveSetup.swift in Sources */,
+				F6FCE9721DE3B1AA0088A662 /* FileArchiveSetup.swift in Sources */,
 				F6FCE9781DE3C4810088A662 /* Message.swift in Sources */,
-				F6FCE9901DF0D68F0088A662 /* Values.swift in Sources */,
-				F673D21C1DE1C245009B3C99 /* Archive.swift in Sources */,
-				F6FCE9831DEB6AEE0088A662 /* ArchiveDocumentStore.swift in Sources */,
+				F6FCE9901DF0D68F0088A662 /* SQLiteValues.swift in Sources */,
+				F673D21C1DE1C245009B3C99 /* FileArchive.swift in Sources */,
+				F688F46F1DF304E400B4D3B4 /* Archive.swift in Sources */,
+				F6FCE9831DEB6AEE0088A662 /* FileArchiveDocumentStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -521,11 +534,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F6FCE9731DE3B1AA0088A662 /* ArchiveSetup.swift in Sources */,
+				F6FCE9731DE3B1AA0088A662 /* FileArchiveSetup.swift in Sources */,
 				F6FCE9791DE3C4810088A662 /* Message.swift in Sources */,
-				F6FCE9911DF0D68F0088A662 /* Values.swift in Sources */,
-				F673D21D1DE1C245009B3C99 /* Archive.swift in Sources */,
-				F6FCE9841DEB6AEE0088A662 /* ArchiveDocumentStore.swift in Sources */,
+				F6FCE9911DF0D68F0088A662 /* SQLiteValues.swift in Sources */,
+				F673D21D1DE1C245009B3C99 /* FileArchive.swift in Sources */,
+				F688F4701DF304E400B4D3B4 /* Archive.swift in Sources */,
+				F6FCE9841DEB6AEE0088A662 /* FileArchiveDocumentStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

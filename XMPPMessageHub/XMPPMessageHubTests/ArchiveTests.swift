@@ -13,14 +13,14 @@ import CoreXMPP
 
 class ArchiveTests: TestCase {
 
-    var archive: Archive?
+    var archive: FileArchive?
     
     override func setUp() {
         super.setUp()
         
         guard let directory = self.directory else { return }
         
-        let archive = Archive(directory: directory, account: JID("from@example.com")!)
+        let archive = FileArchive(directory: directory, account: JID("from@example.com")!)
         
         let wait = expectation(description: "Open Archive")
         archive.open {
@@ -55,7 +55,7 @@ class ArchiveTests: TestCase {
         guard let text = versionFileText else { return }
         
         let version = Int(text)
-        XCTAssertEqual(version, Archive.Setup.version)
+        XCTAssertEqual(version, FileArchive.Setup.version)
     }
     
     func testInsert() {

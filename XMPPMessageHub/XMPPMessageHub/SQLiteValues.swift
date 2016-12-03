@@ -1,5 +1,5 @@
 //
-//  Values.swift
+//  SQLiteValues.swift
 //  XMPPMessageHub
 //
 //  Created by Tobias Kraentzer on 01.12.16.
@@ -8,7 +8,7 @@
 
 import Foundation
 import SQLite
-import  CoreXMPP
+import CoreXMPP
 
 extension UUID: Value {
     public static var declaredDatatype: String {
@@ -75,19 +75,19 @@ extension NSError: Value {
 }
 
 extension QueryType {
-    public subscript(column: SQLite.Expression<UUID>) -> SQLite.Expression<UUID> {
+    subscript(column: SQLite.Expression<UUID>) -> SQLite.Expression<UUID> {
         return namespace(column)
     }
-    public subscript(column: SQLite.Expression<JID>) -> SQLite.Expression<JID> {
+    subscript(column: SQLite.Expression<JID>) -> SQLite.Expression<JID> {
         return namespace(column)
     }
-    public subscript(column: SQLite.Expression<MessageType>) -> SQLite.Expression<MessageType> {
+    subscript(column: SQLite.Expression<MessageType>) -> SQLite.Expression<MessageType> {
         return namespace(column)
     }
-    public subscript(column: SQLite.Expression<MessageDirection>) -> SQLite.Expression<MessageDirection> {
+    subscript(column: SQLite.Expression<MessageDirection>) -> SQLite.Expression<MessageDirection> {
         return namespace(column)
     }
-    public subscript(column: SQLite.Expression<NSError?>) -> SQLite.Expression<NSError?> {
+    subscript(column: SQLite.Expression<NSError?>) -> SQLite.Expression<NSError?> {
         return namespace(column)
     }
 }

@@ -1,5 +1,5 @@
 //
-//  ArchiveDocumentStore.swift
+//  FileArchiveDocumentStore.swift
 //  XMPPMessageHub
 //
 //  Created by Tobias Kraentzer on 27.11.16.
@@ -15,7 +15,7 @@ protocol ArchiveDocumentStore {
     func delete(documentWith uuid: UUID) throws
 }
 
-class ArchiveFileDocumentStore: ArchiveDocumentStore {
+class FileArchiveFileDocumentStore: ArchiveDocumentStore {
     
     let directory: URL
     required init(directory: URL) {

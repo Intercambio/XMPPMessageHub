@@ -1,5 +1,5 @@
 //
-//  ArchiveSetup.swift
+//  FileArchiveSetup.swift
 //  XMPPMessageHub
 //
 //  Created by Tobias Kraentzer on 21.11.16.
@@ -10,7 +10,7 @@ import Foundation
 import SQLite
 import  CoreXMPP
 
-extension Archive {
+extension FileArchive {
     struct Schema {
         static let message = Table("message")
         static let message_uuid = Expression<UUID>("uuid")
@@ -29,7 +29,7 @@ extension Archive {
     }
 }
 
-extension Archive {
+extension FileArchive {
     
     class Setup {
         
@@ -61,7 +61,7 @@ extension Archive {
                 try setup(db)
                 try writeCurrentVersion(Setup.version)
             }
-            let store = ArchiveFileDocumentStore(directory: messagesLocation)
+            let store = FileArchiveFileDocumentStore(directory: messagesLocation)
             return (store, db)
         }
         

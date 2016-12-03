@@ -20,24 +20,24 @@ public enum MessageDirection: String {
 }
 
 public struct Metadata {
-    var created: Date?
-    var transmitted: Date?
-    var read: Date?
-    var thrashed: Date?
-    var error: Error?
+    public var created: Date?
+    public var transmitted: Date?
+    public var read: Date?
+    public var thrashed: Date?
+    public var error: Error?
 }
 
 public struct MessageID {
-    let uuid: UUID
-    let account: JID
-    let counterpart: JID
-    let direction: MessageDirection
-    let type: MessageType
+    public let uuid: UUID
+    public let account: JID
+    public let counterpart: JID
+    public let direction: MessageDirection
+    public let type: MessageType
 }
 
 public struct Message {
-    let messageID: MessageID
-    let metadata: Metadata
+    public let messageID: MessageID
+    public let metadata: Metadata
 }
 
 extension MessageID: CustomDebugStringConvertible {

@@ -19,7 +19,7 @@ class ArchiveDocumentStoreTests: TestCase {
 
         do {
             let uuid = UUID()
-            let store = ArchiveFileDocumentStore(directory: directory)
+            let store = FileArchiveFileDocumentStore(directory: directory)
             
             try store.write(document, with: uuid)
             
