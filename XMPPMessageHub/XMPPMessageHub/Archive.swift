@@ -17,6 +17,7 @@ public enum ArchiveError:  Error {
     case invalidDocument
     case internalError
     case accountMismatch
+    case doesNotExist
 }
 
 public class Archive {
@@ -87,6 +88,30 @@ public class Archive {
                     Schema.metadata_error <- metadata.error as? NSError
                 )
             )
+        }
+        
+        let message = Message(messageID: messageID, metadata: metadata)
+        return message
+    }
+    
+    public func update(_ metadata: Metadata, for messageID: MessageID) throws -> Message {
+        guard
+            let db = self.db
+            else { throw ArchiveError.notSetup }
+        
+        try db.transaction {
+            let query = Schema.metadata.filter(Schema.metadata_uuid == messageID.uuid)
+            let updated = try db.run(query.update(
+                Schema.metadata_uuid <- messageID.uuid,
+                Schema.metadata_created <- metadata.created,
+                Schema.metadata_transmitted <- metadata.transmitted,
+                Schema.metadata_read <- metadata.read,
+                Schema.metadata_thrashed <- metadata.thrashed,
+                Schema.metadata_error <- metadata.error as? NSError
+            ))
+            if updated != 1 {
+                throw ArchiveError.doesNotExist
+            }
         }
         
         let message = Message(messageID: messageID, metadata: metadata)

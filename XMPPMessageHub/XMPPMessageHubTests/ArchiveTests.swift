@@ -133,4 +133,43 @@ class ArchiveTests: TestCase {
             XCTAssertEqual(error as? ArchiveError, .accountMismatch)
         }
     }
+    
+    func testUpdateMetadata() {
+        guard let archive = self.archive else { return }
+        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        
+        document.root.setValue("from@example.com", forAttribute: "from")
+        document.root.setValue("to@example.com", forAttribute: "to")
+        document.root.setValue("chat", forAttribute: "type")
+        document.root.setValue("123", forAttribute: "id")
+        
+        do {
+            var metadata = Metadata()
+            metadata.created = Date()
+            var message = try archive.insert(document, metadata: metadata)
+            XCTAssertNotNil(message)
+            
+            metadata.read = Date.distantFuture
+            message = try archive.update(metadata, for: message.messageID)
+            
+            XCTAssertEqual(message.metadata.read, Date.distantFuture)
+            
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+    
+    func testUpdateDoesNotExsit() {
+        guard let archive = self.archive else { return }
+        
+        let messageID = MessageID(uuid: UUID(),
+                                  account:JID("a@example.com")!,
+                                  counterpart: JID("b@example.com")!,
+                                  direction: .outbound,
+                                  type: .normal)
+        let metadata = Metadata()
+        XCTAssertThrowsError(try archive.update(metadata, for: messageID)) {error in
+            XCTAssertEqual(error as? ArchiveError, .doesNotExist)
+        }
+    }
 }
