@@ -20,7 +20,7 @@ class ArchiveTests: TestCase {
         
         guard let directory = self.directory else { return }
         
-        let archive = Archive(directory: directory)
+        let archive = Archive(directory: directory, account: JID("from@example.com")!)
         
         let wait = expectation(description: "Open Archive")
         archive.open {
@@ -82,6 +82,55 @@ class ArchiveTests: TestCase {
             })
         } catch {
             XCTFail("\(error)")
+        }
+    }
+    
+    func testInsertInvalidDocument() {
+        guard let archive = self.archive else { return }
+        guard let document = PXDocument(elementName: "foo", namespace: "bar", prefix: nil) else { return }
+        
+        let metadata = Metadata()
+        XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) {error in
+            XCTAssertEqual(error as? ArchiveError, .invalidDocument)
+        }
+    }
+    
+    func testInsertMissingFromJID() {
+        guard let archive = self.archive else { return }
+        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        
+        document.root.setValue("b@example.com", forAttribute: "to")
+        
+        let metadata = Metadata()
+        XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) {error in
+            XCTAssertEqual(error as? ArchiveError, .invalidDocument)
+        }
+    }
+    
+    func testInsertMissingToJID() {
+        guard let archive = self.archive else { return }
+        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        
+        document.root.setValue("b@example.com", forAttribute: "from")
+        
+        let metadata = Metadata()
+        XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) {error in
+            XCTAssertEqual(error as? ArchiveError, .invalidDocument)
+        }
+    }
+    
+    func testInsertAccountMismatch() {
+        guard let archive = self.archive else { return }
+        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        
+        document.root.setValue("a@example.com", forAttribute: "from")
+        document.root.setValue("b@example.com", forAttribute: "to")
+        document.root.setValue("chat", forAttribute: "type")
+        document.root.setValue("123", forAttribute: "id")
+        
+        let metadata = Metadata()
+        XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) {error in
+            XCTAssertEqual(error as? ArchiveError, .accountMismatch)
         }
     }
 }

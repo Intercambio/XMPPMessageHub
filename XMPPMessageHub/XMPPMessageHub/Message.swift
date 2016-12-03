@@ -14,6 +14,11 @@ public enum MessageType: String {
     case chat = "chat"
 }
 
+public enum MessageDirection: String {
+    case inbound = "<-"
+    case outbound = "->"
+}
+
 public struct Metadata {
     var created: Date?
     var transmitted: Date?
@@ -24,8 +29,9 @@ public struct Metadata {
 
 public struct MessageID {
     let uuid: UUID
-    let from: JID
-    let to: JID
+    let account: JID
+    let counterpart: JID
+    let direction: MessageDirection
     let type: MessageType
 }
 
@@ -34,9 +40,8 @@ public struct Message {
     let metadata: Metadata
 }
 
-
 extension MessageID: CustomDebugStringConvertible {
     public var debugDescription: String {
-        return "MessgaeID(uuid: \(uuid.uuidString), from: \(from.stringValue), to: \(to.stringValue), type: \(type.rawValue))"
+        return "MessgaeID(uuid: \(uuid.uuidString), \(account.stringValue) \(direction.rawValue) \(counterpart.stringValue), type: \(type.rawValue))"
     }
 }

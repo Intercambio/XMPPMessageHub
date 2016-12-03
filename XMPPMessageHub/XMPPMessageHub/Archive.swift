@@ -12,19 +12,23 @@ import CoreXMPP
 import SQLite
 import Dispatch
 
-enum ArchiveError:  Error {
+public enum ArchiveError:  Error {
     case notSetup
     case invalidDocument
     case internalError
+    case accountMismatch
 }
 
 public class Archive {
 
+    
     public let directory: URL
+    public let account: JID
     
     private let queue: DispatchQueue = DispatchQueue(label: "org.intercambio.XMPPMessageHub.Archive")
-    required public init(directory: URL) {
+    required public init(directory: URL, account: JID) {
         self.directory = directory
+        self.account = account.bare()
     }
     
     private var store: ArchiveDocumentStore?
@@ -67,8 +71,9 @@ public class Archive {
             let _ = try db.run(
                 Schema.message.insert(
                     Schema.message_uuid <- messageID.uuid,
-                    Schema.message_from <- messageID.from,
-                    Schema.message_to <- messageID.to,
+                    Schema.message_account <- messageID.account,
+                    Schema.message_counterpart <- messageID.counterpart,
+                    Schema.message_direction <- messageID.direction,
                     Schema.message_type <- messageID.type
                 )
             )
@@ -94,7 +99,7 @@ public class Archive {
     }
 
     public func enumerateAll(_ block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws {
-        let condition = Schema.metadata.namespace(Schema.metadata_uuid) == Schema.message.namespace(Schema.message_uuid)
+        let condition = Schema.metadata[Schema.metadata_uuid] == Schema.message[Schema.message_uuid]
         let query = Schema.message.join(Schema.metadata, on: condition)
         
         try enumerate(with: query, block: block)
@@ -109,19 +114,20 @@ public class Archive {
             var index = 0
             for row in try db.prepare(query) {
                 
-                let uuid = row.get(Schema.message.namespace(Schema.message_uuid))
-                let from = row.get(Schema.message.namespace(Schema.message_from))
-                let to = row.get(Schema.message.namespace(Schema.message_to))
-                let type = row.get(Schema.message.namespace(Schema.message_type))
+                let uuid = row.get(Schema.message[Schema.message_uuid])
+                let account = row.get(Schema.message[Schema.message_account])
+                let counterpart = row.get(Schema.message[Schema.message_counterpart])
+                let direction = row.get(Schema.message[Schema.message_direction])
+                let type = row.get(Schema.message[Schema.message_type])
                 
-                let messageID = MessageID(uuid: uuid, from: from, to: to, type: type)
+                let messageID = MessageID(uuid: uuid, account: account, counterpart: counterpart, direction: direction, type: type)
                 
                 var metadata = Metadata()
-                metadata.created = row.get(Schema.metadata.namespace(Schema.metadata_created))
-                metadata.transmitted = row.get(Schema.metadata.namespace(Schema.metadata_transmitted))
-                metadata.read = row.get(Schema.metadata.namespace(Schema.metadata_read))
-                metadata.thrashed = row.get(Schema.metadata.namespace(Schema.metadata_thrashed))
-                metadata.error = row.get(Schema.metadata.namespace(Schema.metadata_error))
+                metadata.created = row.get(Schema.metadata[Schema.metadata_created])
+                metadata.transmitted = row.get(Schema.metadata[Schema.metadata_transmitted])
+                metadata.read = row.get(Schema.metadata[Schema.metadata_read])
+                metadata.thrashed = row.get(Schema.metadata[Schema.metadata_thrashed])
+                metadata.error = row.get(Schema.metadata[Schema.metadata_error])
                 
                 let message = Message(messageID: messageID, metadata: metadata)
                 
@@ -156,21 +162,29 @@ public class Archive {
             let to = JID(toString)
             else { throw ArchiveError.invalidDocument }
         
-        let type = try self.type(of: document)
+        guard
+            account == from.bare() || account == to.bare()
+            else { throw ArchiveError.accountMismatch }
         
-        return MessageID(uuid: uuid, from: from, to: to, type: type)
+        let direction: MessageDirection = account.isEqual(from.bare()) ? .outbound : .inbound
+        let counterpart = direction == .outbound ? to.bare() : from.bare()
+        let type = try self.type(of: message)
+        
+        return MessageID(uuid: uuid, account: account, counterpart: counterpart, direction: direction, type: type)
     }
     
-    private func type(of document: PXDocument) throws -> MessageType {
-        guard
-            let message = document.root, message.qualifiedName == PXQName(name: "message", namespace: "jabber:client")
-            else { throw ArchiveError.invalidDocument }
-        
+    private func type(of message: PXElement) throws -> MessageType {
         if let typeString = message.value(forAttribute: "type") as? String,
             let type = MessageType(rawValue: typeString) {
             return type
         } else {
             return .normal
         }
+    }
+}
+
+extension Archive: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        return "Archive(account: \(account.stringValue), directiory: \(directory.absoluteString))"
     }
 }

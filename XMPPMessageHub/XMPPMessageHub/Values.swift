@@ -46,6 +46,18 @@ extension MessageType: Value {
     }
 }
 
+extension MessageDirection: Value {
+    public static var declaredDatatype: String {
+        return String.declaredDatatype
+    }
+    public static func fromDatatypeValue(_ datatypeValue: String) -> MessageDirection {
+        return MessageDirection(rawValue: datatypeValue)!
+    }
+    public var datatypeValue: String {
+        return self.rawValue
+    }
+}
+
 extension NSError: Value {
     public static var declaredDatatype: String {
         return Blob.declaredDatatype
@@ -59,5 +71,23 @@ extension NSError: Value {
         return data.withUnsafeBytes { bytes -> Blob in
             return Blob(bytes: bytes, length: data.count)
         }
+    }
+}
+
+extension QueryType {
+    public subscript(column: SQLite.Expression<UUID>) -> SQLite.Expression<UUID> {
+        return namespace(column)
+    }
+    public subscript(column: SQLite.Expression<JID>) -> SQLite.Expression<JID> {
+        return namespace(column)
+    }
+    public subscript(column: SQLite.Expression<MessageType>) -> SQLite.Expression<MessageType> {
+        return namespace(column)
+    }
+    public subscript(column: SQLite.Expression<MessageDirection>) -> SQLite.Expression<MessageDirection> {
+        return namespace(column)
+    }
+    public subscript(column: SQLite.Expression<NSError?>) -> SQLite.Expression<NSError?> {
+        return namespace(column)
     }
 }

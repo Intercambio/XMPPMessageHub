@@ -12,11 +12,11 @@ import  CoreXMPP
 
 extension Archive {
     struct Schema {
-        
         static let message = Table("message")
         static let message_uuid = Expression<UUID>("uuid")
-        static let message_from = Expression<JID>("from")
-        static let message_to = Expression<JID>("to")
+        static let message_account = Expression<JID>("account")
+        static let message_counterpart = Expression<JID>("counterpart")
+        static let message_direction = Expression<MessageDirection>("direction")
         static let message_type = Expression<MessageType>("type")
         
         static let metadata = Table("metadata")
@@ -90,8 +90,9 @@ extension Archive {
         private func setup(_ db: SQLite.Connection) throws {
             try db.run(Schema.message.create { t in
                 t.column(Schema.message_uuid, primaryKey: true)
-                t.column(Schema.message_from)
-                t.column(Schema.message_to)
+                t.column(Schema.message_account)
+                t.column(Schema.message_direction)
+                t.column(Schema.message_counterpart)
                 t.column(Schema.message_type)
             })
             try db.run(Schema.metadata.create { t in
