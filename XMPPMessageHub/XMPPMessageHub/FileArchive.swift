@@ -159,6 +159,49 @@ public class FileArchive: Archive {
         }
     }
     
+    public func recent() throws -> [Message] {
+        return try queue.sync {
+            guard
+                let db = self.db
+                else { throw ArchiveError.notSetup }
+            
+            var messages: [Message] = []
+            try db.transaction {
+                let query = Schema.message.select(distinct: Schema.message_counterpart)
+                for row in try db.prepare(query) {
+                    let jid = row.get(Schema.message_counterpart)
+                    
+                    let filter = Schema.message[Schema.message_counterpart] == jid
+                    let query = self.makeMessageQuery(with: filter)
+                    
+                    if let row = try db.pluck(query) {
+                        let message = try self.makeMessage(from: row)
+                        messages.append(message)
+                    }
+                }
+            }
+            return messages
+        }
+    }
+    
+    public func counterparts() throws -> [JID] {
+        return try queue.sync {
+            guard
+                let db = self.db
+                else { throw ArchiveError.notSetup }
+            
+            var jids: [JID] = []
+            try db.transaction {
+                let query = Schema.message.select(distinct: Schema.message_counterpart)
+                for row in try db.prepare(query) {
+                    let jid = row.get(Schema.message_counterpart)
+                    jids.append(jid)
+                }
+            }
+            return jids
+        }
+    }
+    
     private func enumerateMessages(filter: SQLite.Expression<Bool>?,
                                    block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws -> Void {
         guard

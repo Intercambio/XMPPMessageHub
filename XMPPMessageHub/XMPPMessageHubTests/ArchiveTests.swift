@@ -293,6 +293,42 @@ class ArchiveTests: TestCase {
         }
     }
     
+    func testRecent() {
+        guard let archive = self.archive else { return }
+        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        
+        document.root.setValue("from@example.com", forAttribute: "from")
+        
+        do {
+            let now = Date.distantFuture
+            
+            for i in 0..<10 {
+                document.root.setValue("a@example.com", forAttribute: "to")
+                var metadata = Metadata()
+                metadata.transmitted = Date(timeInterval: (60.0 * Double(10 - i)), since: now)
+                let message = try archive.insert(document, metadata: metadata)
+                XCTAssertNotNil(message)
+            }
+            
+            for i in 0..<10 {
+                document.root.setValue("b@example.com", forAttribute: "to")
+                var metadata = Metadata()
+                metadata.transmitted = Date(timeInterval: (60.0 * Double(10 - i)), since: now)
+                let message = try archive.insert(document, metadata: metadata)
+                XCTAssertNotNil(message)
+            }
+            
+            let recent = try archive.recent()
+            
+            XCTAssertEqual(recent.count, 2)
+            XCTAssertEqual(recent[0].metadata.transmitted, Date(timeInterval: (60.0 * 10), since: now))
+            XCTAssertEqual(recent[1].metadata.transmitted, Date(timeInterval: (60.0 * 10), since: now))
+            
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+    
     func testAccessPerformance() {
         guard let archive = self.archive else { return }
         guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
