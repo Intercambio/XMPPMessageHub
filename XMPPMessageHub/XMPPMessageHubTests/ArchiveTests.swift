@@ -259,6 +259,37 @@ class ArchiveTests: TestCase {
         } catch {
             XCTFail("\(error)")
         }
+    }
+    
+    func testConversation() {
+        guard let archive = self.archive else { return }
+        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
         
+        document.root.setValue("from@example.com", forAttribute: "from")
+
+        do {
+            for _ in 0..<10 {
+                document.root.setValue("a@example.com", forAttribute: "to")
+                let message = try archive.insert(document, metadata: Metadata())
+                XCTAssertNotNil(message)
+            }
+            
+            for _ in 0..<10 {
+                document.root.setValue("b@example.com", forAttribute: "to")
+                let message = try archive.insert(document, metadata: Metadata())
+                XCTAssertNotNil(message)
+            }
+            
+            try archive.enumerateConversation(with: JID("b@example.com")!, { (message, idx, stop) in
+                XCTAssertEqual(message.messageID.counterpart, JID("b@example.com")!)
+            })
+
+            try archive.enumerateConversation(with: JID("a@example.com")!, { (message, idx, stop) in
+                XCTAssertEqual(message.messageID.counterpart, JID("a@example.com")!)
+            })
+            
+        } catch {
+            XCTFail("\(error)")
+        }
     }
 }
