@@ -101,7 +101,6 @@ public class FileArchive: Archive {
             try db.transaction {
                 let query = Schema.metadata.filter(Schema.metadata_uuid == messageID.uuid)
                 let updated = try db.run(query.update(
-                    Schema.metadata_uuid <- messageID.uuid,
                     Schema.metadata_created <- metadata.created,
                     Schema.metadata_transmitted <- metadata.transmitted,
                     Schema.metadata_read <- metadata.read,
@@ -114,6 +113,26 @@ public class FileArchive: Archive {
             
             let message = Message(messageID: messageID, metadata: metadata)
             return message
+        }
+    }
+    
+    public func update(transmitted: Date?, error: TransmissionError?, for messageID: MessageID) throws -> Message {
+        return try queue.sync {
+            guard
+                let db = self.db
+                else { throw ArchiveError.notSetup }
+            try db.transaction {
+                let query = Schema.metadata.filter(Schema.metadata_uuid == messageID.uuid)
+                let updated = try db.run(query.update(
+                    Schema.metadata_transmitted <- transmitted,
+                    Schema.metadata_error <- error as? NSError
+                ))
+                if updated != 1 {
+                    throw ArchiveError.doesNotExist
+                }
+            }
+            let filter = Schema.metadata[Schema.metadata_uuid] == messageID.uuid
+            return try self.firstMessage(filter: [Expression<Bool?>(filter)])
         }
     }
     

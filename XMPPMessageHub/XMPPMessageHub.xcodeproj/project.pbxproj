@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		F625A54A1DF44F2B0005AFD3 /* HubTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F625A5491DF44F2B0005AFD3 /* HubTests.swift */; };
 		F625A54B1DF44F2B0005AFD3 /* HubTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F625A5491DF44F2B0005AFD3 /* HubTests.swift */; };
+		F625A54D1DF4624E0005AFD3 /* ArchiveProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F625A54C1DF4624E0005AFD3 /* ArchiveProxy.swift */; };
+		F625A54E1DF4624E0005AFD3 /* ArchiveProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F625A54C1DF4624E0005AFD3 /* ArchiveProxy.swift */; };
 		F673D1DD1DE1BB55009B3C99 /* XMPPMessageHub.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D1D31DE1BB55009B3C99 /* XMPPMessageHub.framework */; };
 		F673D1E41DE1BB55009B3C99 /* XMPPMessageHub.h in Headers */ = {isa = PBXBuildFile; fileRef = F673D1D61DE1BB55009B3C99 /* XMPPMessageHub.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F673D1FB1DE1C02D009B3C99 /* XMPPMessageHub.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D1F21DE1C02C009B3C99 /* XMPPMessageHub.framework */; };
@@ -109,6 +111,7 @@
 
 /* Begin PBXFileReference section */
 		F625A5491DF44F2B0005AFD3 /* HubTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubTests.swift; sourceTree = "<group>"; };
+		F625A54C1DF4624E0005AFD3 /* ArchiveProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveProxy.swift; sourceTree = "<group>"; };
 		F673D1D31DE1BB55009B3C99 /* XMPPMessageHub.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = XMPPMessageHub.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F673D1D61DE1BB55009B3C99 /* XMPPMessageHub.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMPPMessageHub.h; sourceTree = "<group>"; };
 		F673D1D71DE1BB55009B3C99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -323,6 +326,7 @@
 		F6FCE97A1DEB416D0088A662 /* Archive */ = {
 			isa = PBXGroup;
 			children = (
+				F625A54C1DF4624E0005AFD3 /* ArchiveProxy.swift */,
 				F688F46E1DF304E400B4D3B4 /* Archive.swift */,
 				F69A25791DF436AD007D5C35 /* ArchiveManager.swift */,
 				F688F46D1DF304BC00B4D3B4 /* File Archive */,
@@ -539,6 +543,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F69A25771DF43470007D5C35 /* Hub.swift in Sources */,
+				F625A54D1DF4624E0005AFD3 /* ArchiveProxy.swift in Sources */,
 				F6FCE9721DE3B1AA0088A662 /* FileArchiveSetup.swift in Sources */,
 				F6FCE9781DE3C4810088A662 /* Message.swift in Sources */,
 				F6FCE9901DF0D68F0088A662 /* SQLite.swift in Sources */,
@@ -568,6 +573,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F69A25781DF43470007D5C35 /* Hub.swift in Sources */,
+				F625A54E1DF4624E0005AFD3 /* ArchiveProxy.swift in Sources */,
 				F6FCE9731DE3B1AA0088A662 /* FileArchiveSetup.swift in Sources */,
 				F6FCE9791DE3C4810088A662 /* Message.swift in Sources */,
 				F6FCE9911DF0D68F0088A662 /* SQLite.swift in Sources */,

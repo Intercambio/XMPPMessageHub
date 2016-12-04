@@ -32,7 +32,7 @@ public struct Metadata {
     public var error: TransmissionError?
 }
 
-public struct MessageID: Equatable {
+public struct MessageID: Equatable, Hashable {
     public let uuid: UUID
     public let account: JID
     public let counterpart: JID
@@ -41,6 +41,9 @@ public struct MessageID: Equatable {
     
     public static func ==(lhs: MessageID, rhs: MessageID) -> Bool {
         return lhs.uuid == rhs.uuid
+    }
+    public var hashValue: Int {
+        return uuid.hashValue
     }
 }
 

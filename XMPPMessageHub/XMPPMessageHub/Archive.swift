@@ -20,10 +20,10 @@ public enum ArchiveError:  Error {
 
 public protocol Archive {
     var account: JID { get }
-    func open(completion: @escaping (Error?) -> Void) -> Void
     
     func insert(_ document: PXDocument, metadata: Metadata) throws -> Message
     func update(_ metadata: Metadata, for messageID: MessageID) throws -> Message
+    func update(transmitted: Date?, error: TransmissionError?, for messageID: MessageID) throws -> Message
     func delete(_ messageID: MessageID) throws
     
     func message(with messageID: MessageID) throws -> Message

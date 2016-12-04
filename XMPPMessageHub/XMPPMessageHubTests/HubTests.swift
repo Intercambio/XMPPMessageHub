@@ -14,19 +14,17 @@ import CoreXMPP
 
 class HubTests: TestCase {
     
-    var archiveManager: ArchvieManager?
     var hub: Hub?
     
     override func setUp() {
         super.setUp()
         guard let directory = self.directory else { return }
-        self.archiveManager = FileArchvieManager(directory: directory)
-        self.hub = Hub(archvieManager: self.archiveManager!)
+        let archiveManager = FileArchvieManager(directory: directory)
+        self.hub = Hub(archvieManager: archiveManager)
     }
     
     override func tearDown() {
         self.hub = nil
-        self.archiveManager = nil
         super.tearDown()
     }
     
@@ -35,7 +33,6 @@ class HubTests: TestCase {
     func testReceiveMessage() {
         guard
             let hub = self.hub,
-            let archiveManager = self.archiveManager,
             let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil)
             else { XCTFail(); return }
         
@@ -58,7 +55,7 @@ class HubTests: TestCase {
         // Verify that the message is in the archvie
         
         let getArchiveExp = expectation(description: "Get Archive")
-        archiveManager.archive(for: JID("romeo@example.com")!, create: false) {
+        hub.archive(for: JID("romeo@example.com")!, create: false) {
             archive, error in
             XCTAssertNil(error)
             XCTAssertNotNil(archive)
@@ -80,5 +77,67 @@ class HubTests: TestCase {
             }
         }
         waitForExpectations(timeout: 1.0, handler: nil)
+    }
+    
+    func testSendMessage() {
+        guard
+            let hub = self.hub,
+            let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil)
+            else { XCTFail(); return }
+        
+        document.root.setValue("juliet@example.com", forAttribute: "to")
+        document.root.setValue("romeo@example.com", forAttribute: "from")
+        document.root.setValue("chat", forAttribute: "type")
+        document.root.setValue("456", forAttribute: "id")
+        
+        let dispatcher = Dispatcher()
+        hub.messageHandler = dispatcher
+        
+        expectation(forNotification: Hub.DidUpdateMessageNotification.rawValue, object: hub, handler: nil)
+        
+        let getArchiveExp = expectation(description: "Get Archive")
+        hub.archive(for: JID("romeo@example.com")!, create: true) {
+            archive, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(archive)
+            
+            do {
+                if let archive = archive {
+                    let _ = try archive.insert(document, metadata: Metadata())
+                }
+            } catch {
+                XCTFail("\(error)")
+            }
+            
+            getArchiveExp.fulfill()
+        }
+        waitForExpectations(timeout: 1.0, handler: nil)
+        
+        let verify = expectation(description: "Verify Archive")
+        hub.archive(for: JID("romeo@example.com")!, create: false) {
+            archive, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(archive)
+            
+            do {
+                if let archive = archive {
+                    let messages = try archive.all()
+                    XCTAssertEqual(messages.count, 1)
+                    
+                    let message = messages[0]
+                    XCTAssertNotNil(message.metadata.transmitted)
+                }
+            } catch {
+                XCTFail("\(error)")
+            }
+            verify.fulfill()
+        }
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+    
+    class Dispatcher: NSObject, MessageHandler {
+        func handleMessage(_ document: PXDocument, completion: ((Error?) -> Void)? = nil) {
+            completion?(nil)
+        }
     }
 }
