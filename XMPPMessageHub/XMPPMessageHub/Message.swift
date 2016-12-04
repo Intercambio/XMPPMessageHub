@@ -10,8 +10,11 @@ import Foundation
 import CoreXMPP
 
 public enum MessageType: String {
-    case normal = "normal"
     case chat = "chat"
+    case error = "error"
+    case groupchat = "groupchat"
+    case headline = "headline"
+    case normal = "normal"
 }
 
 public enum MessageDirection: String {
