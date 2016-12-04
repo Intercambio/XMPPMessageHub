@@ -41,6 +41,14 @@
 		F673D23C1DE1C352009B3C99 /* ArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */; };
 		F688F46F1DF304E400B4D3B4 /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = F688F46E1DF304E400B4D3B4 /* Archive.swift */; };
 		F688F4701DF304E400B4D3B4 /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = F688F46E1DF304E400B4D3B4 /* Archive.swift */; };
+		F69A25771DF43470007D5C35 /* Hub.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69A25761DF43470007D5C35 /* Hub.swift */; };
+		F69A25781DF43470007D5C35 /* Hub.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69A25761DF43470007D5C35 /* Hub.swift */; };
+		F69A257A1DF436AD007D5C35 /* ArchiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69A25791DF436AD007D5C35 /* ArchiveManager.swift */; };
+		F69A257B1DF436AD007D5C35 /* ArchiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69A25791DF436AD007D5C35 /* ArchiveManager.swift */; };
+		F69A257D1DF440F2007D5C35 /* FileArchvieManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69A257C1DF440F2007D5C35 /* FileArchvieManager.swift */; };
+		F69A257E1DF440F2007D5C35 /* FileArchvieManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69A257C1DF440F2007D5C35 /* FileArchvieManager.swift */; };
+		F69A25801DF441A9007D5C35 /* FileArchvieManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69A257F1DF441A9007D5C35 /* FileArchvieManagerTests.swift */; };
+		F69A25811DF441A9007D5C35 /* FileArchvieManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69A257F1DF441A9007D5C35 /* FileArchvieManagerTests.swift */; };
 		F6FCE96C1DE1C87F0088A662 /* TestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE96B1DE1C87F0088A662 /* TestCase.swift */; };
 		F6FCE96D1DE1C87F0088A662 /* TestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE96B1DE1C87F0088A662 /* TestCase.swift */; };
 		F6FCE9721DE3B1AA0088A662 /* FileArchiveSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9711DE3B1AA0088A662 /* FileArchiveSetup.swift */; };
@@ -118,6 +126,10 @@
 		F673D2221DE1C2AA009B3C99 /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = ../Carthage/Build/Mac/SocketRocket.framework; sourceTree = "<group>"; };
 		F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveTests.swift; sourceTree = "<group>"; };
 		F688F46E1DF304E400B4D3B4 /* Archive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Archive.swift; sourceTree = "<group>"; };
+		F69A25761DF43470007D5C35 /* Hub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hub.swift; sourceTree = "<group>"; };
+		F69A25791DF436AD007D5C35 /* ArchiveManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveManager.swift; sourceTree = "<group>"; };
+		F69A257C1DF440F2007D5C35 /* FileArchvieManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileArchvieManager.swift; sourceTree = "<group>"; };
+		F69A257F1DF441A9007D5C35 /* FileArchvieManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileArchvieManagerTests.swift; sourceTree = "<group>"; };
 		F6FCE96B1DE1C87F0088A662 /* TestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCase.swift; sourceTree = "<group>"; };
 		F6FCE9711DE3B1AA0088A662 /* FileArchiveSetup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileArchiveSetup.swift; sourceTree = "<group>"; };
 		F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveSetupTests.swift; sourceTree = "<group>"; };
@@ -212,6 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				F6FCE9771DE3C4810088A662 /* Message.swift */,
+				F69A25751DF4345F007D5C35 /* Hub */,
 				F6FCE97A1DEB416D0088A662 /* Archive */,
 				F673D23E1DE1C460009B3C99 /* Supporting Files */,
 			);
@@ -222,6 +235,7 @@
 			isa = PBXGroup;
 			children = (
 				F6FCE96B1DE1C87F0088A662 /* TestCase.swift */,
+				F69A257F1DF441A9007D5C35 /* FileArchvieManagerTests.swift */,
 				F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */,
 				F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */,
 				F6FCE9851DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift */,
@@ -285,6 +299,7 @@
 		F688F46D1DF304BC00B4D3B4 /* File Archive */ = {
 			isa = PBXGroup;
 			children = (
+				F69A257C1DF440F2007D5C35 /* FileArchvieManager.swift */,
 				F673D21B1DE1C245009B3C99 /* FileArchive.swift */,
 				F6FCE9711DE3B1AA0088A662 /* FileArchiveSetup.swift */,
 				F6FCE9821DEB6AEE0088A662 /* FileArchiveDocumentStore.swift */,
@@ -293,10 +308,19 @@
 			name = "File Archive";
 			sourceTree = "<group>";
 		};
+		F69A25751DF4345F007D5C35 /* Hub */ = {
+			isa = PBXGroup;
+			children = (
+				F69A25761DF43470007D5C35 /* Hub.swift */,
+			);
+			name = Hub;
+			sourceTree = "<group>";
+		};
 		F6FCE97A1DEB416D0088A662 /* Archive */ = {
 			isa = PBXGroup;
 			children = (
 				F688F46E1DF304E400B4D3B4 /* Archive.swift */,
+				F69A25791DF436AD007D5C35 /* ArchiveManager.swift */,
 				F688F46D1DF304BC00B4D3B4 /* File Archive */,
 			);
 			name = Archive;
@@ -510,9 +534,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F69A25771DF43470007D5C35 /* Hub.swift in Sources */,
 				F6FCE9721DE3B1AA0088A662 /* FileArchiveSetup.swift in Sources */,
 				F6FCE9781DE3C4810088A662 /* Message.swift in Sources */,
 				F6FCE9901DF0D68F0088A662 /* SQLite.swift in Sources */,
+				F69A257A1DF436AD007D5C35 /* ArchiveManager.swift in Sources */,
+				F69A257D1DF440F2007D5C35 /* FileArchvieManager.swift in Sources */,
 				F673D21C1DE1C245009B3C99 /* FileArchive.swift in Sources */,
 				F688F46F1DF304E400B4D3B4 /* Archive.swift in Sources */,
 				F6FCE9831DEB6AEE0088A662 /* FileArchiveDocumentStore.swift in Sources */,
@@ -526,6 +553,7 @@
 				F673D23B1DE1C352009B3C99 /* ArchiveTests.swift in Sources */,
 				F6FCE9751DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */,
 				F6FCE96C1DE1C87F0088A662 /* TestCase.swift in Sources */,
+				F69A25801DF441A9007D5C35 /* FileArchvieManagerTests.swift in Sources */,
 				F6FCE9861DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -534,9 +562,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F69A25781DF43470007D5C35 /* Hub.swift in Sources */,
 				F6FCE9731DE3B1AA0088A662 /* FileArchiveSetup.swift in Sources */,
 				F6FCE9791DE3C4810088A662 /* Message.swift in Sources */,
 				F6FCE9911DF0D68F0088A662 /* SQLite.swift in Sources */,
+				F69A257B1DF436AD007D5C35 /* ArchiveManager.swift in Sources */,
+				F69A257E1DF440F2007D5C35 /* FileArchvieManager.swift in Sources */,
 				F673D21D1DE1C245009B3C99 /* FileArchive.swift in Sources */,
 				F688F4701DF304E400B4D3B4 /* Archive.swift in Sources */,
 				F6FCE9841DEB6AEE0088A662 /* FileArchiveDocumentStore.swift in Sources */,
@@ -550,6 +581,7 @@
 				F673D23C1DE1C352009B3C99 /* ArchiveTests.swift in Sources */,
 				F6FCE9761DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */,
 				F6FCE96D1DE1C87F0088A662 /* TestCase.swift in Sources */,
+				F69A25811DF441A9007D5C35 /* FileArchvieManagerTests.swift in Sources */,
 				F6FCE9871DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
