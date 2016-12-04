@@ -122,7 +122,7 @@ public class FileArchive: Archive {
     public func message(with messageID: MessageID) throws -> Message {
         return try queue.sync {
             let filter = Schema.metadata[Schema.metadata_uuid] == messageID.uuid
-            return try firstMessage(filter: filter)
+            return try firstMessage(filter: [Expression<Bool?>(filter)])
         }
     }
     
@@ -135,27 +135,27 @@ public class FileArchive: Archive {
 
     public func enumerateAll(_ block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws {
         return try queue.sync {
-            try enumerateMessages(filter: nil, block: block)
+            try enumerateMessages(block: block)
         }
     }
     
     public func all() throws -> [Message] {
         return try queue.sync {
-            return try messages(filter: nil)
+            return try messages()
         }
     }
     
     public func enumerateConversation(with counterpart: JID, _ block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws {
         return try queue.sync {
             let filter = Schema.message[Schema.message_counterpart] == counterpart.bare()
-            try enumerateMessages(filter: filter, block: block)
+            try enumerateMessages(filter: [Expression<Bool?>(filter)], block: block)
         }
     }
     
     public func conversation(with counterpart: JID) throws -> [Message] {
         return try queue.sync {
             let filter = Schema.message[Schema.message_counterpart] == counterpart.bare()
-            return try messages(filter: filter)
+            return try messages(filter: [Expression<Bool?>(filter)])
         }
     }
     
@@ -172,7 +172,7 @@ public class FileArchive: Archive {
                     let jid = row.get(Schema.message_counterpart)
                     
                     let filter = Schema.message[Schema.message_counterpart] == jid
-                    let query = self.makeMessageQuery(with: filter)
+                    let query = self.makeMessageQuery(with: [Expression<Bool?>(filter)])
                     
                     if let row = try db.pluck(query) {
                         let message = try self.makeMessage(from: row)
@@ -181,6 +181,14 @@ public class FileArchive: Archive {
                 }
             }
             return messages
+        }
+    }
+    
+    public func pending() throws -> [Message] {
+        return try queue.sync {
+            let filters = [Schema.metadata[Schema.metadata_transmitted] == nil,
+                           Schema.metadata[Schema.metadata_error] == nil]
+            return try messages(filter: filters)
         }
     }
     
@@ -202,7 +210,7 @@ public class FileArchive: Archive {
         }
     }
     
-    private func enumerateMessages(filter: SQLite.Expression<Bool>?,
+    private func enumerateMessages(filter: [SQLite.Expression<Bool?>] = [],
                                    block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws -> Void {
         guard
             let db = self.db
@@ -225,7 +233,7 @@ public class FileArchive: Archive {
         }
     }
     
-    private func messages(filter: SQLite.Expression<Bool>?) throws -> [Message] {
+    private func messages(filter: [SQLite.Expression<Bool?>] = []) throws -> [Message] {
         guard
             let db = self.db
             else { throw ArchiveError.notSetup }
@@ -242,7 +250,7 @@ public class FileArchive: Archive {
         return result
     }
 
-    private func firstMessage(filter: SQLite.Expression<Bool>?) throws -> Message {
+    private func firstMessage(filter: [SQLite.Expression<Bool?>] = []) throws -> Message {
         guard
             let db = self.db
             else { throw ArchiveError.notSetup }
@@ -264,11 +272,11 @@ public class FileArchive: Archive {
         }
     }
     
-    private func makeMessageQuery(with filter: SQLite.Expression<Bool>?) -> QueryType {
+    private func makeMessageQuery(with filter: [SQLite.Expression<Bool?>] = []) -> QueryType {
         let condition = Schema.metadata[Schema.metadata_uuid] == Schema.message[Schema.message_uuid]
         var query = Schema.message.join(Schema.metadata, on: condition)
         
-        if let expresion = filter {
+        for expresion in filter {
             query = query.filter(expresion)
         }
         

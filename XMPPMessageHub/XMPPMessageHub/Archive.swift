@@ -31,6 +31,7 @@ public protocol Archive {
     func all() throws -> [Message]
     func conversation(with counterpart: JID) throws -> [Message]
     func recent() throws -> [Message]
+    func pending() throws -> [Message]
     
     func enumerateAll(_ block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws -> Void
     func enumerateConversation(with counterpart: JID, _ block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws -> Void
