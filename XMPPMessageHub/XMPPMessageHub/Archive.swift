@@ -26,4 +26,5 @@ public protocol Archive {
     func message(with messageID: MessageID) throws -> Message
     func document(for messageID: MessageID) throws -> PXDocument
     func enumerateAll(_ block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws -> Void
+    func enumerateConversation(with counterpart: JID, _ block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws -> Void
 }

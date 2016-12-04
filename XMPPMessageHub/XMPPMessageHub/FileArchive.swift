@@ -121,10 +121,8 @@ public class FileArchive: Archive {
     
     public func message(with messageID: MessageID) throws -> Message {
         return try queue.sync {
-            let condition = Schema.metadata[Schema.metadata_uuid] == Schema.message[Schema.message_uuid]
-            let query = Schema.message.join(Schema.metadata, on: condition)
-            let filter = query.filter(Schema.metadata[Schema.metadata_uuid] == messageID.uuid)
-            return try firstMessage(with: filter)
+            let filter = Schema.metadata[Schema.metadata_uuid] == messageID.uuid
+            return try firstMessage(filter: filter)
         }
     }
     
@@ -137,17 +135,22 @@ public class FileArchive: Archive {
 
     public func enumerateAll(_ block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws {
         return try queue.sync {
-            let condition = Schema.metadata[Schema.metadata_uuid] == Schema.message[Schema.message_uuid]
-            let query = Schema.message.join(Schema.metadata, on: condition)
-            
-            try enumerateMessages(with: query, block: block)
+            try enumerateMessages(filter: nil, block: block)
         }
     }
     
-    private func enumerateMessages(with query: QueryType, block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws {
+    public func enumerateConversation(with counterpart: JID, _ block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws {
+        let filter = Schema.message[Schema.message_counterpart] == counterpart.bare()
+        try enumerateMessages(filter: filter, block: block)
+    }
+    
+    private func enumerateMessages(filter: SQLite.Expression<Bool>?,
+                                   block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws -> Void {
         guard
             let db = self.db
             else { throw ArchiveError.notSetup }
+        
+        let query = makeMessageQuery(with: filter)
         
         try db.transaction {
             var index = 0
@@ -163,11 +166,13 @@ public class FileArchive: Archive {
             }
         }
     }
-    
-    private func firstMessage(with query: QueryType) throws -> Message {
+
+    private func firstMessage(filter: SQLite.Expression<Bool>?) throws -> Message {
         guard
             let db = self.db
             else { throw ArchiveError.notSetup }
+        
+        let query = makeMessageQuery(with: filter)
         
         var message: Message? = nil
         
@@ -182,6 +187,41 @@ public class FileArchive: Archive {
         } else {
             throw ArchiveError.doesNotExist
         }
+    }
+    
+    private func makeMessageQuery(with filter: SQLite.Expression<Bool>?) -> QueryType {
+        let condition = Schema.metadata[Schema.metadata_uuid] == Schema.message[Schema.message_uuid]
+        var query = Schema.message.join(Schema.metadata, on: condition)
+        
+        if let expresion = filter {
+            query = query.filter(expresion)
+        }
+        
+        let transmitted = Expression<Date>("transmitted")
+        let created = Expression<Date>("created")
+        
+        query = query.filter(Schema.metadata[Schema.metadata_thrashed] == nil)
+        query = query.order([
+            transmitted.desc,
+            created.desc,
+            Schema.message[rowid].desc
+            ])
+
+        query = query.select(
+            Schema.message[Schema.message_uuid],
+            Schema.message[Schema.message_account],
+            Schema.message[Schema.message_counterpart],
+            Schema.message[Schema.message_direction],
+            Schema.message[Schema.message_type],
+            Schema.metadata[Schema.metadata_created],
+            Schema.metadata[Schema.metadata_transmitted],
+            Schema.metadata[Schema.metadata_read],
+            Schema.metadata[Schema.metadata_thrashed],
+            Schema.metadata[Schema.metadata_error],
+            (Schema.metadata[Schema.metadata_transmitted] ?? Date.distantFuture).alias(name: "transmitted"),
+            (Schema.metadata[Schema.metadata_created] ?? Date.distantFuture).alias(name: "created")
+        )
+        return query
     }
     
     private func makeMessage(from row: SQLite.Row) throws -> Message {

@@ -209,4 +209,56 @@ class ArchiveTests: TestCase {
             XCTAssertEqual(error as? ArchiveError, .doesNotExist)
         }
     }
+    
+    func testSortOrder() {
+        guard let archive = self.archive else { return }
+        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        
+        document.root.setValue("from@example.com", forAttribute: "from")
+        document.root.setValue("to@example.com", forAttribute: "to")
+        document.root.setValue("chat", forAttribute: "type")
+        document.root.setValue("123", forAttribute: "id")
+        
+        let now = Date()
+        
+        do {
+            // without date should be on top
+            for i in 0..<2 {
+                document.root.setValue(String(1 - i), forAttribute: "id")
+                let metadata = Metadata()
+                let message = try archive.insert(document, metadata: metadata)
+                XCTAssertNotNil(message)
+            }
+            
+            // not transmitted should be before transmitted
+            for i in 0..<10 {
+                document.root.setValue(String(2 + i), forAttribute: "id")
+                var metadata = Metadata()
+                metadata.created = Date(timeInterval: 60.0 * Double(10 - i), since: now)
+                let message = try archive.insert(document, metadata: metadata)
+                XCTAssertNotNil(message)
+            }
+            
+            for i in 0..<10 {
+                document.root.setValue(String(12 + i), forAttribute: "id")
+                var metadata = Metadata()
+                metadata.transmitted = Date(timeInterval: 10000.0 + (60.0 * Double(10 - i)), since: now)
+                let message = try archive.insert(document, metadata: metadata)
+                XCTAssertNotNil(message)
+            }
+
+            var messages: [Message] = []
+            try archive.enumerateAll({ (message, idx, stop) in
+                messages.append(message)
+                let document = try? archive.document(for: message.messageID)
+                let id: String? = document?.root.value(forAttribute: "id") as? String
+                let i = Int(id ?? "-1")
+                XCTAssertEqual(idx, i)
+            })
+            
+        } catch {
+            XCTFail("\(error)")
+        }
+        
+    }
 }

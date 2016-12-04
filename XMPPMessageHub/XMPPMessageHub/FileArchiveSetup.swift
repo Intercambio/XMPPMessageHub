@@ -88,6 +88,11 @@ extension FileArchive {
         }
         
         private func setup(_ db: SQLite.Connection) throws {
+            try db.createCollation("DATEORDER") { lhs, rhs in
+                let lhsDate = Date.fromDatatypeValue(lhs)
+                let rhsDate = Date.fromDatatypeValue(rhs)
+                return lhsDate.compare(rhsDate)
+            }
             try db.run(Schema.message.create { t in
                 t.column(Schema.message_uuid, primaryKey: true)
                 t.column(Schema.message_account)
@@ -95,6 +100,8 @@ extension FileArchive {
                 t.column(Schema.message_counterpart)
                 t.column(Schema.message_type)
             })
+            try db.run(Schema.message.createIndex(Schema.message_account))
+            try db.run(Schema.message.createIndex(Schema.message_counterpart))
             try db.run(Schema.metadata.create { t in
                 t.column(Schema.metadata_uuid, primaryKey: true)
                 t.column(Schema.metadata_created)
@@ -104,6 +111,8 @@ extension FileArchive {
                 t.column(Schema.metadata_error)
                 t.foreignKey(Schema.metadata_uuid, references: Schema.message, Schema.message_uuid)
             })
+            try db.run(Schema.metadata.createIndex(Schema.metadata_created))
+            try db.run(Schema.metadata.createIndex(Schema.metadata_transmitted))
         }
         
         private func readCurrentVersion() -> Int {

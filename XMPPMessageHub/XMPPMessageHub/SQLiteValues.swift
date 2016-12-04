@@ -91,3 +91,21 @@ extension QueryType {
         return namespace(column)
     }
 }
+
+extension String {
+    func join(_ expressions: [Expressible]) -> Expressible {
+        var (template, bindings) = ([String](), [Binding?]())
+        for expressible in expressions {
+            let expression = expressible.expression
+            template.append(expression.template)
+            bindings.append(contentsOf: expression.bindings)
+        }
+        return Expression<Void>(template.joined(separator: self), bindings)
+    }
+}
+
+extension ExpressionType {
+    public func alias(name: String) -> Expressible {
+        return " ".join([self, Expression<Void>(literal: "AS \(name)")])
+    }
+}
