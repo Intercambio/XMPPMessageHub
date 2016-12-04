@@ -292,4 +292,37 @@ class ArchiveTests: TestCase {
             XCTFail("\(error)")
         }
     }
+    
+    func testAccessPerformance() {
+        guard let archive = self.archive else { return }
+        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        
+        document.root.setValue("from@example.com", forAttribute: "from")
+        
+        do {
+            for _ in 0..<1000 {
+                document.root.setValue("a@example.com", forAttribute: "to")
+                let message = try archive.insert(document, metadata: Metadata())
+                XCTAssertNotNil(message)
+            }
+            
+            for _ in 0..<1000 {
+                document.root.setValue("b@example.com", forAttribute: "to")
+                let message = try archive.insert(document, metadata: Metadata())
+                XCTAssertNotNil(message)
+            }
+
+            self.measure {
+                do {
+                    let messages = try archive.conversation(with: JID("b@example.com")!)
+                    XCTAssertEqual(messages.count, 1000)
+                } catch {
+                    XCTFail("\(error)")
+                }
+            }
+            
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
 }

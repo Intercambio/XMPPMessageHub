@@ -139,9 +139,24 @@ public class FileArchive: Archive {
         }
     }
     
+    public func all() throws -> [Message] {
+        return try queue.sync {
+            return try messages(filter: nil)
+        }
+    }
+    
     public func enumerateConversation(with counterpart: JID, _ block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws {
-        let filter = Schema.message[Schema.message_counterpart] == counterpart.bare()
-        try enumerateMessages(filter: filter, block: block)
+        return try queue.sync {
+            let filter = Schema.message[Schema.message_counterpart] == counterpart.bare()
+            try enumerateMessages(filter: filter, block: block)
+        }
+    }
+    
+    public func conversation(with counterpart: JID) throws -> [Message] {
+        return try queue.sync {
+            let filter = Schema.message[Schema.message_counterpart] == counterpart.bare()
+            return try messages(filter: filter)
+        }
     }
     
     private func enumerateMessages(filter: SQLite.Expression<Bool>?,
@@ -165,6 +180,23 @@ public class FileArchive: Archive {
                 }
             }
         }
+    }
+    
+    private func messages(filter: SQLite.Expression<Bool>?) throws -> [Message] {
+        guard
+            let db = self.db
+            else { throw ArchiveError.notSetup }
+        
+        let query = makeMessageQuery(with: filter)
+        
+        var result: [Message] = []
+        try db.transaction {
+            for row in try db.prepare(query) {
+                let message = try self.makeMessage(from: row)
+                result.append(message)
+            }
+        }
+        return result
     }
 
     private func firstMessage(filter: SQLite.Expression<Bool>?) throws -> Message {

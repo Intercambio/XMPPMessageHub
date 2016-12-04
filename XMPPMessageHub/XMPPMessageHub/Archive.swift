@@ -21,10 +21,15 @@ public enum ArchiveError:  Error {
 public protocol Archive {
     var account: JID { get }
     func open(completion: @escaping (Error?) -> Void) -> Void
+    
     func insert(_ document: PXDocument, metadata: Metadata) throws -> Message
     func update(_ metadata: Metadata, for messageID: MessageID) throws -> Message
     func message(with messageID: MessageID) throws -> Message
     func document(for messageID: MessageID) throws -> PXDocument
+    
+    func all() throws -> [Message]
     func enumerateAll(_ block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws -> Void
+
+    func conversation(with counterpart: JID) throws -> [Message]
     func enumerateConversation(with counterpart: JID, _ block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws -> Void
 }

@@ -88,11 +88,6 @@ extension FileArchive {
         }
         
         private func setup(_ db: SQLite.Connection) throws {
-            try db.createCollation("DATEORDER") { lhs, rhs in
-                let lhsDate = Date.fromDatatypeValue(lhs)
-                let rhsDate = Date.fromDatatypeValue(rhs)
-                return lhsDate.compare(rhsDate)
-            }
             try db.run(Schema.message.create { t in
                 t.column(Schema.message_uuid, primaryKey: true)
                 t.column(Schema.message_account)
