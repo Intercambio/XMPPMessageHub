@@ -77,9 +77,9 @@ class ArchiveTests: TestCase {
             XCTAssertNotNil(document)
             XCTAssertEqual(document.root.value(forAttribute: "id") as? String, "123")
             
-            try archive.enumerateAll({ (message, idx, stop) in
-                print("\(message)")
-            })
+            let messages = try archive.all()
+            XCTAssertEqual(messages[0].messageID, message.messageID)
+            
         } catch {
             XCTFail("\(error)")
         }
@@ -247,14 +247,13 @@ class ArchiveTests: TestCase {
                 XCTAssertNotNil(message)
             }
 
-            var messages: [Message] = []
-            try archive.enumerateAll({ (message, idx, stop) in
-                messages.append(message)
+            let messages = try archive.all()
+            for (idx, message) in messages.enumerated() {
                 let document = try? archive.document(for: message.messageID)
                 let id: String? = document?.root.value(forAttribute: "id") as? String
                 let i = Int(id ?? "-1")
                 XCTAssertEqual(idx, i)
-            })
+            }
             
         } catch {
             XCTFail("\(error)")
@@ -280,13 +279,13 @@ class ArchiveTests: TestCase {
                 XCTAssertNotNil(message)
             }
             
-            try archive.enumerateConversation(with: JID("b@example.com")!, { (message, idx, stop) in
+            for message in try archive.conversation(with: JID("b@example.com")!) {
                 XCTAssertEqual(message.messageID.counterpart, JID("b@example.com")!)
-            })
-
-            try archive.enumerateConversation(with: JID("a@example.com")!, { (message, idx, stop) in
+            }
+            
+            for message in try archive.conversation(with: JID("a@example.com")!) {
                 XCTAssertEqual(message.messageID.counterpart, JID("a@example.com")!)
-            })
+            }
             
         } catch {
             XCTFail("\(error)")

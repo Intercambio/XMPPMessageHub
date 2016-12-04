@@ -51,7 +51,7 @@ public class FileArchive: Archive {
         db = configuration.db
     }
     
-    // MARK: - Manage
+    // MARK: Insert, Update and Delete Messages
     
     public func insert(_ document: PXDocument, metadata: Metadata) throws -> Message {
         return try queue.sync {
@@ -132,6 +132,8 @@ public class FileArchive: Archive {
         }
     }
     
+    // MARK: Get Message and Document
+    
     public func message(with messageID: MessageID) throws -> Message {
         return try queue.sync {
             let filter = Schema.metadata[Schema.metadata_uuid] == messageID.uuid
@@ -148,30 +150,12 @@ public class FileArchive: Archive {
             return try store.read(documentWith: messageID.uuid)
         }
     }
-
-    public func enumerateAll(_ block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws {
-        return try queue.sync {
-            try enumerateMessages(block: block)
-        }
-    }
+    
+    // MARK: Query Messages
     
     public func all() throws -> [Message] {
         return try queue.sync {
             return try messages()
-        }
-    }
-    
-    public func enumerateConversation(with counterpart: JID, _ block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws {
-        return try queue.sync {
-            let filter = Schema.message[Schema.message_counterpart] == counterpart.bare()
-            try enumerateMessages(filter: [Expression<Bool?>(filter)], block: block)
-        }
-    }
-    
-    public func conversation(with counterpart: JID) throws -> [Message] {
-        return try queue.sync {
-            let filter = Schema.message[Schema.message_counterpart] == counterpart.bare()
-            return try messages(filter: [Expression<Bool?>(filter)])
         }
     }
     
@@ -208,6 +192,15 @@ public class FileArchive: Archive {
         }
     }
     
+    public func conversation(with counterpart: JID) throws -> [Message] {
+        return try queue.sync {
+            let filter = Schema.message[Schema.message_counterpart] == counterpart.bare()
+            return try messages(filter: [Expression<Bool?>(filter)])
+        }
+    }
+    
+    // MARK: Counterparts
+    
     public func counterparts() throws -> [JID] {
         return try queue.sync {
             guard
@@ -225,6 +218,8 @@ public class FileArchive: Archive {
             return jids
         }
     }
+    
+    // MARK: -
     
     private func enumerateMessages(filter: [SQLite.Expression<Bool?>] = [],
                                    block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws -> Void {
@@ -338,8 +333,6 @@ public class FileArchive: Archive {
         
         return Message(messageID: messageID, metadata: metadata)
     }
-    
-    // MARK: - Helper
     
     private func makeMessageID(for document: PXDocument, with uuid: UUID) throws -> MessageID {
         guard

@@ -26,16 +26,13 @@ public protocol Archive {
     func update(_ metadata: Metadata, for messageID: MessageID) throws -> Message
     func delete(_ messageID: MessageID) throws
     
+    func message(with messageID: MessageID) throws -> Message
     func document(for messageID: MessageID) throws -> PXDocument
     
-    func message(with messageID: MessageID) throws -> Message
     func all() throws -> [Message]
-    func conversation(with counterpart: JID) throws -> [Message]
     func recent() throws -> [Message]
     func pending() throws -> [Message]
-    
-    func enumerateAll(_ block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws -> Void
-    func enumerateConversation(with counterpart: JID, _ block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws -> Void
-    
+    func conversation(with counterpart: JID) throws -> [Message]
+
     func counterparts() throws -> [JID]
 }

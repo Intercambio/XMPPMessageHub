@@ -93,7 +93,7 @@ extension QueryType {
 }
 
 extension String {
-    func join(_ expressions: [Expressible]) -> Expressible {
+    fileprivate func x__join(_ expressions: [Expressible]) -> Expressible {
         var (template, bindings) = ([String](), [Binding?]())
         for expressible in expressions {
             let expression = expressible.expression
@@ -106,6 +106,6 @@ extension String {
 
 extension ExpressionType {
     public func alias(name: String) -> Expressible {
-        return " ".join([self, Expression<Void>(literal: "AS \(name)")])
+        return " ".x__join([self, Expression<Void>(literal: "AS \(name)")])
     }
 }

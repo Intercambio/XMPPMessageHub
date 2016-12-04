@@ -26,12 +26,16 @@ public struct Metadata {
     public var error: Error?
 }
 
-public struct MessageID {
+public struct MessageID: Equatable {
     public let uuid: UUID
     public let account: JID
     public let counterpart: JID
     public let direction: MessageDirection
     public let type: MessageType
+    
+    public static func ==(lhs: MessageID, rhs: MessageID) -> Bool {
+        return lhs.uuid == rhs.uuid
+    }
 }
 
 public struct Message {
