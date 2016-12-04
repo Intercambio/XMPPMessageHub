@@ -361,4 +361,31 @@ class ArchiveTests: TestCase {
             XCTFail("\(error)")
         }
     }
+    
+    func testDelete() {
+        guard let archive = self.archive else { return }
+        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        
+        document.root.setValue("from@example.com", forAttribute: "from")
+        document.root.setValue("to@example.com", forAttribute: "to")
+        document.root.setValue("chat", forAttribute: "type")
+        document.root.setValue("123", forAttribute: "id")
+        
+        do {
+            var metadata = Metadata()
+            metadata.created = Date()
+            let message = try archive.insert(document, metadata: metadata)
+            XCTAssertNotNil(message)
+            
+            try archive.delete(message.messageID)
+            
+            XCTAssertThrowsError(try archive.message(with: message.messageID)) {error in
+                XCTAssertEqual(error as? ArchiveError, .doesNotExist)
+            }
+            
+            XCTAssertThrowsError(try archive.document(for: message.messageID))
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
 }

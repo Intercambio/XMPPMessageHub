@@ -82,7 +82,6 @@ public class FileArchive: Archive {
                         Schema.metadata_created <- metadata.created,
                         Schema.metadata_transmitted <- metadata.transmitted,
                         Schema.metadata_read <- metadata.read,
-                        Schema.metadata_thrashed <- metadata.thrashed,
                         Schema.metadata_error <- metadata.error as? NSError
                     )
                 )
@@ -106,7 +105,6 @@ public class FileArchive: Archive {
                     Schema.metadata_created <- metadata.created,
                     Schema.metadata_transmitted <- metadata.transmitted,
                     Schema.metadata_read <- metadata.read,
-                    Schema.metadata_thrashed <- metadata.thrashed,
                     Schema.metadata_error <- metadata.error as? NSError
                 ))
                 if updated != 1 {
@@ -119,6 +117,21 @@ public class FileArchive: Archive {
         }
     }
     
+    public func delete(_ messageID: MessageID) throws {
+        try queue.sync {
+            guard
+                let store = self.store,
+                let db = self.db
+                else { throw ArchiveError.notSetup }
+            
+            try db.transaction {
+                let _ = try db.run(Schema.message.filter(Schema.message_uuid == messageID.uuid).delete())
+                let _ = try db.run(Schema.metadata.filter(Schema.metadata_uuid == messageID.uuid).delete())
+            }
+            try store.delete(documentWith: messageID.uuid)
+        }
+    }
+    
     public func message(with messageID: MessageID) throws -> Message {
         return try queue.sync {
             let filter = Schema.metadata[Schema.metadata_uuid] == messageID.uuid
@@ -128,7 +141,10 @@ public class FileArchive: Archive {
     
     public func document(for messageID: MessageID) throws -> PXDocument {
         return try queue.sync {
-            guard let store = self.store else { throw ArchiveError.notSetup }
+            guard
+                let store = self.store
+                else { throw ArchiveError.notSetup }
+            
             return try store.read(documentWith: messageID.uuid)
         }
     }
@@ -283,7 +299,6 @@ public class FileArchive: Archive {
         let transmitted = Expression<Date>("transmitted")
         let created = Expression<Date>("created")
         
-        query = query.filter(Schema.metadata[Schema.metadata_thrashed] == nil)
         query = query.order([
             transmitted.desc,
             created.desc,
@@ -299,7 +314,6 @@ public class FileArchive: Archive {
             Schema.metadata[Schema.metadata_created],
             Schema.metadata[Schema.metadata_transmitted],
             Schema.metadata[Schema.metadata_read],
-            Schema.metadata[Schema.metadata_thrashed],
             Schema.metadata[Schema.metadata_error],
             (Schema.metadata[Schema.metadata_transmitted] ?? Date.distantFuture).alias(name: "transmitted"),
             (Schema.metadata[Schema.metadata_created] ?? Date.distantFuture).alias(name: "created")
@@ -320,7 +334,6 @@ public class FileArchive: Archive {
         metadata.created = row.get(Schema.metadata[Schema.metadata_created])
         metadata.transmitted = row.get(Schema.metadata[Schema.metadata_transmitted])
         metadata.read = row.get(Schema.metadata[Schema.metadata_read])
-        metadata.thrashed = row.get(Schema.metadata[Schema.metadata_thrashed])
         metadata.error = row.get(Schema.metadata[Schema.metadata_error])
         
         return Message(messageID: messageID, metadata: metadata)

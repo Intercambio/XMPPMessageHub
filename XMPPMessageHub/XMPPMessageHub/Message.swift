@@ -23,7 +23,6 @@ public struct Metadata {
     public var created: Date?
     public var transmitted: Date?
     public var read: Date?
-    public var thrashed: Date?
     public var error: Error?
 }
 

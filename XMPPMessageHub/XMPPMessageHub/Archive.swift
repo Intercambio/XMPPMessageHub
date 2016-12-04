@@ -24,6 +24,7 @@ public protocol Archive {
     
     func insert(_ document: PXDocument, metadata: Metadata) throws -> Message
     func update(_ metadata: Metadata, for messageID: MessageID) throws -> Message
+    func delete(_ messageID: MessageID) throws
     
     func document(for messageID: MessageID) throws -> PXDocument
     
