@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F625A54A1DF44F2B0005AFD3 /* HubTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F625A5491DF44F2B0005AFD3 /* HubTests.swift */; };
+		F625A54B1DF44F2B0005AFD3 /* HubTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F625A5491DF44F2B0005AFD3 /* HubTests.swift */; };
 		F673D1DD1DE1BB55009B3C99 /* XMPPMessageHub.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D1D31DE1BB55009B3C99 /* XMPPMessageHub.framework */; };
 		F673D1E41DE1BB55009B3C99 /* XMPPMessageHub.h in Headers */ = {isa = PBXBuildFile; fileRef = F673D1D61DE1BB55009B3C99 /* XMPPMessageHub.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F673D1FB1DE1C02D009B3C99 /* XMPPMessageHub.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D1F21DE1C02C009B3C99 /* XMPPMessageHub.framework */; };
@@ -106,6 +108,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F625A5491DF44F2B0005AFD3 /* HubTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubTests.swift; sourceTree = "<group>"; };
 		F673D1D31DE1BB55009B3C99 /* XMPPMessageHub.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = XMPPMessageHub.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F673D1D61DE1BB55009B3C99 /* XMPPMessageHub.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMPPMessageHub.h; sourceTree = "<group>"; };
 		F673D1D71DE1BB55009B3C99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -235,6 +238,7 @@
 			isa = PBXGroup;
 			children = (
 				F6FCE96B1DE1C87F0088A662 /* TestCase.swift */,
+				F625A5491DF44F2B0005AFD3 /* HubTests.swift */,
 				F69A257F1DF441A9007D5C35 /* FileArchvieManagerTests.swift */,
 				F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */,
 				F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */,
@@ -551,6 +555,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F673D23B1DE1C352009B3C99 /* ArchiveTests.swift in Sources */,
+				F625A54A1DF44F2B0005AFD3 /* HubTests.swift in Sources */,
 				F6FCE9751DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */,
 				F6FCE96C1DE1C87F0088A662 /* TestCase.swift in Sources */,
 				F69A25801DF441A9007D5C35 /* FileArchvieManagerTests.swift in Sources */,
@@ -579,6 +584,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F673D23C1DE1C352009B3C99 /* ArchiveTests.swift in Sources */,
+				F625A54B1DF44F2B0005AFD3 /* HubTests.swift in Sources */,
 				F6FCE9761DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */,
 				F6FCE96D1DE1C87F0088A662 /* TestCase.swift in Sources */,
 				F69A25811DF441A9007D5C35 /* FileArchvieManagerTests.swift in Sources */,
