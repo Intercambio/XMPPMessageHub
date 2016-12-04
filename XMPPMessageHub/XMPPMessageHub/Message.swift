@@ -9,6 +9,9 @@
 import Foundation
 import CoreXMPP
 
+public protocol TransmissionError: Error, NSSecureCoding {
+}
+
 public enum MessageType: String {
     case chat = "chat"
     case error = "error"
@@ -26,7 +29,7 @@ public struct Metadata {
     public var created: Date?
     public var transmitted: Date?
     public var read: Date?
-    public var error: Error?
+    public var error: TransmissionError?
 }
 
 public struct MessageID: Equatable {
@@ -50,4 +53,7 @@ extension MessageID: CustomDebugStringConvertible {
     public var debugDescription: String {
         return "MessgaeID(uuid: \(uuid.uuidString), \(account.stringValue) \(direction.rawValue) \(counterpart.stringValue), type: \(type.rawValue))"
     }
+}
+
+extension NSError: TransmissionError {
 }

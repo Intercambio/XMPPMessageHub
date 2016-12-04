@@ -149,10 +149,17 @@ class ArchiveTests: TestCase {
             var message = try archive.insert(document, metadata: metadata)
             XCTAssertNotNil(message)
             
+            let error = NSError(domain: "MyError", code: 234, userInfo: ["some": "user info"])
+            
             metadata.read = Date.distantFuture
+            metadata.error = error
             message = try archive.update(metadata, for: message.messageID)
             
+            XCTAssertNotNil(message.metadata.read)
             XCTAssertEqual(message.metadata.read, Date.distantFuture)
+            
+            XCTAssertNotNil(message.metadata.error)
+            XCTAssertEqual(message.metadata.error as? NSError, error)
             
         } catch {
             XCTFail("\(error)")
