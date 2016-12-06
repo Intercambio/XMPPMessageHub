@@ -18,7 +18,7 @@ class MessageCarbonsFilterTests: TestCase {
             else { XCTFail(); return }
         
         do {
-            let filter = MessageCarbonsReceivedFilter()
+            let filter = MessageCarbonsFilter(direction: .received)
             let result = try filter.apply(to: document, with: Metadata())
             
             let document = result.document
@@ -40,7 +40,7 @@ class MessageCarbonsFilterTests: TestCase {
             else { XCTFail(); return }
         
         do {
-            let filter = MessageCarbonsSentFilter()
+            let filter = MessageCarbonsFilter(direction: .sent)
             let result = try filter.apply(to: document, with: Metadata())
             
             let document = result.document

@@ -44,8 +44,8 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
             label: "Hub",
             attributes: [.concurrent])
         
-        filter.append(MessageCarbonsReceivedFilter())
-        filter.append(MessageCarbonsSentFilter())
+        filter.append(MessageCarbonsFilter(direction: .received))
+        filter.append(MessageCarbonsFilter(direction: .sent))
     }
     
     // MARK: - ArchvieManager
