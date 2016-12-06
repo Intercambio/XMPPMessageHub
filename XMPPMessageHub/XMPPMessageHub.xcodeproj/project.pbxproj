@@ -21,6 +21,8 @@
 		F66425361DF63AFF001F8F6E /* xep_0280_received.xml in Resources */ = {isa = PBXBuildFile; fileRef = F66425341DF63AFF001F8F6E /* xep_0280_received.xml */; };
 		F66425381DF645BC001F8F6E /* xep_0280_sent.xml in Resources */ = {isa = PBXBuildFile; fileRef = F66425371DF645BC001F8F6E /* xep_0280_sent.xml */; };
 		F66425391DF645BC001F8F6E /* xep_0280_sent.xml in Resources */ = {isa = PBXBuildFile; fileRef = F66425371DF645BC001F8F6E /* xep_0280_sent.xml */; };
+		F664253B1DF6A429001F8F6E /* InboundMesageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F664253A1DF6A429001F8F6E /* InboundMesageHandler.swift */; };
+		F664253C1DF6A429001F8F6E /* InboundMesageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F664253A1DF6A429001F8F6E /* InboundMesageHandler.swift */; };
 		F673D1DD1DE1BB55009B3C99 /* XMPPMessageHub.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D1D31DE1BB55009B3C99 /* XMPPMessageHub.framework */; };
 		F673D1E41DE1BB55009B3C99 /* XMPPMessageHub.h in Headers */ = {isa = PBXBuildFile; fileRef = F673D1D61DE1BB55009B3C99 /* XMPPMessageHub.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F673D1FB1DE1C02D009B3C99 /* XMPPMessageHub.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D1F21DE1C02C009B3C99 /* XMPPMessageHub.framework */; };
@@ -127,6 +129,7 @@
 		F66425311DF63A12001F8F6E /* MessageCarbonsReceivedFilterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCarbonsReceivedFilterTests.swift; sourceTree = "<group>"; };
 		F66425341DF63AFF001F8F6E /* xep_0280_received.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = xep_0280_received.xml; sourceTree = "<group>"; };
 		F66425371DF645BC001F8F6E /* xep_0280_sent.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = xep_0280_sent.xml; sourceTree = "<group>"; };
+		F664253A1DF6A429001F8F6E /* InboundMesageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InboundMesageHandler.swift; sourceTree = "<group>"; };
 		F673D1D31DE1BB55009B3C99 /* XMPPMessageHub.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = XMPPMessageHub.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F673D1D61DE1BB55009B3C99 /* XMPPMessageHub.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMPPMessageHub.h; sourceTree = "<group>"; };
 		F673D1D71DE1BB55009B3C99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -347,6 +350,7 @@
 			isa = PBXGroup;
 			children = (
 				F69A25761DF43470007D5C35 /* Hub.swift */,
+				F664253A1DF6A429001F8F6E /* InboundMesageHandler.swift */,
 			);
 			name = Hub;
 			sourceTree = "<group>";
@@ -582,6 +586,7 @@
 				F6FCE9781DE3C4810088A662 /* Message.swift in Sources */,
 				F6FCE9901DF0D68F0088A662 /* SQLite.swift in Sources */,
 				F69A257A1DF436AD007D5C35 /* ArchiveManager.swift in Sources */,
+				F664253B1DF6A429001F8F6E /* InboundMesageHandler.swift in Sources */,
 				F69A257D1DF440F2007D5C35 /* FileArchvieManager.swift in Sources */,
 				F673D21C1DE1C245009B3C99 /* FileArchive.swift in Sources */,
 				F688F46F1DF304E400B4D3B4 /* Archive.swift in Sources */,
@@ -615,6 +620,7 @@
 				F6FCE9791DE3C4810088A662 /* Message.swift in Sources */,
 				F6FCE9911DF0D68F0088A662 /* SQLite.swift in Sources */,
 				F69A257B1DF436AD007D5C35 /* ArchiveManager.swift in Sources */,
+				F664253C1DF6A429001F8F6E /* InboundMesageHandler.swift in Sources */,
 				F69A257E1DF440F2007D5C35 /* FileArchvieManager.swift in Sources */,
 				F673D21D1DE1C245009B3C99 /* FileArchive.swift in Sources */,
 				F688F4701DF304E400B4D3B4 /* Archive.swift in Sources */,
