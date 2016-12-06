@@ -36,7 +36,7 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
     private var pendingMessageDispatch: [PendingMessageDispatch] = []
     private var messagesBeeingTransmitted: [MessageID] = []
     
-    private var filter: [MessageFilter] = []
+    private var inboundFilter: [MessageFilter] = []
     
     required public init(archvieManager: ArchvieManager) {
         self.archvieManager = archvieManager
@@ -44,8 +44,8 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
             label: "Hub",
             attributes: [.concurrent])
         
-        filter.append(MessageCarbonsFilter(direction: .received))
-        filter.append(MessageCarbonsFilter(direction: .sent))
+        inboundFilter.append(MessageCarbonsFilter(direction: .received))
+        inboundFilter.append(MessageCarbonsFilter(direction: .sent))
     }
     
     // MARK: - ArchvieManager
@@ -126,7 +126,7 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
                 let now = Date()
                 let metadata = Metadata(created: now, transmitted: now, read: nil, error: nil, forwarded: false)
                 
-                let result = try self.filter.reduce((document: document, metadata: metadata)) { input, filter in
+                let result = try self.inboundFilter.reduce((document: document, metadata: metadata)) { input, filter in
                     return try filter.apply(to: input.document, with: input.metadata)
                 }
                 
