@@ -11,6 +11,16 @@
 		F625A54B1DF44F2B0005AFD3 /* HubTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F625A5491DF44F2B0005AFD3 /* HubTests.swift */; };
 		F625A54D1DF4624E0005AFD3 /* ArchiveProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F625A54C1DF4624E0005AFD3 /* ArchiveProxy.swift */; };
 		F625A54E1DF4624E0005AFD3 /* ArchiveProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F625A54C1DF4624E0005AFD3 /* ArchiveProxy.swift */; };
+		F664252C1DF6371C001F8F6E /* MessageFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F664252B1DF6371C001F8F6E /* MessageFilter.swift */; };
+		F664252D1DF6371C001F8F6E /* MessageFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F664252B1DF6371C001F8F6E /* MessageFilter.swift */; };
+		F664252F1DF638DF001F8F6E /* MessageCarbonsFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F664252E1DF638DF001F8F6E /* MessageCarbonsFilter.swift */; };
+		F66425301DF638DF001F8F6E /* MessageCarbonsFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F664252E1DF638DF001F8F6E /* MessageCarbonsFilter.swift */; };
+		F66425321DF63A12001F8F6E /* MessageCarbonsReceivedFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66425311DF63A12001F8F6E /* MessageCarbonsReceivedFilterTests.swift */; };
+		F66425331DF63A12001F8F6E /* MessageCarbonsReceivedFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66425311DF63A12001F8F6E /* MessageCarbonsReceivedFilterTests.swift */; };
+		F66425351DF63AFF001F8F6E /* xep_0280_received.xml in Resources */ = {isa = PBXBuildFile; fileRef = F66425341DF63AFF001F8F6E /* xep_0280_received.xml */; };
+		F66425361DF63AFF001F8F6E /* xep_0280_received.xml in Resources */ = {isa = PBXBuildFile; fileRef = F66425341DF63AFF001F8F6E /* xep_0280_received.xml */; };
+		F66425381DF645BC001F8F6E /* xep_0280_sent.xml in Resources */ = {isa = PBXBuildFile; fileRef = F66425371DF645BC001F8F6E /* xep_0280_sent.xml */; };
+		F66425391DF645BC001F8F6E /* xep_0280_sent.xml in Resources */ = {isa = PBXBuildFile; fileRef = F66425371DF645BC001F8F6E /* xep_0280_sent.xml */; };
 		F673D1DD1DE1BB55009B3C99 /* XMPPMessageHub.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D1D31DE1BB55009B3C99 /* XMPPMessageHub.framework */; };
 		F673D1E41DE1BB55009B3C99 /* XMPPMessageHub.h in Headers */ = {isa = PBXBuildFile; fileRef = F673D1D61DE1BB55009B3C99 /* XMPPMessageHub.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F673D1FB1DE1C02D009B3C99 /* XMPPMessageHub.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D1F21DE1C02C009B3C99 /* XMPPMessageHub.framework */; };
@@ -112,6 +122,11 @@
 /* Begin PBXFileReference section */
 		F625A5491DF44F2B0005AFD3 /* HubTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubTests.swift; sourceTree = "<group>"; };
 		F625A54C1DF4624E0005AFD3 /* ArchiveProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveProxy.swift; sourceTree = "<group>"; };
+		F664252B1DF6371C001F8F6E /* MessageFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageFilter.swift; sourceTree = "<group>"; };
+		F664252E1DF638DF001F8F6E /* MessageCarbonsFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCarbonsFilter.swift; sourceTree = "<group>"; };
+		F66425311DF63A12001F8F6E /* MessageCarbonsReceivedFilterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCarbonsReceivedFilterTests.swift; sourceTree = "<group>"; };
+		F66425341DF63AFF001F8F6E /* xep_0280_received.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = xep_0280_received.xml; sourceTree = "<group>"; };
+		F66425371DF645BC001F8F6E /* xep_0280_sent.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = xep_0280_sent.xml; sourceTree = "<group>"; };
 		F673D1D31DE1BB55009B3C99 /* XMPPMessageHub.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = XMPPMessageHub.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F673D1D61DE1BB55009B3C99 /* XMPPMessageHub.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMPPMessageHub.h; sourceTree = "<group>"; };
 		F673D1D71DE1BB55009B3C99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -205,6 +220,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F664252A1DF63708001F8F6E /* Filter */ = {
+			isa = PBXGroup;
+			children = (
+				F664252B1DF6371C001F8F6E /* MessageFilter.swift */,
+				F664252E1DF638DF001F8F6E /* MessageCarbonsFilter.swift */,
+			);
+			name = Filter;
+			sourceTree = "<group>";
+		};
 		F673D1C91DE1BB55009B3C99 = {
 			isa = PBXGroup;
 			children = (
@@ -231,6 +255,7 @@
 			children = (
 				F6FCE9771DE3C4810088A662 /* Message.swift */,
 				F69A25751DF4345F007D5C35 /* Hub */,
+				F664252A1DF63708001F8F6E /* Filter */,
 				F6FCE97A1DEB416D0088A662 /* Archive */,
 				F673D23E1DE1C460009B3C99 /* Supporting Files */,
 			);
@@ -246,6 +271,9 @@
 				F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */,
 				F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */,
 				F6FCE9851DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift */,
+				F66425311DF63A12001F8F6E /* MessageCarbonsReceivedFilterTests.swift */,
+				F66425341DF63AFF001F8F6E /* xep_0280_received.xml */,
+				F66425371DF645BC001F8F6E /* xep_0280_sent.xml */,
 				F673D23D1DE1C435009B3C99 /* Supporting Files */,
 			);
 			path = XMPPMessageHubTests;
@@ -496,6 +524,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F66425351DF63AFF001F8F6E /* xep_0280_received.xml in Resources */,
+				F66425381DF645BC001F8F6E /* xep_0280_sent.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -510,6 +540,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F66425361DF63AFF001F8F6E /* xep_0280_received.xml in Resources */,
+				F66425391DF645BC001F8F6E /* xep_0280_sent.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -543,6 +575,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F69A25771DF43470007D5C35 /* Hub.swift in Sources */,
+				F664252C1DF6371C001F8F6E /* MessageFilter.swift in Sources */,
+				F664252F1DF638DF001F8F6E /* MessageCarbonsFilter.swift in Sources */,
 				F625A54D1DF4624E0005AFD3 /* ArchiveProxy.swift in Sources */,
 				F6FCE9721DE3B1AA0088A662 /* FileArchiveSetup.swift in Sources */,
 				F6FCE9781DE3C4810088A662 /* Message.swift in Sources */,
@@ -564,6 +598,7 @@
 				F6FCE9751DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */,
 				F6FCE96C1DE1C87F0088A662 /* TestCase.swift in Sources */,
 				F69A25801DF441A9007D5C35 /* FileArchvieManagerTests.swift in Sources */,
+				F66425321DF63A12001F8F6E /* MessageCarbonsReceivedFilterTests.swift in Sources */,
 				F6FCE9861DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -573,6 +608,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F69A25781DF43470007D5C35 /* Hub.swift in Sources */,
+				F664252D1DF6371C001F8F6E /* MessageFilter.swift in Sources */,
+				F66425301DF638DF001F8F6E /* MessageCarbonsFilter.swift in Sources */,
 				F625A54E1DF4624E0005AFD3 /* ArchiveProxy.swift in Sources */,
 				F6FCE9731DE3B1AA0088A662 /* FileArchiveSetup.swift in Sources */,
 				F6FCE9791DE3C4810088A662 /* Message.swift in Sources */,
@@ -594,6 +631,7 @@
 				F6FCE9761DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */,
 				F6FCE96D1DE1C87F0088A662 /* TestCase.swift in Sources */,
 				F69A25811DF441A9007D5C35 /* FileArchvieManagerTests.swift in Sources */,
+				F66425331DF63A12001F8F6E /* MessageCarbonsReceivedFilterTests.swift in Sources */,
 				F6FCE9871DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
