@@ -1,5 +1,5 @@
 //
-//  MessageCarbonsReceivedFilterTests.swift
+//  MessageCarbonsFilterTests.swift
 //  XMPPMessageHub
 //
 //  Created by Tobias Kräntzer on 06.12.16.
@@ -10,11 +10,11 @@ import XCTest
 import PureXML
 @testable import XMPPMessageHub
 
-class MessageCarbonsReceivedFilterTests: TestCase {
+class MessageCarbonsFilterTests: TestCase {
     
-    func testFilter() {
+    func testReceivedFilter() {
         guard
-            let document = PXDocument(named: "xep_0280_forwarded.xml", in: Bundle(for: MessageCarbonsReceivedFilterTests.self))
+            let document = PXDocument(named: "xep_0280_received.xml", in: Bundle(for: MessageCarbonsFilterTests.self))
             else { XCTFail(); return }
         
         do {
@@ -29,6 +29,28 @@ class MessageCarbonsReceivedFilterTests: TestCase {
             let metadata = result.metadata
             XCTAssertTrue(metadata.forwarded)
 
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+    
+    func testSentFilter() {
+        guard
+            let document = PXDocument(named: "xep_0280_sent.xml", in: Bundle(for: MessageCarbonsFilterTests.self))
+            else { XCTFail(); return }
+        
+        do {
+            let filter = MessageCarbonsSentFilter()
+            let result = try filter.apply(to: document, with: Metadata())
+            
+            let document = result.document
+            XCTAssertEqual(document.root.value(forAttribute: "id") as? String, "456")
+            XCTAssertEqual(document.root.value(forAttribute: "from") as? String, "romeo@montague.example/home")
+            XCTAssertEqual(document.root.value(forAttribute: "to") as? String, "juliet@capulet.example/balcony")
+            
+            let metadata = result.metadata
+            XCTAssertTrue(metadata.forwarded)
+            
         } catch {
             XCTFail("\(error)")
         }
