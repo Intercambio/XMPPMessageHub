@@ -14,39 +14,35 @@ public enum HubError: Error {
     case invalidDocument
 }
 
-public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler, InboundMesageHandlerDelegate {
+public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler, InboundMesageHandlerDelegate, OutboundMessageHandlerDelegate {
     
     public static let MessageKey = "XMPPMessageHubMessageKey"
     public static let DidAddMessageNotification = Notification.Name(rawValue: "XMPPMessageHubDidAddMessageNotification")
     public static let DidUpdateMessageNotification = Notification.Name(rawValue: "XMPPMessageHubDidUpdateMessageNotification")
     
-    public weak var messageHandler: MessageHandler?
-    
-    private let archvieManager: ArchvieManager
-    
-    private struct PendingMessageDispatch {
-        let document: PXDocument
-        let metadata: Metadata
-        let account: JID
-        var completion: ((Error?) -> Void)?
+    public weak var messageHandler: MessageHandler? {
+        didSet{
+            outboundMessageHandler.messageHandler = messageHandler
+        }
     }
     
     private var archiveByAccount: [JID:Archive] = [:]
-    private var messagesBeeingTransmitted: [MessageID] = []
     
-    private let queue: DispatchQueue
-    private let outboundFilter: [MessageFilter]
+    private let archvieManager: ArchvieManager
     private let inboundMessageHandler: InboundMesageHandler
+    private let outboundMessageHandler: OutboundMessageHandler
+    private let queue: DispatchQueue
     
     required public init(archvieManager: ArchvieManager, inboundFilter: [MessageFilter] = [], outboundFilter: [MessageFilter] = []) {
         self.archvieManager = archvieManager
-        self.outboundFilter = outboundFilter
         self.inboundMessageHandler = InboundMesageHandler(archvieManager: archvieManager, inboundFilter: inboundFilter)
+        self.outboundMessageHandler = OutboundMessageHandler(outboundFilter: outboundFilter)
         queue = DispatchQueue(
             label: "Hub",
             attributes: [.concurrent])
         super.init()
         self.inboundMessageHandler.delegate = self
+        self.outboundMessageHandler.delegate = self
     }
     
     // MARK: - ArchvieManager
@@ -75,43 +71,7 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
     
     func archiveProxy(_ proxy: ArchiveProxy, didInsert message: Message, with document: PXDocument) {
         queue.async(flags: [.barrier]) {
-            guard
-                self.messagesBeeingTransmitted.contains(message.messageID) == false,
-                let handler = self.messageHandler
-                else { return }
-            
-            do {
-                let result = try self.outboundFilter.reduce((document: document, metadata: message.metadata)) { input, filter in
-                    return try filter.apply(to: input.document, with: input.metadata)
-                }
-                
-                let archive = proxy.archive
-                self.messagesBeeingTransmitted.append(message.messageID)
-                handler.handleMessage(result.document) { error in
-                    self.queue.async(flags: [.barrier]) {
-                        if let idx = self.messagesBeeingTransmitted.index(of: message.messageID) {
-                            self.messagesBeeingTransmitted.remove(at: idx)
-                        }
-                        do {
-                            let now = Date()
-                            let message = try archive.update(
-                                transmitted: error == nil ? now :  nil,
-                                error: error as? TransmissionError,
-                                for: message.messageID)
-                            DispatchQueue.main.async {
-                                NotificationCenter.default.post(
-                                    name: Hub.DidUpdateMessageNotification,
-                                    object: self,
-                                    userInfo: [Hub.MessageKey:message])
-                            }
-                        } catch {
-                            NSLog("Failed to update message metadata: \(error)")
-                        }
-                    }
-                }
-            } catch {
-                NSLog("Failed to apply outbound filter: \(error)")
-            }
+            self.outboundMessageHandler.send(message, with: document, in: proxy.archive)
         }
     }
     
@@ -122,6 +82,30 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
             DispatchQueue.main.async {
                 NotificationCenter.default.post(
                     name: Hub.DidAddMessageNotification,
+                    object: self,
+                    userInfo: [Hub.MessageKey:message])
+            }
+        }
+    }
+    
+    // MARK: - OutboundMessageHandlerDelegate
+    
+    func outboundMessageHandler(_ handler: OutboundMessageHandler, didSent message: Message) {
+        queue.async {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: Hub.DidUpdateMessageNotification,
+                    object: self,
+                    userInfo: [Hub.MessageKey:message])
+            }
+        }
+    }
+    
+    func outboundMessageHandler(_ handler: OutboundMessageHandler, failedToSend message: Message, with error: Error) {
+        queue.async {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: Hub.DidUpdateMessageNotification,
                     object: self,
                     userInfo: [Hub.MessageKey:message])
             }

@@ -31,7 +31,7 @@ class InboundMesageHandler: NSObject, MessageHandler {
     private let archvieManager: ArchvieManager
     private let inboundFilter: [MessageFilter]
     
-    required public init(archvieManager: ArchvieManager, inboundFilter: [MessageFilter]) {
+    required init(archvieManager: ArchvieManager, inboundFilter: [MessageFilter]) {
         self.archvieManager = archvieManager
         self.inboundFilter = inboundFilter
         queue = DispatchQueue(
