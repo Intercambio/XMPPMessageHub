@@ -22,7 +22,7 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
     
     public weak var messageHandler: MessageHandler?
     
-    let archvieManager: ArchvieManager
+    private let archvieManager: ArchvieManager
     
     private struct PendingMessageDispatch {
         let document: PXDocument
@@ -36,16 +36,16 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
     private var pendingMessageDispatch: [PendingMessageDispatch] = []
     private var messagesBeeingTransmitted: [MessageID] = []
     
-    private var inboundFilter: [MessageFilter] = []
+    private let inboundFilter: [MessageFilter]
+    private let outboundFilter: [MessageFilter]
     
-    required public init(archvieManager: ArchvieManager) {
+    required public init(archvieManager: ArchvieManager, inboundFilter: [MessageFilter] = [], outboundFilter: [MessageFilter] = []) {
         self.archvieManager = archvieManager
+        self.inboundFilter = inboundFilter
+        self.outboundFilter = outboundFilter
         queue = DispatchQueue(
             label: "Hub",
             attributes: [.concurrent])
-        
-        inboundFilter.append(MessageCarbonsFilter(direction: .received))
-        inboundFilter.append(MessageCarbonsFilter(direction: .sent))
     }
     
     // MARK: - ArchvieManager
@@ -79,30 +79,37 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
                 let handler = self.messageHandler
                 else { return }
             
-            let archive = proxy.archive
-            self.messagesBeeingTransmitted.append(message.messageID)
-            handler.handleMessage(document) { error in
-                self.queue.async(flags: [.barrier]) {
-                    if let idx = self.messagesBeeingTransmitted.index(of: message.messageID) {
-                        self.messagesBeeingTransmitted.remove(at: idx)
-                    }
-                    do {
-                        let now = Date()
-                        let message = try archive.update(
-                            transmitted: error == nil ? now :  nil,
-                            error: error as? TransmissionError,
-                            for: message.messageID)
-                        DispatchQueue.main.async {
-                            NotificationCenter.default.post(
-                                name: Hub.DidUpdateMessageNotification,
-                                object: self,
-                                userInfo: [Hub.MessageKey:message])
+            do {
+                let result = try self.outboundFilter.reduce((document: document, metadata: message.metadata)) { input, filter in
+                    return try filter.apply(to: input.document, with: input.metadata)
+                }
+                
+                let archive = proxy.archive
+                self.messagesBeeingTransmitted.append(message.messageID)
+                handler.handleMessage(result.document) { error in
+                    self.queue.async(flags: [.barrier]) {
+                        if let idx = self.messagesBeeingTransmitted.index(of: message.messageID) {
+                            self.messagesBeeingTransmitted.remove(at: idx)
                         }
-                    } catch {
-                        print(">>> \(error)")
-                        // TODO: Handle error ...
+                        do {
+                            let now = Date()
+                            let message = try archive.update(
+                                transmitted: error == nil ? now :  nil,
+                                error: error as? TransmissionError,
+                                for: message.messageID)
+                            DispatchQueue.main.async {
+                                NotificationCenter.default.post(
+                                    name: Hub.DidUpdateMessageNotification,
+                                    object: self,
+                                    userInfo: [Hub.MessageKey:message])
+                            }
+                        } catch {
+                            NSLog("Failed to update message metadata: \(error)")
+                        }
                     }
                 }
+            } catch {
+                NSLog("Failed to apply outbound filter: \(error)")
             }
         }
     }
