@@ -52,8 +52,9 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
             if let archive = self.archiveByAccount[account] {
                 completion(ArchiveProxy(archive: archive, delegate: self), nil)
             } else {
-                self.archvieManager.archive(for: account, create: create){
+                self.archvieManager.archive(for: account, create: create) {
                     archive, error in
+                    self.archiveByAccount[account] = archive
                     completion(archive != nil ? ArchiveProxy(archive: archive!, delegate: self) : nil, error)
                 }
             }

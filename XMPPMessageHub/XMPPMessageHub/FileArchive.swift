@@ -44,6 +44,13 @@ public class FileArchive: Archive {
         }
     }
     
+    public func close() {
+        queue.sync(flags: [.barrier]) {
+            self.store = nil
+            self.db = nil
+        }
+    }
+    
     private func open() throws {
         let setup = Setup(directory: directory)
         let configuration = try setup.run()

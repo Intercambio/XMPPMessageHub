@@ -21,7 +21,7 @@ public class FileArchvieManager: ArchvieManager {
     }
     
     private let queue: DispatchQueue
-    private var archiveByAccount: [JID:Archive] = [:]
+    private var archiveByAccount: [JID:FileArchive] = [:]
     private var pendingArchivesByAccount: [JID:PendingArchive] = [:]
     
     required public init(directory: URL) {
@@ -53,8 +53,9 @@ public class FileArchvieManager: ArchvieManager {
     public func deleteArchive(for account: JID, completion: @escaping ((Error?) -> Void) = {_ in}) {
         queue.async {
             do {
-                if self.archiveByAccount[account] != nil {
+                if let archive = self.archiveByAccount[account] {
                     self.archiveByAccount[account] = nil
+                    archive.close()
                 } else if let pendingArchvie = self.pendingArchivesByAccount[account] {
                     self.pendingArchivesByAccount[account] = nil
                     for completion in pendingArchvie.handler {
