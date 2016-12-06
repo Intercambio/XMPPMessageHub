@@ -26,6 +26,7 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
     
     private struct PendingMessageDispatch {
         let document: PXDocument
+        let metadata: Metadata
         let account: JID
         var completion: ((Error?) -> Void)?
     }
@@ -35,11 +36,15 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
     private var pendingMessageDispatch: [PendingMessageDispatch] = []
     private var messagesBeeingTransmitted: [MessageID] = []
     
+    private var filter: [MessageFilter] = []
+    
     required public init(archvieManager: ArchvieManager) {
         self.archvieManager = archvieManager
         queue = DispatchQueue(
             label: "Hub",
             attributes: [.concurrent])
+        
+        filter.append(MessageCarbonsReceivedFilter())
     }
     
     // MARK: - ArchvieManager
@@ -117,11 +122,18 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
         queue.async(flags: [.barrier]) {
             let account = to.bare()
             do {
+                let now = Date()
+                let metadata = Metadata(created: now, transmitted: now, read: nil, error: nil, forwarded: false)
+                
+                let result = try self.filter.reduce((document: document, metadata: metadata)) { input, filter in
+                    return try filter.apply(to: input.document, with: input.metadata)
+                }
+                
                 if let archive = self.archiveByAccount[account] {
-                    try self.insert(document, in: archive)
+                    try self.insert(result.document, with: result.metadata, in: archive)
                     completion?(nil)
                 } else {
-                    let pending = PendingMessageDispatch(document: document, account: account, completion: completion)
+                    let pending = PendingMessageDispatch(document: result.document, metadata: result.metadata, account: account, completion: completion)
                     self.pendingMessageDispatch.append(pending)
                     self.openArchive(for: account)
                 }
@@ -133,9 +145,7 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
     
     // MARK: -
     
-    private func insert(_ document: PXDocument, in archive: Archive) throws {
-        let now = Date()
-        let metadata = Metadata(created: now, transmitted: now, read: nil, error: nil)
+    private func insert(_ document: PXDocument, with metadata: Metadata, in archive: Archive) throws {
         let message = try archive.insert(document, metadata: metadata)
         DispatchQueue.main.async {
             NotificationCenter.default.post(
@@ -160,7 +170,7 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
                     }
                 
                 do {
-                    try self.insert(pending.document, in: archive)
+                    try self.insert(pending.document, with: pending.metadata, in: archive)
                     pending.completion?(nil)
                 } catch {
                     pending.completion?(error)
