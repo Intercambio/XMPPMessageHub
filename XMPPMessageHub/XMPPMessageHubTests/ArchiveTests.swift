@@ -153,6 +153,7 @@ class ArchiveTests: TestCase {
             
             metadata.read = Date.distantFuture
             metadata.error = error
+            metadata.forwarded = true
             message = try archive.update(metadata, for: message.messageID)
             
             XCTAssertNotNil(message.metadata.read)
@@ -160,6 +161,8 @@ class ArchiveTests: TestCase {
             
             XCTAssertNotNil(message.metadata.error)
             XCTAssertEqual(message.metadata.error as? NSError, error)
+
+            XCTAssertTrue(message.metadata.forwarded)
             
         } catch {
             XCTFail("\(error)")

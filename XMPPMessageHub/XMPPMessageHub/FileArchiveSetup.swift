@@ -25,6 +25,7 @@ extension FileArchive {
         static let metadata_transmitted = Expression<Date?>("transmitted")
         static let metadata_read = Expression<Date?>("read")
         static let metadata_error = Expression<NSError?>("error")
+        static let metadata_forwarded = Expression<Bool>("forwarded")
     }
 }
 
@@ -102,6 +103,7 @@ extension FileArchive {
                 t.column(Schema.metadata_transmitted)
                 t.column(Schema.metadata_read)
                 t.column(Schema.metadata_error)
+                t.column(Schema.metadata_forwarded)
                 t.foreignKey(Schema.metadata_uuid, references: Schema.message, Schema.message_uuid)
             })
             try db.run(Schema.metadata.createIndex(Schema.metadata_created))
