@@ -25,6 +25,8 @@
 		F664253C1DF6A429001F8F6E /* InboundMesageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F664253A1DF6A429001F8F6E /* InboundMesageHandler.swift */; };
 		F664253E1DF6A93B001F8F6E /* OutboundMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F664253D1DF6A93B001F8F6E /* OutboundMessageHandler.swift */; };
 		F664253F1DF6A93B001F8F6E /* OutboundMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F664253D1DF6A93B001F8F6E /* OutboundMessageHandler.swift */; };
+		F66425421DF94E15001F8F6E /* MessageCarbonsDispatchHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66425411DF94E15001F8F6E /* MessageCarbonsDispatchHandler.swift */; };
+		F66425431DF94E15001F8F6E /* MessageCarbonsDispatchHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66425411DF94E15001F8F6E /* MessageCarbonsDispatchHandler.swift */; };
 		F673D1DD1DE1BB55009B3C99 /* XMPPMessageHub.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D1D31DE1BB55009B3C99 /* XMPPMessageHub.framework */; };
 		F673D1E41DE1BB55009B3C99 /* XMPPMessageHub.h in Headers */ = {isa = PBXBuildFile; fileRef = F673D1D61DE1BB55009B3C99 /* XMPPMessageHub.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F673D1FB1DE1C02D009B3C99 /* XMPPMessageHub.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D1F21DE1C02C009B3C99 /* XMPPMessageHub.framework */; };
@@ -133,6 +135,7 @@
 		F66425371DF645BC001F8F6E /* xep_0280_sent.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = xep_0280_sent.xml; sourceTree = "<group>"; };
 		F664253A1DF6A429001F8F6E /* InboundMesageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InboundMesageHandler.swift; sourceTree = "<group>"; };
 		F664253D1DF6A93B001F8F6E /* OutboundMessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutboundMessageHandler.swift; sourceTree = "<group>"; };
+		F66425411DF94E15001F8F6E /* MessageCarbonsDispatchHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCarbonsDispatchHandler.swift; sourceTree = "<group>"; };
 		F673D1D31DE1BB55009B3C99 /* XMPPMessageHub.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = XMPPMessageHub.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F673D1D61DE1BB55009B3C99 /* XMPPMessageHub.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMPPMessageHub.h; sourceTree = "<group>"; };
 		F673D1D71DE1BB55009B3C99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -235,6 +238,14 @@
 			name = Filter;
 			sourceTree = "<group>";
 		};
+		F66425401DF94DF9001F8F6E /* Handler */ = {
+			isa = PBXGroup;
+			children = (
+				F66425411DF94E15001F8F6E /* MessageCarbonsDispatchHandler.swift */,
+			);
+			name = Handler;
+			sourceTree = "<group>";
+		};
 		F673D1C91DE1BB55009B3C99 = {
 			isa = PBXGroup;
 			children = (
@@ -261,6 +272,7 @@
 			children = (
 				F6FCE9771DE3C4810088A662 /* Message.swift */,
 				F69A25751DF4345F007D5C35 /* Hub */,
+				F66425401DF94DF9001F8F6E /* Handler */,
 				F664252A1DF63708001F8F6E /* Filter */,
 				F6FCE97A1DEB416D0088A662 /* Archive */,
 				F673D23E1DE1C460009B3C99 /* Supporting Files */,
@@ -594,6 +606,7 @@
 				F69A257D1DF440F2007D5C35 /* FileArchvieManager.swift in Sources */,
 				F664253E1DF6A93B001F8F6E /* OutboundMessageHandler.swift in Sources */,
 				F673D21C1DE1C245009B3C99 /* FileArchive.swift in Sources */,
+				F66425421DF94E15001F8F6E /* MessageCarbonsDispatchHandler.swift in Sources */,
 				F688F46F1DF304E400B4D3B4 /* Archive.swift in Sources */,
 				F6FCE9831DEB6AEE0088A662 /* FileArchiveDocumentStore.swift in Sources */,
 			);
@@ -629,6 +642,7 @@
 				F69A257E1DF440F2007D5C35 /* FileArchvieManager.swift in Sources */,
 				F664253F1DF6A93B001F8F6E /* OutboundMessageHandler.swift in Sources */,
 				F673D21D1DE1C245009B3C99 /* FileArchive.swift in Sources */,
+				F66425431DF94E15001F8F6E /* MessageCarbonsDispatchHandler.swift in Sources */,
 				F688F4701DF304E400B4D3B4 /* Archive.swift in Sources */,
 				F6FCE9841DEB6AEE0088A662 /* FileArchiveDocumentStore.swift in Sources */,
 			);

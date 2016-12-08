@@ -19,33 +19,33 @@ public enum HubError: Error {
     case invalidDocument
 }
 
-public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler, InboundMesageHandlerDelegate, OutboundMessageHandlerDelegate {
+public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler, DispatcherHandler, InboundMesageHandlerDelegate, OutboundMessageHandlerDelegate, MessageCarbonsDispatchHandlerDelegate {
     
     public static let MessageKey = "XMPPMessageHubMessageKey"
     
-    public weak var messageHandler: MessageHandler? {
-        didSet{
-            outboundMessageHandler.messageHandler = messageHandler
-        }
-    }
+    public weak var messageHandler: MessageHandler? { didSet { outboundMessageHandler.messageHandler = messageHandler } }
+    public weak var iqHandler: IQHandler? { didSet { messageCarbonsDispatchHandler.iqHandler = iqHandler } }
     
     private var archiveByAccount: [JID:Archive] = [:]
     
     private let archvieManager: ArchvieManager
     private let inboundMessageHandler: InboundMesageHandler
     private let outboundMessageHandler: OutboundMessageHandler
+    private let messageCarbonsDispatchHandler: MessageCarbonsDispatchHandler
     private let queue: DispatchQueue
     
     required public init(archvieManager: ArchvieManager, inboundFilter: [MessageFilter] = [], outboundFilter: [MessageFilter] = []) {
         self.archvieManager = archvieManager
         self.inboundMessageHandler = InboundMesageHandler(archvieManager: archvieManager, inboundFilter: inboundFilter)
         self.outboundMessageHandler = OutboundMessageHandler(outboundFilter: outboundFilter)
+        self.messageCarbonsDispatchHandler = MessageCarbonsDispatchHandler()
         queue = DispatchQueue(
             label: "Hub",
             attributes: [.concurrent])
         super.init()
         self.inboundMessageHandler.delegate = self
         self.outboundMessageHandler.delegate = self
+        self.messageCarbonsDispatchHandler.delegate = self
     }
     
     // MARK: - ArchvieManager
@@ -116,12 +116,48 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
         }
     }
     
+    // MARK: - MessageCarbonsDispatchHandlerDelegate
+    
+    func messageCarbonsDispatchHandler(_ handler: MessageCarbonsDispatchHandler, didEnableFor account: JID) {
+        NSLog("Did enable message carbons for: \(account.stringValue)")
+    }
+    
+    func messageCarbonsDispatchHandler(_ handler: MessageCarbonsDispatchHandler, failedToEnableFor account: JID, wirth error: Error) {
+        NSLog("Failed to enable message carbons for: \(account.stringValue) with error: \(error)")
+    }
+    
     // MARK: - MessageHandler
     
     public func handleMessage(_ document: PXDocument,
                               completion: ((Error?) -> Void)?) {
         queue.async {
            self.inboundMessageHandler.handleMessage(document, completion: completion)
+        }
+    }
+    
+    // MARK: - DispatcherHandler
+    
+    public func didAddConnection(_ jid: JID) {
+        queue.async {
+            
+        }
+    }
+    
+    public func didRemoveConnection(_ jid: JID) {
+        queue.async {
+            
+        }
+    }
+    
+    public func didConnect(_ jid: JID, resumed: Bool) {
+        queue.async {
+            self.messageCarbonsDispatchHandler.didConnect(jid, resumed: resumed)
+        }
+    }
+    
+    public func didDisconnect(_ jid: JID) {
+        queue.async {
+            
         }
     }
 }
