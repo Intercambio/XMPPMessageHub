@@ -27,7 +27,7 @@ class MessageCarbonsFilterTests: TestCase {
             XCTAssertEqual(document.root.value(forAttribute: "to") as? String, "romeo@montague.example/garden")
             
             let metadata = result.metadata
-            XCTAssertTrue(metadata.forwarded)
+            XCTAssertTrue(metadata.isCarbonCopy)
 
         } catch {
             XCTFail("\(error)")
@@ -49,7 +49,7 @@ class MessageCarbonsFilterTests: TestCase {
             XCTAssertEqual(document.root.value(forAttribute: "to") as? String, "juliet@capulet.example/balcony")
             
             let metadata = result.metadata
-            XCTAssertTrue(metadata.forwarded)
+            XCTAssertTrue(metadata.isCarbonCopy)
             
         } catch {
             XCTFail("\(error)")

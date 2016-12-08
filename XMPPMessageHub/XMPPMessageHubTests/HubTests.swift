@@ -43,7 +43,7 @@ class HubTests: TestCase {
         document.root.setValue("chat", forAttribute: "type")
         document.root.setValue("456", forAttribute: "id")
         
-        expectation(forNotification: Hub.DidAddMessageNotification.rawValue, object: hub, handler: nil)
+        expectation(forNotification: Notification.Name.HubDidAddMessageNotification.rawValue, object: hub, handler: nil)
         
         let dispatchExp = expectation(description: "Message Handled")
         hub.handleMessage(document) { error in
@@ -93,7 +93,7 @@ class HubTests: TestCase {
         let dispatcher = Dispatcher()
         hub.messageHandler = dispatcher
         
-        expectation(forNotification: Hub.DidUpdateMessageNotification.rawValue, object: hub, handler: nil)
+        expectation(forNotification: Notification.Name.HubDidUpdateMessageNotification.rawValue, object: hub, handler: nil)
         
         let getArchiveExp = expectation(description: "Get Archive")
         hub.archive(for: JID("romeo@example.com")!, create: true) {

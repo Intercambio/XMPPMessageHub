@@ -30,7 +30,7 @@ public struct Metadata {
     public var transmitted: Date?
     public var read: Date?
     public var error: TransmissionError?
-    public var forwarded: Bool = false
+    public var isCarbonCopy: Bool = false
 }
 
 public struct MessageID: Equatable, Hashable {

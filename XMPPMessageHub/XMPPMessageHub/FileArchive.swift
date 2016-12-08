@@ -90,7 +90,7 @@ public class FileArchive: Archive {
                         Schema.metadata_transmitted <- metadata.transmitted,
                         Schema.metadata_read <- metadata.read,
                         Schema.metadata_error <- metadata.error as? NSError,
-                        Schema.metadata_forwarded <- metadata.forwarded
+                        Schema.metadata_is_carbon_copy <- metadata.isCarbonCopy
                     )
                 )
             }
@@ -113,7 +113,7 @@ public class FileArchive: Archive {
                     Schema.metadata_transmitted <- metadata.transmitted,
                     Schema.metadata_read <- metadata.read,
                     Schema.metadata_error <- metadata.error as? NSError,
-                    Schema.metadata_forwarded <- metadata.forwarded
+                    Schema.metadata_is_carbon_copy <- metadata.isCarbonCopy
                 ))
                 if updated != 1 {
                     throw ArchiveError.doesNotExist
@@ -338,7 +338,7 @@ public class FileArchive: Archive {
             Schema.metadata[Schema.metadata_transmitted],
             Schema.metadata[Schema.metadata_read],
             Schema.metadata[Schema.metadata_error],
-            Schema.metadata[Schema.metadata_forwarded],
+            Schema.metadata[Schema.metadata_is_carbon_copy],
             (Schema.metadata[Schema.metadata_transmitted] ?? Date.distantFuture).alias(name: "transmitted"),
             (Schema.metadata[Schema.metadata_created] ?? Date.distantFuture).alias(name: "created")
         )
@@ -359,7 +359,7 @@ public class FileArchive: Archive {
         metadata.transmitted = row.get(Schema.metadata[Schema.metadata_transmitted])
         metadata.read = row.get(Schema.metadata[Schema.metadata_read])
         metadata.error = row.get(Schema.metadata[Schema.metadata_error])
-        metadata.forwarded = row.get(Schema.metadata[Schema.metadata_forwarded])
+        metadata.isCarbonCopy = row.get(Schema.metadata[Schema.metadata_is_carbon_copy])
         
         return Message(messageID: messageID, metadata: metadata)
     }

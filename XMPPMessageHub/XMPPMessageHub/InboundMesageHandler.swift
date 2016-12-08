@@ -56,7 +56,7 @@ class InboundMesageHandler: NSObject, MessageHandler {
             let account = to.bare()
             do {
                 let now = Date()
-                let metadata = Metadata(created: now, transmitted: now, read: nil, error: nil, forwarded: false)
+                let metadata = Metadata(created: now, transmitted: now, read: nil, error: nil, isCarbonCopy: false)
                 
                 let result = try self.inboundFilter.reduce((document: document, metadata: metadata)) { input, filter in
                     return try filter.apply(to: input.document, with: input.metadata)

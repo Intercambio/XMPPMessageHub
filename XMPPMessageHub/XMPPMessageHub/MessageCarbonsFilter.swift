@@ -52,7 +52,7 @@ class MessageCarbonsFilter: MessageFilter {
             else { return (document: document, metadata: metadata) }
         
         var newMetadata = metadata
-        newMetadata.forwarded = true
+        newMetadata.isCarbonCopy = true
         
         return (document: newDocument, metadata: newMetadata)
     }

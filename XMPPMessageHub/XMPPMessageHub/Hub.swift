@@ -10,6 +10,11 @@ import Foundation
 import CoreXMPP
 import PureXML
 
+extension NSNotification.Name {
+    public static let HubDidAddMessageNotification = Notification.Name(rawValue: "XMPPMessageHubDidAddMessageNotification")
+    public static let HubDidUpdateMessageNotification = Notification.Name(rawValue: "XMPPMessageHubDidUpdateMessageNotification")
+}
+
 public enum HubError: Error {
     case invalidDocument
 }
@@ -17,8 +22,6 @@ public enum HubError: Error {
 public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler, InboundMesageHandlerDelegate, OutboundMessageHandlerDelegate {
     
     public static let MessageKey = "XMPPMessageHubMessageKey"
-    public static let DidAddMessageNotification = Notification.Name(rawValue: "XMPPMessageHubDidAddMessageNotification")
-    public static let DidUpdateMessageNotification = Notification.Name(rawValue: "XMPPMessageHubDidUpdateMessageNotification")
     
     public weak var messageHandler: MessageHandler? {
         didSet{
@@ -82,7 +85,7 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
         queue.async {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(
-                    name: Hub.DidAddMessageNotification,
+                    name: NSNotification.Name.HubDidAddMessageNotification,
                     object: self,
                     userInfo: [Hub.MessageKey:message])
             }
@@ -95,7 +98,7 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
         queue.async {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(
-                    name: Hub.DidUpdateMessageNotification,
+                    name: NSNotification.Name.HubDidUpdateMessageNotification,
                     object: self,
                     userInfo: [Hub.MessageKey:message])
             }
@@ -106,7 +109,7 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
         queue.async {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(
-                    name: Hub.DidUpdateMessageNotification,
+                    name: NSNotification.Name.HubDidUpdateMessageNotification,
                     object: self,
                     userInfo: [Hub.MessageKey:message])
             }
