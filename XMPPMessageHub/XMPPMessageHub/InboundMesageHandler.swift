@@ -8,7 +8,7 @@
 
 import Foundation
 import PureXML
-import CoreXMPP
+import XMPPFoundation
 
 protocol InboundMesageHandlerDelegate: class {
     func inboundMessageHandler(_ handler: InboundMesageHandler, didReceive message: Message) -> Void
@@ -44,13 +44,12 @@ class InboundMesageHandler: NSObject, MessageHandler {
     func handleMessage(_ document: PXDocument,
                               completion: ((Error?) -> Void)?) {
         guard
-            let message = document.root, message.qualifiedName == PXQName(name: "message", namespace: "jabber:client")
-            else { completion?(HubError.invalidDocument); return }
-        
-        guard
-            let toString = message.value(forAttribute: "to") as? String,
-            let to = JID(toString)
-            else { completion?(HubError.invalidDocument); return }
+            let message = document.root as? MessageStanza,
+            let to = message.to
+            else {
+                completion?(HubError.invalidDocument)
+                return
+        }
         
         queue.async(flags: [.barrier]) {
             let account = to.bare()

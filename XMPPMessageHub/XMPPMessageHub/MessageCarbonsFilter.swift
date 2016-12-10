@@ -8,7 +8,7 @@
 
 import Foundation
 import PureXML
-import CoreXMPP
+import XMPPFoundation
 
 class MessageCarbonsFilter: MessageFilter {
     

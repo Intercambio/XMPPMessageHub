@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import CoreXMPP
+import XMPPFoundation
 import PureXML
 
 extension NSNotification.Name {

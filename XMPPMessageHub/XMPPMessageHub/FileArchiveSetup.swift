@@ -8,7 +8,7 @@
 
 import Foundation
 import SQLite
-import  CoreXMPP
+import XMPPFoundation
 
 extension FileArchive {
     struct Schema {

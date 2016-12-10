@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import CoreXMPP
+import XMPPFoundation
 @testable import XMPPMessageHub
 
 class FileArchvieManagerTests: TestCase {

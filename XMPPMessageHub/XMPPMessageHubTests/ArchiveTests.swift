@@ -8,7 +8,7 @@
 
 import XCTest
 import PureXML
-import CoreXMPP
+import XMPPFoundation
 @testable import XMPPMessageHub
 
 class ArchiveTests: TestCase {
