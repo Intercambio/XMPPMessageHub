@@ -8,7 +8,7 @@
 
 import Foundation
 import SQLite
-import CoreXMPP
+import XMPPFoundation
 
 extension UUID: Value {
     public static var declaredDatatype: String {

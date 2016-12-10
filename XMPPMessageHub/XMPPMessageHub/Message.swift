@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import CoreXMPP
+import XMPPFoundation
 
 public protocol TransmissionError: Error, NSSecureCoding {
 }

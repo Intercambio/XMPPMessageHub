@@ -9,7 +9,7 @@
 import XCTest
 import PureXML
 import Dispatch
-import CoreXMPP
+import XMPPFoundation
 @testable import XMPPMessageHub
 
 class HubTests: TestCase {

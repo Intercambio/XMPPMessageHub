@@ -8,7 +8,7 @@
 
 import Foundation
 import PureXML
-import CoreXMPP
+import XMPPFoundation
 
 protocol InboundMesageHandlerDelegate: class {
     func inboundMessageHandler(_ handler: InboundMesageHandler, didReceive message: Message) -> Void

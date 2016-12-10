@@ -28,33 +28,13 @@
 		F673D1DD1DE1BB55009B3C99 /* XMPPMessageHub.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D1D31DE1BB55009B3C99 /* XMPPMessageHub.framework */; };
 		F673D1E41DE1BB55009B3C99 /* XMPPMessageHub.h in Headers */ = {isa = PBXBuildFile; fileRef = F673D1D61DE1BB55009B3C99 /* XMPPMessageHub.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F673D1FB1DE1C02D009B3C99 /* XMPPMessageHub.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D1F21DE1C02C009B3C99 /* XMPPMessageHub.framework */; };
-		F673D20F1DE1C107009B3C99 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D20A1DE1C107009B3C99 /* CocoaLumberjack.framework */; };
-		F673D2101DE1C107009B3C99 /* CoreXMPP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D20B1DE1C107009B3C99 /* CoreXMPP.framework */; };
 		F673D2111DE1C107009B3C99 /* PureXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D20C1DE1C107009B3C99 /* PureXML.framework */; };
-		F673D2121DE1C107009B3C99 /* SASLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D20D1DE1C107009B3C99 /* SASLKit.framework */; };
-		F673D2131DE1C107009B3C99 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D20E1DE1C107009B3C99 /* SocketRocket.framework */; };
-		F673D2151DE1C130009B3C99 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D20A1DE1C107009B3C99 /* CocoaLumberjack.framework */; };
-		F673D2161DE1C130009B3C99 /* CoreXMPP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D20B1DE1C107009B3C99 /* CoreXMPP.framework */; };
 		F673D2171DE1C130009B3C99 /* PureXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D20C1DE1C107009B3C99 /* PureXML.framework */; };
-		F673D2181DE1C130009B3C99 /* SASLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D20D1DE1C107009B3C99 /* SASLKit.framework */; };
-		F673D2191DE1C130009B3C99 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D20E1DE1C107009B3C99 /* SocketRocket.framework */; };
 		F673D21C1DE1C245009B3C99 /* FileArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = F673D21B1DE1C245009B3C99 /* FileArchive.swift */; };
 		F673D21D1DE1C245009B3C99 /* FileArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = F673D21B1DE1C245009B3C99 /* FileArchive.swift */; };
-		F673D2231DE1C2AA009B3C99 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D21E1DE1C2AA009B3C99 /* CocoaLumberjack.framework */; };
-		F673D2241DE1C2AA009B3C99 /* CoreXMPP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D21F1DE1C2AA009B3C99 /* CoreXMPP.framework */; };
 		F673D2251DE1C2AA009B3C99 /* PureXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D2201DE1C2AA009B3C99 /* PureXML.framework */; };
-		F673D2261DE1C2AA009B3C99 /* SASLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D2211DE1C2AA009B3C99 /* SASLKit.framework */; };
-		F673D2271DE1C2AA009B3C99 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D2221DE1C2AA009B3C99 /* SocketRocket.framework */; };
-		F673D2291DE1C2C4009B3C99 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D21E1DE1C2AA009B3C99 /* CocoaLumberjack.framework */; };
-		F673D22A1DE1C2C4009B3C99 /* CoreXMPP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D21F1DE1C2AA009B3C99 /* CoreXMPP.framework */; };
 		F673D22B1DE1C2C4009B3C99 /* PureXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D2201DE1C2AA009B3C99 /* PureXML.framework */; };
-		F673D22C1DE1C2C4009B3C99 /* SASLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D2211DE1C2AA009B3C99 /* SASLKit.framework */; };
-		F673D22D1DE1C2C4009B3C99 /* SocketRocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D2221DE1C2AA009B3C99 /* SocketRocket.framework */; };
-		F673D2341DE1C30B009B3C99 /* CocoaLumberjack.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F673D21E1DE1C2AA009B3C99 /* CocoaLumberjack.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F673D2351DE1C30B009B3C99 /* CoreXMPP.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F673D21F1DE1C2AA009B3C99 /* CoreXMPP.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F673D2361DE1C30B009B3C99 /* PureXML.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F673D2201DE1C2AA009B3C99 /* PureXML.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F673D2371DE1C30B009B3C99 /* SASLKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F673D2211DE1C2AA009B3C99 /* SASLKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F673D2381DE1C30B009B3C99 /* SocketRocket.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F673D2221DE1C2AA009B3C99 /* SocketRocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F673D23B1DE1C352009B3C99 /* ArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */; };
 		F673D23C1DE1C352009B3C99 /* ArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */; };
 		F688F46F1DF304E400B4D3B4 /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = F688F46E1DF304E400B4D3B4 /* Archive.swift */; };
@@ -67,6 +47,11 @@
 		F69A257E1DF440F2007D5C35 /* FileArchvieManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69A257C1DF440F2007D5C35 /* FileArchvieManager.swift */; };
 		F69A25801DF441A9007D5C35 /* FileArchvieManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69A257F1DF441A9007D5C35 /* FileArchvieManagerTests.swift */; };
 		F69A25811DF441A9007D5C35 /* FileArchvieManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69A257F1DF441A9007D5C35 /* FileArchvieManagerTests.swift */; };
+		F6FAE8671DFCB8A40039EE7A /* XMPPFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6FAE8661DFCB8A40039EE7A /* XMPPFoundation.framework */; };
+		F6FAE8681DFCB8AB0039EE7A /* XMPPFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6FAE8661DFCB8A40039EE7A /* XMPPFoundation.framework */; };
+		F6FAE86A1DFCB8BC0039EE7A /* XMPPFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6FAE8691DFCB8BC0039EE7A /* XMPPFoundation.framework */; };
+		F6FAE86B1DFCB8C50039EE7A /* XMPPFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6FAE8691DFCB8BC0039EE7A /* XMPPFoundation.framework */; };
+		F6FAE86C1DFCB8C70039EE7A /* XMPPFoundation.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F6FAE8691DFCB8BC0039EE7A /* XMPPFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F6FCE96C1DE1C87F0088A662 /* TestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE96B1DE1C87F0088A662 /* TestCase.swift */; };
 		F6FCE96D1DE1C87F0088A662 /* TestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE96B1DE1C87F0088A662 /* TestCase.swift */; };
 		F6FCE9721DE3B1AA0088A662 /* FileArchiveSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9711DE3B1AA0088A662 /* FileArchiveSetup.swift */; };
@@ -112,12 +97,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				F673D2341DE1C30B009B3C99 /* CocoaLumberjack.framework in CopyFiles */,
-				F673D2351DE1C30B009B3C99 /* CoreXMPP.framework in CopyFiles */,
 				F673D2361DE1C30B009B3C99 /* PureXML.framework in CopyFiles */,
-				F673D2371DE1C30B009B3C99 /* SASLKit.framework in CopyFiles */,
-				F673D2381DE1C30B009B3C99 /* SocketRocket.framework in CopyFiles */,
 				F6FCE98E1DEB74380088A662 /* SQLite.framework in CopyFiles */,
+				F6FAE86C1DFCB8C70039EE7A /* XMPPFoundation.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,23 +122,17 @@
 		F673D1F21DE1C02C009B3C99 /* XMPPMessageHub.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = XMPPMessageHub.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F673D1FA1DE1C02D009B3C99 /* XMPPMessageHubTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XMPPMessageHubTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F673D2011DE1C02D009B3C99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F673D20A1DE1C107009B3C99 /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = ../Carthage/Build/iOS/CocoaLumberjack.framework; sourceTree = "<group>"; };
-		F673D20B1DE1C107009B3C99 /* CoreXMPP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreXMPP.framework; path = ../Carthage/Build/iOS/CoreXMPP.framework; sourceTree = "<group>"; };
 		F673D20C1DE1C107009B3C99 /* PureXML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PureXML.framework; path = ../Carthage/Build/iOS/PureXML.framework; sourceTree = "<group>"; };
-		F673D20D1DE1C107009B3C99 /* SASLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SASLKit.framework; path = ../Carthage/Build/iOS/SASLKit.framework; sourceTree = "<group>"; };
-		F673D20E1DE1C107009B3C99 /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = ../Carthage/Build/iOS/SocketRocket.framework; sourceTree = "<group>"; };
 		F673D21B1DE1C245009B3C99 /* FileArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileArchive.swift; sourceTree = "<group>"; };
-		F673D21E1DE1C2AA009B3C99 /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = ../Carthage/Build/Mac/CocoaLumberjack.framework; sourceTree = "<group>"; };
-		F673D21F1DE1C2AA009B3C99 /* CoreXMPP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreXMPP.framework; path = ../Carthage/Build/Mac/CoreXMPP.framework; sourceTree = "<group>"; };
 		F673D2201DE1C2AA009B3C99 /* PureXML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PureXML.framework; path = ../Carthage/Build/Mac/PureXML.framework; sourceTree = "<group>"; };
-		F673D2211DE1C2AA009B3C99 /* SASLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SASLKit.framework; path = ../Carthage/Build/Mac/SASLKit.framework; sourceTree = "<group>"; };
-		F673D2221DE1C2AA009B3C99 /* SocketRocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SocketRocket.framework; path = ../Carthage/Build/Mac/SocketRocket.framework; sourceTree = "<group>"; };
 		F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveTests.swift; sourceTree = "<group>"; };
 		F688F46E1DF304E400B4D3B4 /* Archive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Archive.swift; sourceTree = "<group>"; };
 		F69A25761DF43470007D5C35 /* Hub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hub.swift; sourceTree = "<group>"; };
 		F69A25791DF436AD007D5C35 /* ArchiveManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveManager.swift; sourceTree = "<group>"; };
 		F69A257C1DF440F2007D5C35 /* FileArchvieManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileArchvieManager.swift; sourceTree = "<group>"; };
 		F69A257F1DF441A9007D5C35 /* FileArchvieManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileArchvieManagerTests.swift; sourceTree = "<group>"; };
+		F6FAE8661DFCB8A40039EE7A /* XMPPFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XMPPFoundation.framework; path = ../Carthage/Build/iOS/XMPPFoundation.framework; sourceTree = "<group>"; };
+		F6FAE8691DFCB8BC0039EE7A /* XMPPFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XMPPFoundation.framework; path = ../Carthage/Build/Mac/XMPPFoundation.framework; sourceTree = "<group>"; };
 		F6FCE96B1DE1C87F0088A662 /* TestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCase.swift; sourceTree = "<group>"; };
 		F6FCE9711DE3B1AA0088A662 /* FileArchiveSetup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileArchiveSetup.swift; sourceTree = "<group>"; };
 		F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveSetupTests.swift; sourceTree = "<group>"; };
@@ -173,12 +149,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6FAE8671DFCB8A40039EE7A /* XMPPFoundation.framework in Frameworks */,
 				F6FCE9891DEB74080088A662 /* SQLite.framework in Frameworks */,
-				F673D20F1DE1C107009B3C99 /* CocoaLumberjack.framework in Frameworks */,
-				F673D2101DE1C107009B3C99 /* CoreXMPP.framework in Frameworks */,
 				F673D2111DE1C107009B3C99 /* PureXML.framework in Frameworks */,
-				F673D2121DE1C107009B3C99 /* SASLKit.framework in Frameworks */,
-				F673D2131DE1C107009B3C99 /* SocketRocket.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,12 +160,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				F673D1DD1DE1BB55009B3C99 /* XMPPMessageHub.framework in Frameworks */,
-				F673D2151DE1C130009B3C99 /* CocoaLumberjack.framework in Frameworks */,
-				F673D2161DE1C130009B3C99 /* CoreXMPP.framework in Frameworks */,
 				F673D2171DE1C130009B3C99 /* PureXML.framework in Frameworks */,
-				F673D2181DE1C130009B3C99 /* SASLKit.framework in Frameworks */,
-				F673D2191DE1C130009B3C99 /* SocketRocket.framework in Frameworks */,
 				F6FCE98A1DEB74110088A662 /* SQLite.framework in Frameworks */,
+				F6FAE8681DFCB8AB0039EE7A /* XMPPFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,12 +170,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6FAE86A1DFCB8BC0039EE7A /* XMPPFoundation.framework in Frameworks */,
 				F6FCE98C1DEB742C0088A662 /* SQLite.framework in Frameworks */,
-				F673D2231DE1C2AA009B3C99 /* CocoaLumberjack.framework in Frameworks */,
-				F673D2241DE1C2AA009B3C99 /* CoreXMPP.framework in Frameworks */,
 				F673D2251DE1C2AA009B3C99 /* PureXML.framework in Frameworks */,
-				F673D2261DE1C2AA009B3C99 /* SASLKit.framework in Frameworks */,
-				F673D2271DE1C2AA009B3C99 /* SocketRocket.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,12 +181,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				F673D1FB1DE1C02D009B3C99 /* XMPPMessageHub.framework in Frameworks */,
-				F673D2291DE1C2C4009B3C99 /* CocoaLumberjack.framework in Frameworks */,
-				F673D22A1DE1C2C4009B3C99 /* CoreXMPP.framework in Frameworks */,
 				F673D22B1DE1C2C4009B3C99 /* PureXML.framework in Frameworks */,
-				F673D22C1DE1C2C4009B3C99 /* SASLKit.framework in Frameworks */,
-				F673D22D1DE1C2C4009B3C99 /* SocketRocket.framework in Frameworks */,
 				F6FCE98D1DEB74340088A662 /* SQLite.framework in Frameworks */,
+				F6FAE86B1DFCB8C50039EE7A /* XMPPFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,12 +261,9 @@
 		F673D2141DE1C10E009B3C99 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				F6FAE8661DFCB8A40039EE7A /* XMPPFoundation.framework */,
 				F6FCE9881DEB74080088A662 /* SQLite.framework */,
-				F673D20A1DE1C107009B3C99 /* CocoaLumberjack.framework */,
-				F673D20B1DE1C107009B3C99 /* CoreXMPP.framework */,
 				F673D20C1DE1C107009B3C99 /* PureXML.framework */,
-				F673D20D1DE1C107009B3C99 /* SASLKit.framework */,
-				F673D20E1DE1C107009B3C99 /* SocketRocket.framework */,
 			);
 			name = iOS;
 			sourceTree = "<group>";
@@ -310,12 +271,9 @@
 		F673D2281DE1C2AE009B3C99 /* macOS */ = {
 			isa = PBXGroup;
 			children = (
+				F6FAE8691DFCB8BC0039EE7A /* XMPPFoundation.framework */,
 				F6FCE98B1DEB742C0088A662 /* SQLite.framework */,
-				F673D21E1DE1C2AA009B3C99 /* CocoaLumberjack.framework */,
-				F673D21F1DE1C2AA009B3C99 /* CoreXMPP.framework */,
 				F673D2201DE1C2AA009B3C99 /* PureXML.framework */,
-				F673D2211DE1C2AA009B3C99 /* SASLKit.framework */,
-				F673D2221DE1C2AA009B3C99 /* SocketRocket.framework */,
 			);
 			name = macOS;
 			sourceTree = "<group>";
@@ -562,11 +520,8 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/../Carthage/Build/iOS/CocoaLumberjack.framework",
-				"$(SRCROOT)/../Carthage/Build/iOS/CoreXMPP.framework",
+				"$(SRCROOT)/../Carthage/Build/iOS/XMPPFoundation.framework",
 				"$(SRCROOT)/../Carthage/Build/iOS/PureXML.framework",
-				"$(SRCROOT)/../Carthage/Build/iOS/SASLKit.framework",
-				"$(SRCROOT)/../Carthage/Build/iOS/SocketRocket.framework",
 				"$(SRCROOT)/../Carthage/Build/iOS/SQLite.framework",
 			);
 			outputPaths = (

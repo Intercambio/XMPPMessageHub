@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import CoreXMPP
+import XMPPFoundation
 
 public enum ArchvieManagerError: Error {
     case doesNotExist
