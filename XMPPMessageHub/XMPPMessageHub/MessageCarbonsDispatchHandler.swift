@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import CoreXMPP
+import XMPPFoundation
 
 protocol MessageCarbonsDispatchHandlerDelegate: class {
     func messageCarbonsDispatchHandler(_ handler: MessageCarbonsDispatchHandler, didEnableFor account: JID) -> Void
@@ -59,11 +59,9 @@ class MessageCarbonsDispatchHandler: NSObject, DispatcherHandler {
     }
     
     private func makeRequest(for account: JID) -> PXDocument {
-        let request = PXDocument(elementName: "iq", namespace: "jabber:client", prefix: nil)!
-        let iq = request.root!
-        
-        iq.setValue(account.stringValue, forAttribute: "from")
-        iq.setValue("set", forAttribute: "type")
+        let request = IQStanza.makeDocumentWithIQStanza(from: account, to: nil)
+        let iq = request.root as! IQStanza
+        iq.type = .set
         iq.add(withName: "enable", namespace: "urn:xmpp:carbons:2", content: nil)
         
         return request
