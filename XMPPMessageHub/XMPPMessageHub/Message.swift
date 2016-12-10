@@ -61,3 +61,15 @@ extension MessageID: CustomDebugStringConvertible {
 
 extension NSError: TransmissionError {
 }
+
+extension MessageStanzaType {
+    public var messageType: MessageType {
+        switch self {
+        case .chat: return .chat
+        case .error: return .error
+        case .groupchat: return .groupchat
+        case .headline: return .headline
+        default: return .normal
+        }
+    }
+}

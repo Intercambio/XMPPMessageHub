@@ -366,17 +366,9 @@ public class FileArchive: Archive {
     
     private func makeMessageID(for document: PXDocument, with uuid: UUID) throws -> MessageID {
         guard
-            let message = document.root, message.qualifiedName == PXQName(name: "message", namespace: "jabber:client")
-            else { throw ArchiveError.invalidDocument }
-        
-        guard
-            let fromString = message.value(forAttribute: "from") as? String,
-            let from = JID(fromString)
-            else { throw ArchiveError.invalidDocument }
-        
-        guard
-            let toString = message.value(forAttribute: "to") as? String,
-            let to = JID(toString)
+            let message = document.root as? MessageStanza,
+            let from = message.from,
+            let to = message.to
             else { throw ArchiveError.invalidDocument }
         
         guard
@@ -385,18 +377,9 @@ public class FileArchive: Archive {
         
         let direction: MessageDirection = account.isEqual(from.bare()) ? .outbound : .inbound
         let counterpart = direction == .outbound ? to.bare() : from.bare()
-        let type = try self.type(of: message)
+        let type = message.type.messageType
         
         return MessageID(uuid: uuid, account: account, counterpart: counterpart, direction: direction, type: type)
-    }
-    
-    private func type(of message: PXElement) throws -> MessageType {
-        if let typeString = message.value(forAttribute: "type") as? String,
-            let type = MessageType(rawValue: typeString) {
-            return type
-        } else {
-            return .normal
-        }
     }
 }
 
