@@ -19,22 +19,28 @@ public enum HubError: Error {
     case invalidDocument
 }
 
-public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler, DispatcherHandler, InboundMesageHandlerDelegate, OutboundMessageHandlerDelegate, MessageCarbonsDispatchHandlerDelegate {
+public class Hub: NSObject, ArchvieManager, MessageHandler, DispatcherHandler {
     
     public static let MessageKey = "XMPPMessageHubMessageKey"
     
     public weak var messageHandler: MessageHandler? { didSet { outboundMessageHandler.messageHandler = messageHandler } }
     public weak var iqHandler: IQHandler? { didSet { messageCarbonsDispatchHandler.iqHandler = iqHandler } }
     
+    fileprivate let archvieManager: ArchvieManager
+    fileprivate let inboundMessageHandler: InboundMesageHandler
+    fileprivate let outboundMessageHandler: OutboundMessageHandler
+    fileprivate let messageCarbonsDispatchHandler: MessageCarbonsDispatchHandler
+    fileprivate let queue: DispatchQueue
+    
     private var archiveByAccount: [JID:Archive] = [:]
     
-    private let archvieManager: ArchvieManager
-    private let inboundMessageHandler: InboundMesageHandler
-    private let outboundMessageHandler: OutboundMessageHandler
-    private let messageCarbonsDispatchHandler: MessageCarbonsDispatchHandler
-    private let queue: DispatchQueue
-    
-    required public init(archvieManager: ArchvieManager, inboundFilter: [MessageFilter] = [], outboundFilter: [MessageFilter] = []) {
+    required public init(archvieManager: ArchvieManager) {
+        let inboundFilter: [MessageFilter] = [
+            MessageCarbonsFilter(direction: .received),
+            MessageCarbonsFilter(direction: .sent)
+        ]
+        let outboundFilter: [MessageFilter] = [
+        ]
         self.archvieManager = archvieManager
         self.inboundMessageHandler = InboundMesageHandler(archvieManager: archvieManager, inboundFilter: inboundFilter)
         self.outboundMessageHandler = OutboundMessageHandler(outboundFilter: outboundFilter)
@@ -70,6 +76,44 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
             self.archvieManager.deleteArchive(for: account, completion: completion)
         }
     }
+    
+    // MARK: - MessageHandler
+    
+    public func handleMessage(_ document: PXDocument,
+                              completion: ((Error?) -> Void)?) {
+        queue.async {
+           self.inboundMessageHandler.handleMessage(document, completion: completion)
+        }
+    }
+    
+    // MARK: - DispatcherHandler
+    
+    public func didAddConnection(_ jid: JID) {
+        queue.async {
+            
+        }
+    }
+    
+    public func didRemoveConnection(_ jid: JID) {
+        queue.async {
+            
+        }
+    }
+    
+    public func didConnect(_ jid: JID, resumed: Bool) {
+        queue.async {
+            self.messageCarbonsDispatchHandler.didConnect(jid, resumed: resumed)
+        }
+    }
+    
+    public func didDisconnect(_ jid: JID) {
+        queue.async {
+            
+        }
+    }
+}
+
+extension Hub: ArchiveProxyDelegate, InboundMesageHandlerDelegate, OutboundMessageHandlerDelegate, MessageCarbonsDispatchHandlerDelegate {
     
     // MARK: - ArchiveProxyDelegate
     
@@ -126,38 +170,4 @@ public class Hub: NSObject, ArchvieManager, ArchiveProxyDelegate, MessageHandler
         NSLog("Failed to enable message carbons for: \(account.stringValue) with error: \(error)")
     }
     
-    // MARK: - MessageHandler
-    
-    public func handleMessage(_ document: PXDocument,
-                              completion: ((Error?) -> Void)?) {
-        queue.async {
-           self.inboundMessageHandler.handleMessage(document, completion: completion)
-        }
-    }
-    
-    // MARK: - DispatcherHandler
-    
-    public func didAddConnection(_ jid: JID) {
-        queue.async {
-            
-        }
-    }
-    
-    public func didRemoveConnection(_ jid: JID) {
-        queue.async {
-            
-        }
-    }
-    
-    public func didConnect(_ jid: JID, resumed: Bool) {
-        queue.async {
-            self.messageCarbonsDispatchHandler.didConnect(jid, resumed: resumed)
-        }
-    }
-    
-    public func didDisconnect(_ jid: JID) {
-        queue.async {
-            
-        }
-    }
 }
