@@ -54,6 +54,8 @@
 		F6FAE86A1DFCB8BC0039EE7A /* XMPPFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6FAE8691DFCB8BC0039EE7A /* XMPPFoundation.framework */; };
 		F6FAE86B1DFCB8C50039EE7A /* XMPPFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6FAE8691DFCB8BC0039EE7A /* XMPPFoundation.framework */; };
 		F6FAE86C1DFCB8C70039EE7A /* XMPPFoundation.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F6FAE8691DFCB8BC0039EE7A /* XMPPFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F6FAE8701DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FAE86F1DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift */; };
+		F6FAE8711DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FAE86F1DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift */; };
 		F6FCE96C1DE1C87F0088A662 /* TestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE96B1DE1C87F0088A662 /* TestCase.swift */; };
 		F6FCE96D1DE1C87F0088A662 /* TestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE96B1DE1C87F0088A662 /* TestCase.swift */; };
 		F6FCE9721DE3B1AA0088A662 /* FileArchiveSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9711DE3B1AA0088A662 /* FileArchiveSetup.swift */; };
@@ -136,6 +138,7 @@
 		F69A257F1DF441A9007D5C35 /* FileArchvieManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileArchvieManagerTests.swift; sourceTree = "<group>"; };
 		F6FAE8661DFCB8A40039EE7A /* XMPPFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XMPPFoundation.framework; path = ../Carthage/Build/iOS/XMPPFoundation.framework; sourceTree = "<group>"; };
 		F6FAE8691DFCB8BC0039EE7A /* XMPPFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XMPPFoundation.framework; path = ../Carthage/Build/Mac/XMPPFoundation.framework; sourceTree = "<group>"; };
+		F6FAE86F1DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCarbonsDispatchHandlerTests.swift; sourceTree = "<group>"; };
 		F6FCE96B1DE1C87F0088A662 /* TestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCase.swift; sourceTree = "<group>"; };
 		F6FCE9711DE3B1AA0088A662 /* FileArchiveSetup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileArchiveSetup.swift; sourceTree = "<group>"; };
 		F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveSetupTests.swift; sourceTree = "<group>"; };
@@ -254,6 +257,7 @@
 				F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */,
 				F6FCE9851DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift */,
 				F66425311DF63A12001F8F6E /* MessageCarbonsFilterTests.swift */,
+				F6FAE86F1DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift */,
 				F66425341DF63AFF001F8F6E /* xep_0280_received.xml */,
 				F66425371DF645BC001F8F6E /* xep_0280_sent.xml */,
 				F673D23D1DE1C435009B3C99 /* Supporting Files */,
@@ -572,6 +576,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F673D23B1DE1C352009B3C99 /* ArchiveTests.swift in Sources */,
+				F6FAE8701DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift in Sources */,
 				F625A54A1DF44F2B0005AFD3 /* HubTests.swift in Sources */,
 				F6FCE9751DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */,
 				F6FCE96C1DE1C87F0088A662 /* TestCase.swift in Sources */,
@@ -608,6 +613,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F673D23C1DE1C352009B3C99 /* ArchiveTests.swift in Sources */,
+				F6FAE8711DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift in Sources */,
 				F625A54B1DF44F2B0005AFD3 /* HubTests.swift in Sources */,
 				F6FCE9761DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */,
 				F6FCE96D1DE1C87F0088A662 /* TestCase.swift in Sources */,

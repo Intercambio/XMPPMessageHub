@@ -23,7 +23,7 @@ class MessageCarbonsDispatchHandler: NSObject, DispatcherHandler {
     
     required override init() {
         queue = DispatchQueue(
-            label: "Hub",
+            label: "MessageCarbonsDispatchHandler",
             attributes: [.concurrent])
         super.init()
     }
@@ -59,7 +59,7 @@ class MessageCarbonsDispatchHandler: NSObject, DispatcherHandler {
     }
     
     private func makeRequest(for account: JID) -> PXDocument {
-        let request = IQStanza.makeDocumentWithIQStanza(from: account, to: nil)
+        let request = IQStanza.makeDocumentWithIQStanza(from: account, to: account)
         let iq = request.root as! IQStanza
         iq.type = .set
         iq.add(withName: "enable", namespace: "urn:xmpp:carbons:2", content: nil)
