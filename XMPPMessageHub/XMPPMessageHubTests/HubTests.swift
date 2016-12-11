@@ -43,40 +43,41 @@ class HubTests: TestCase {
         document.root.setValue("chat", forAttribute: "type")
         document.root.setValue("456", forAttribute: "id")
         
-        expectation(forNotification: Notification.Name.HubDidAddMessageNotification.rawValue, object: hub, handler: nil)
+        var requestedArchive: Archive? = nil
         
-        let dispatchExp = expectation(description: "Message Handled")
+        let getArchiveExp = expectation(description: "Get Archive")
+        hub.archive(for: JID("romeo@example.com")!, create: true) {
+            archive, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(archive)
+                requestedArchive = archive
+                getArchiveExp.fulfill()
+        }
+        waitForExpectations(timeout: 1.0, handler: nil)
+    
+        guard
+            let archive = requestedArchive
+            else { return }
+        
+        expectation(forNotification: Notification.Name.ArchiveDidChange.rawValue, object: archive, handler: nil)
+        let dispatchExp = self.expectation(description: "Message Handled")
         hub.handleMessage(document) { error in
             XCTAssertNil(error)
             dispatchExp.fulfill()
         }
         waitForExpectations(timeout: 1.0, handler: nil)
         
-        // Verify that the message is in the archvie
-        
-        let getArchiveExp = expectation(description: "Get Archive")
-        hub.archive(for: JID("romeo@example.com")!, create: false) {
-            archive, error in
-            XCTAssertNil(error)
-            XCTAssertNotNil(archive)
-            DispatchQueue.main.async {
-                do {
-                    if let archive = archive {
-                        let messages = try archive.all()
-                        XCTAssertEqual(messages.count, 1)
-                        
-                        let message = messages[0]
-                        let document = try archive.document(for: message.messageID)
-                        XCTAssertNotNil(document)
-                        XCTAssertEqual(document.root.value(forAttribute: "id") as? String, "456")
-                    }
-                } catch {
-                    XCTFail("\(error)")
-                }
-                getArchiveExp.fulfill()
-            }
+        do {
+            let messages = try archive.all()
+            XCTAssertEqual(messages.count, 1)
+            
+            let message = messages[0]
+            let document = try archive.document(for: message.messageID)
+            XCTAssertNotNil(document)
+            XCTAssertEqual(document.root.value(forAttribute: "id") as? String, "456")
+        } catch {
+            XCTFail("\(error)")
         }
-        waitForExpectations(timeout: 1.0, handler: nil)
     }
     
     func testSendMessage() {
@@ -93,46 +94,45 @@ class HubTests: TestCase {
         let dispatcher = Dispatcher()
         hub.messageHandler = dispatcher
         
-        expectation(forNotification: Notification.Name.HubDidUpdateMessageNotification.rawValue, object: hub, handler: nil)
+        var requestedArchive: Archive? = nil
         
         let getArchiveExp = expectation(description: "Get Archive")
         hub.archive(for: JID("romeo@example.com")!, create: true) {
             archive, error in
             XCTAssertNil(error)
             XCTAssertNotNil(archive)
-            
-            do {
-                if let archive = archive {
-                    let _ = try archive.insert(document, metadata: Metadata())
-                }
-            } catch {
-                XCTFail("\(error)")
-            }
-            
+            requestedArchive = archive
             getArchiveExp.fulfill()
         }
         waitForExpectations(timeout: 1.0, handler: nil)
         
-        let verify = expectation(description: "Verify Archive")
-        hub.archive(for: JID("romeo@example.com")!, create: false) {
-            archive, error in
-            XCTAssertNil(error)
-            XCTAssertNotNil(archive)
-            
-            do {
-                if let archive = archive {
-                    let messages = try archive.all()
-                    XCTAssertEqual(messages.count, 1)
-                    
-                    let message = messages[0]
-                    XCTAssertNotNil(message.metadata.transmitted)
-                }
-            } catch {
-                XCTFail("\(error)")
+        guard
+            let archive = requestedArchive
+            else { return }
+        
+        do {
+            expectation(forNotification: Notification.Name.ArchiveDidChange.rawValue,
+                        object: archive) {
+                            notification in
+                            guard
+                                let updated = notification.userInfo?[UpdatedMessagesKey] as? [Message],
+                                let message = updated.first
+                                else { return false }
+                            return message.messageID.account == JID("romeo@example.com")!
             }
-            verify.fulfill()
+            
+            let _ = try archive.insert(document, metadata: Metadata())
+            waitForExpectations(timeout: 1.0, handler: nil)
+            
+            let messages = try archive.all()
+            XCTAssertEqual(messages.count, 1)
+            
+            let message = messages[0]
+            XCTAssertNotNil(message.metadata.transmitted)
+            
+        } catch {
+            XCTFail("\(error)")
         }
-        waitForExpectations(timeout: 1.0, handler: nil)
     }
     
     class Dispatcher: NSObject, MessageHandler {

@@ -22,6 +22,21 @@ class ArchiveProxy: Archive {
     init(archive: Archive, delegate: ArchiveProxyDelegate? = nil) {
         self.delegate = delegate
         self.archive = archive
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(archiveDidChange(notification:)),
+            name: nil,
+            object: archive)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc private func archiveDidChange(notification: Notification) {
+        NotificationCenter.default.post(name: notification.name,
+                                        object: self,
+                                        userInfo: notification.userInfo)
     }
     
     // MARK: - Archive

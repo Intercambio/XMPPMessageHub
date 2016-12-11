@@ -68,6 +68,13 @@ class ArchiveTests: TestCase {
         document.root.setValue("123", forAttribute: "id")
         
         do {
+            expectation(forNotification: Notification.Name.ArchiveDidChange.rawValue,
+                        object: archive) { notification in
+                            let inserted = notification.userInfo?[InsertedMessagesKey] as? [Message]
+                            XCTAssertEqual(inserted?.count, 1)
+                            return true
+            }
+            
             var metadata = Metadata()
             metadata.created = Date()
             let message = try archive.insert(document, metadata: metadata)
@@ -80,6 +87,7 @@ class ArchiveTests: TestCase {
             let messages = try archive.all()
             XCTAssertEqual(messages[0].messageID, message.messageID)
             
+            waitForExpectations(timeout: 1.0, handler: nil)
         } catch {
             XCTFail("\(error)")
         }

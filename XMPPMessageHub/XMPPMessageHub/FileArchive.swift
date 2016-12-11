@@ -96,6 +96,7 @@ public class FileArchive: Archive {
             }
             
             let message = Message(messageID: messageID, metadata: metadata)
+            self.postChangeNotificationFor(inserted: [message])
             return message
         }
     }
@@ -106,9 +107,11 @@ public class FileArchive: Archive {
                 let db = self.db
                 else { throw ArchiveError.notSetup }
             
+            var message: Message? = nil
+            
             try db.transaction {
-                let query = Schema.metadata.filter(Schema.metadata_uuid == messageID.uuid)
-                let updated = try db.run(query.update(
+                let metadataQuery = Schema.metadata.filter(Schema.metadata_uuid == messageID.uuid)
+                let updated = try db.run(metadataQuery.update(
                     Schema.metadata_created <- metadata.created,
                     Schema.metadata_transmitted <- metadata.transmitted,
                     Schema.metadata_read <- metadata.read,
@@ -118,10 +121,19 @@ public class FileArchive: Archive {
                 if updated != 1 {
                     throw ArchiveError.doesNotExist
                 }
+                let filter = Schema.metadata[Schema.metadata_uuid] == messageID.uuid
+                let messageQuery = self.makeMessageQuery(with: [Expression<Bool?>(filter)])
+                if let row = try db.pluck(messageQuery) {
+                    message = try self.makeMessage(from: row)
+                }
             }
             
-            let message = Message(messageID: messageID, metadata: metadata)
-            return message
+            guard
+                let result = message
+                else { throw ArchiveError.doesNotExist }
+            
+            self.postChangeNotificationFor(updated: [result])
+            return result
         }
     }
     
@@ -130,18 +142,31 @@ public class FileArchive: Archive {
             guard
                 let db = self.db
                 else { throw ArchiveError.notSetup }
+            
+            var message: Message? = nil
+            
             try db.transaction {
-                let query = Schema.metadata.filter(Schema.metadata_uuid == messageID.uuid)
-                let updated = try db.run(query.update(
+                let metadataQuery = Schema.metadata.filter(Schema.metadata_uuid == messageID.uuid)
+                let updated = try db.run(metadataQuery.update(
                     Schema.metadata_transmitted <- transmitted,
                     Schema.metadata_error <- error as? NSError
                 ))
                 if updated != 1 {
                     throw ArchiveError.doesNotExist
                 }
+                let filter = Schema.metadata[Schema.metadata_uuid] == messageID.uuid
+                let messageQuery = self.makeMessageQuery(with: [Expression<Bool?>(filter)])
+                if let row = try db.pluck(messageQuery) {
+                    message = try self.makeMessage(from: row)
+                }
             }
-            let filter = Schema.metadata[Schema.metadata_uuid] == messageID.uuid
-            return try self.firstMessage(filter: [Expression<Bool?>(filter)])
+            
+            guard
+                let result = message
+                else { throw ArchiveError.doesNotExist }
+            
+            self.postChangeNotificationFor(updated: [result])
+            return result
         }
     }
     
@@ -152,11 +177,42 @@ public class FileArchive: Archive {
                 let db = self.db
                 else { throw ArchiveError.notSetup }
             
+            var message: Message? = nil
+            
             try db.transaction {
+                
+                let filter = Schema.metadata[Schema.metadata_uuid] == messageID.uuid
+                let messageQuery = self.makeMessageQuery(with: [Expression<Bool?>(filter)])
+                guard
+                    let row = try db.pluck(messageQuery)
+                    else { throw ArchiveError.doesNotExist  }
+                
+                message = try self.makeMessage(from: row)
+
                 let _ = try db.run(Schema.message.filter(Schema.message_uuid == messageID.uuid).delete())
                 let _ = try db.run(Schema.metadata.filter(Schema.metadata_uuid == messageID.uuid).delete())
+                try store.delete(documentWith: messageID.uuid)
             }
-            try store.delete(documentWith: messageID.uuid)
+            
+            guard
+                let result = message
+                else { throw ArchiveError.doesNotExist }
+            
+            self.postChangeNotificationFor(deleted: [result])
+        }
+    }
+    
+    private func postChangeNotificationFor(inserted: [Message]? = nil, updated: [Message]? = nil, deleted: [Message]? = nil) {
+        var userInfo: [AnyHashable : Any] = [:]
+        userInfo[InsertedMessagesKey] = inserted
+        userInfo[UpdatedMessagesKey] = updated
+        userInfo[DeletedMessagesKey] = deleted
+        let notification = Notification(name: Notification.Name.ArchiveDidChange,
+                                        object: self,
+                                        userInfo: userInfo)
+        let notificationCenter = NotificationCenter.default
+        DispatchQueue.global().async {
+            notificationCenter.post(notification)
         }
     }
     

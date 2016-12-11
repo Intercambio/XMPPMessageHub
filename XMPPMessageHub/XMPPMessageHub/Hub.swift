@@ -10,11 +10,6 @@ import Foundation
 import XMPPFoundation
 import PureXML
 
-extension NSNotification.Name {
-    public static let HubDidAddMessageNotification = Notification.Name(rawValue: "XMPPMessageHubDidAddMessageNotification")
-    public static let HubDidUpdateMessageNotification = Notification.Name(rawValue: "XMPPMessageHubDidUpdateMessageNotification")
-}
-
 public enum HubError: Error {
     case invalidDocument
 }
@@ -126,38 +121,17 @@ extension Hub: ArchiveProxyDelegate, InboundMesageHandlerDelegate, OutboundMessa
     // MARK: - InboundMesageHandlerDelegate
     
     func inboundMessageHandler(_ handler: InboundMesageHandler, didReceive message: Message) {
-        queue.async {
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(
-                    name: NSNotification.Name.HubDidAddMessageNotification,
-                    object: self,
-                    userInfo: [Hub.MessageKey:message])
-            }
-        }
+        NSLog("Did receive message: \(message.messageID)")
     }
     
     // MARK: - OutboundMessageHandlerDelegate
     
     func outboundMessageHandler(_ handler: OutboundMessageHandler, didSent message: Message) {
-        queue.async {
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(
-                    name: NSNotification.Name.HubDidUpdateMessageNotification,
-                    object: self,
-                    userInfo: [Hub.MessageKey:message])
-            }
-        }
+        NSLog("Did send message: \(message.messageID)")
     }
     
     func outboundMessageHandler(_ handler: OutboundMessageHandler, failedToSend message: Message, with error: Error) {
-        queue.async {
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(
-                    name: NSNotification.Name.HubDidUpdateMessageNotification,
-                    object: self,
-                    userInfo: [Hub.MessageKey:message])
-            }
-        }
+        NSLog("Failed to send message: \(message.messageID) with error: \(error.localizedDescription)")
     }
     
     // MARK: - MessageCarbonsDispatchHandlerDelegate

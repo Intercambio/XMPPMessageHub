@@ -36,3 +36,11 @@ public protocol Archive {
 
     func counterparts() throws -> [JID]
 }
+
+extension Notification.Name {
+    public static let ArchiveDidChange = Notification.Name("XMPPMessageHubArchiveDidChange")
+}
+
+public let InsertedMessagesKey: String = "XMPPMessageHubInsertedMessagesKey"
+public let UpdatedMessagesKey: String = "XMPPMessageHubUpdatedMessagesKey"
+public let DeletedMessagesKey: String = "XMPPMessageHubDeletedMessagesKey"
