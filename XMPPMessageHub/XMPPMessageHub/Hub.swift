@@ -10,10 +10,6 @@ import Foundation
 import XMPPFoundation
 import PureXML
 
-public enum HubError: Error {
-    case invalidDocument
-}
-
 public class Hub: NSObject, ArchvieManager, MessageHandler, DispatcherHandler {
     
     public static let MessageKey = "XMPPMessageHubMessageKey"

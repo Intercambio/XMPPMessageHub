@@ -10,6 +10,10 @@ import Foundation
 import PureXML
 import XMPPFoundation
 
+enum InboundMesageHandlerError: Error {
+    case invalidDocument
+}
+
 protocol InboundMesageHandlerDelegate: class {
     func inboundMessageHandler(_ handler: InboundMesageHandler, didReceive message: Message) -> Void
 }
@@ -47,7 +51,7 @@ class InboundMesageHandler: NSObject, MessageHandler {
             let message = document.root as? MessageStanza,
             let to = message.to
             else {
-                completion?(HubError.invalidDocument)
+                completion?(InboundMesageHandlerError.invalidDocument)
                 return
         }
         
