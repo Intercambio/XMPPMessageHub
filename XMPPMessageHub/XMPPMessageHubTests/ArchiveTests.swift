@@ -77,7 +77,7 @@ class ArchiveTests: TestCase {
             
             var metadata = Metadata()
             metadata.created = Date()
-            let message = try archive.insert(document, metadata: metadata)
+            let (message, _) = try archive.insert(document, metadata: metadata)
             XCTAssertNotNil(message)
         
             let document = try archive.document(for: message.messageID)
@@ -154,7 +154,7 @@ class ArchiveTests: TestCase {
         do {
             var metadata = Metadata()
             metadata.created = Date()
-            var message = try archive.insert(document, metadata: metadata)
+            var (message, _) = try archive.insert(document, metadata: metadata)
             XCTAssertNotNil(message)
             
             let error = NSError(domain: "MyError", code: 234, userInfo: ["some": "user info"])
@@ -203,7 +203,7 @@ class ArchiveTests: TestCase {
         do {
             var metadata = Metadata()
             metadata.created = Date()
-            let message = try archive.insert(document, metadata: metadata)
+            let (message, _) = try archive.insert(document, metadata: metadata)
             XCTAssertNotNil(message)
 
             let storedMessage = try archive.message(with: message.messageID)
@@ -391,7 +391,7 @@ class ArchiveTests: TestCase {
         do {
             var metadata = Metadata()
             metadata.created = Date()
-            let message = try archive.insert(document, metadata: metadata)
+            let (message, _) = try archive.insert(document, metadata: metadata)
             XCTAssertNotNil(message)
             
             try archive.delete(message.messageID)

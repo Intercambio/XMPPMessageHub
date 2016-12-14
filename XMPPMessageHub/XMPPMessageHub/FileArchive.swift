@@ -60,7 +60,7 @@ public class FileArchive: Archive {
     
     // MARK: Insert, Update and Delete Messages
     
-    public func insert(_ document: PXDocument, metadata: Metadata) throws -> Message {
+    public func insert(_ document: PXDocument, metadata: Metadata) throws -> (Message, PXDocument) {
         return try queue.sync {
             
             guard
@@ -97,7 +97,7 @@ public class FileArchive: Archive {
             
             let message = Message(messageID: messageID, metadata: metadata)
             self.postChangeNotificationFor(inserted: [message])
-            return message
+            return (message, document)
         }
     }
     

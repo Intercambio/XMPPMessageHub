@@ -82,7 +82,7 @@ class InboundMesageHandler: NSObject, MessageHandler {
     // MARK: -
     
     private func insert(_ document: PXDocument, with metadata: Metadata, in archive: Archive) throws {
-        let message = try archive.insert(document, metadata: metadata)
+        let (message, _) = try archive.insert(document, metadata: metadata)
         delegate?.inboundMessageHandler(self, didReceive: message)
     }
     
