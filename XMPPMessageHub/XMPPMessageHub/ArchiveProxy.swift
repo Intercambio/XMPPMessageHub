@@ -43,8 +43,8 @@ class ArchiveProxy: Archive {
     
     var account: JID { return archive.account }
     
-    func insert(_ document: PXDocument, metadata: Metadata) throws -> (Message, PXDocument) {
-        let (message, document) = try archive.insert(document, metadata: metadata)
+    func insert(_ document: PXDocument, metadata: Metadata, copy: Bool) throws -> (Message, PXDocument) {
+        let (message, document) = try archive.insert(document, metadata: metadata, copy: copy)
         delegate?.archiveProxy(self, didInsert: message, with: document)
         return (message, document)
     }

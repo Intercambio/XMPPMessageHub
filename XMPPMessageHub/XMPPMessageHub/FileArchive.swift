@@ -60,7 +60,7 @@ public class FileArchive: Archive {
     
     // MARK: Insert, Update and Delete Messages
     
-    public func insert(_ document: PXDocument, metadata: Metadata) throws -> (Message, PXDocument) {
+    public func insert(_ document: PXDocument, metadata: Metadata, copy: Bool = false) throws -> (Message, PXDocument) {
         return try queue.sync {
             
             guard
@@ -68,9 +68,13 @@ public class FileArchive: Archive {
                 let db = self.db
                 else { throw ArchiveError.notSetup }
             
+            let document = copy ? document : PXDocument(element: document.root)!
             
             let uuid = UUID()
             let messageID = try self.makeMessageID(for: document, with: uuid)
+            
+            let originId = document.root.add(withName: "origin-id", namespace: "urn:xmpp:sid:0", content: nil)
+            originId?.setValue(uuid.uuidString.lowercased(), forAttribute: "id")
             
             try store.write(document, with: uuid)
             try db.transaction {

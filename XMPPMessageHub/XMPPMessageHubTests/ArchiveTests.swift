@@ -84,6 +84,13 @@ class ArchiveTests: TestCase {
             XCTAssertNotNil(document)
             XCTAssertEqual(document.root.value(forAttribute: "id") as? String, "123")
             
+            if let element = document.root.nodes(forXPath: "./sid:origin-id",
+                                                 usingNamespaces: ["sid":"urn:xmpp:sid:0"]).first as? PXElement {
+                XCTAssertEqual(element.value(forAttribute: "id") as? String, message.messageID.uuid.uuidString.lowercased())
+            } else {
+                XCTFail("Expecting an 'origin-id' element.")
+            }
+            
             let messages = try archive.all()
             XCTAssertEqual(messages[0].messageID, message.messageID)
             
