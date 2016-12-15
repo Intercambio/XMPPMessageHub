@@ -75,7 +75,14 @@ public class FileArchive: Archive {
             try db.transaction {
                 
                 if messageID.originID != nil {
-                    let exists = try self.existsMessage(with: messageID)
+                    let exists = try self.existsOriginID(with: messageID)
+                    if exists {
+                        throw ArchiveError.duplicateMessage
+                    }
+                }
+                
+                if messageID.stanzaID != nil {
+                    let exists = try self.existsRemoteID(with: messageID)
                     if exists {
                         throw ArchiveError.duplicateMessage
                     }
@@ -88,7 +95,8 @@ public class FileArchive: Archive {
                         Schema.message_counterpart <- messageID.counterpart,
                         Schema.message_direction <- messageID.direction,
                         Schema.message_type <- messageID.type,
-                        Schema.message_origin_id <- messageID.originID
+                        Schema.message_origin_id <- messageID.originID,
+                        Schema.message_stanza_id <- messageID.stanzaID
                     )
                 )
                 let _ = try db.run(
@@ -109,7 +117,7 @@ public class FileArchive: Archive {
         }
     }
     
-    private func existsMessage(with messageID: MessageID) throws -> Bool {
+    private func existsOriginID(with messageID: MessageID) throws -> Bool {
         guard
             let db = self.db,
             let originID = messageID.originID
@@ -124,6 +132,26 @@ public class FileArchive: Archive {
             && Schema.message_account == account
             && Schema.message_counterpart == counterpart
             && Schema.message_direction == direction)
+        
+        let row = try db.pluck(query)
+        return row != nil
+    }
+
+    private func existsRemoteID(with messageID: MessageID) throws -> Bool {
+        guard
+            let db = self.db,
+            let stanzaID = messageID.stanzaID
+            else { throw ArchiveError.notSetup }
+        
+        let account = messageID.account.bare()
+        let counterpart = messageID.counterpart.bare()
+        let direction = messageID.direction
+        
+        let query = Schema.message.filter(
+            Schema.message_stanza_id == stanzaID
+                && Schema.message_account == account
+                && Schema.message_counterpart == counterpart
+                && Schema.message_direction == direction)
         
         let row = try db.pluck(query)
         return row != nil
@@ -419,6 +447,7 @@ public class FileArchive: Archive {
             Schema.message[Schema.message_direction],
             Schema.message[Schema.message_type],
             Schema.message[Schema.message_origin_id],
+            Schema.message[Schema.message_stanza_id],
             Schema.metadata[Schema.metadata_created],
             Schema.metadata[Schema.metadata_transmitted],
             Schema.metadata[Schema.metadata_read],
@@ -437,6 +466,7 @@ public class FileArchive: Archive {
         let direction = row.get(Schema.message[Schema.message_direction])
         let type = row.get(Schema.message[Schema.message_type])
         let originID = row.get(Schema.message[Schema.message_origin_id])
+        let stanzaID = row.get(Schema.message[Schema.message_stanza_id])
         
         let messageID = MessageID(
             uuid: uuid,
@@ -444,7 +474,8 @@ public class FileArchive: Archive {
             counterpart: counterpart,
             direction: direction,
             type: type,
-            originID: originID)
+            originID: originID,
+            stanzaID: stanzaID)
         
         var metadata = Metadata()
         metadata.created = row.get(Schema.metadata[Schema.metadata_created])
@@ -473,6 +504,7 @@ public class FileArchive: Archive {
         let counterpart = direction == .outbound ? to.bare() : from.bare()
         let type = message.type.messageType
         let originID = message.originID
+        let stanzaID = message.stanzaID(by: account.bare())
         
         return MessageID(
             uuid: uuid,
@@ -480,7 +512,8 @@ public class FileArchive: Archive {
             counterpart: counterpart,
             direction: direction,
             type: type,
-            originID: originID)
+            originID: originID,
+            stanzaID: stanzaID)
     }
 }
 

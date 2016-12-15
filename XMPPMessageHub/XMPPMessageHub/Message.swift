@@ -41,6 +41,7 @@ public struct MessageID: Equatable, Hashable {
     public let type: MessageType
     
     public let originID: String?
+    public let stanzaID: String? // stanza ID by the bare JID ot the account
 
     public static func ==(lhs: MessageID, rhs: MessageID) -> Bool {
         return lhs.uuid == rhs.uuid

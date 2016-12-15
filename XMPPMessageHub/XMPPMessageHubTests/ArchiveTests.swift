@@ -67,10 +67,12 @@ class ArchiveTests: TestCase {
         document.root.setValue("chat", forAttribute: "type")
         document.root.setValue("123", forAttribute: "id")
         
-        let id = "1234566"
-        
         let originId = document.root.add(withName: "origin-id", namespace: "urn:xmpp:sid:0", content: nil)
-        originId?.setValue(id, forAttribute: "id")
+        originId?.setValue("1234566", forAttribute: "id")
+        
+        let stanzaId = document.root.add(withName: "stanza-id", namespace: "urn:xmpp:sid:0", content: nil)
+        stanzaId?.setValue("346", forAttribute: "id")
+        stanzaId?.setValue("from@example.com", forAttribute: "by")
         
         do {
             expectation(forNotification: Notification.Name.ArchiveDidChange.rawValue,
@@ -85,6 +87,7 @@ class ArchiveTests: TestCase {
             let message = try archive.insert(document, metadata: metadata)
             XCTAssertNotNil(message)
             XCTAssertEqual(message.messageID.originID, "1234566")
+            XCTAssertEqual(message.messageID.stanzaID, "346")
             
             let document = try archive.document(for: message.messageID)
             XCTAssertNotNil(document)
@@ -119,6 +122,34 @@ class ArchiveTests: TestCase {
             let message = try archive.insert(document, metadata: metadata)
             XCTAssertNotNil(message)
 
+            XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) {error in
+                XCTAssertEqual(error as? ArchiveError, .duplicateMessage)
+            }
+            
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+    
+    func testInsertDuplicateStanzaID() {
+        guard let archive = self.archive else { return }
+        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        
+        document.root.setValue("from@example.com", forAttribute: "from")
+        document.root.setValue("to@example.com", forAttribute: "to")
+        document.root.setValue("chat", forAttribute: "type")
+        document.root.setValue("123", forAttribute: "id")
+        
+        let stanzaId = document.root.add(withName: "stanza-id", namespace: "urn:xmpp:sid:0", content: nil)
+        stanzaId?.setValue("346", forAttribute: "id")
+        stanzaId?.setValue("from@example.com", forAttribute: "by")
+        
+        do {
+            
+            let metadata = Metadata()
+            let message = try archive.insert(document, metadata: metadata)
+            XCTAssertNotNil(message)
+            
             XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) {error in
                 XCTAssertEqual(error as? ArchiveError, .duplicateMessage)
             }
@@ -220,7 +251,8 @@ class ArchiveTests: TestCase {
                                   counterpart: JID("b@example.com")!,
                                   direction: .outbound,
                                   type: .normal,
-                                  originID: nil)
+                                  originID: nil,
+                                  stanzaID: nil)
         let metadata = Metadata()
         XCTAssertThrowsError(try archive.update(metadata, for: messageID)) {error in
             XCTAssertEqual(error as? ArchiveError, .doesNotExist)
@@ -258,7 +290,8 @@ class ArchiveTests: TestCase {
                                   counterpart: JID("b@example.com")!,
                                   direction: .outbound,
                                   type: .normal,
-                                  originID: nil)
+                                  originID: nil,
+                                  stanzaID: nil)
         
         XCTAssertThrowsError(try archive.message(with: messageID)) {error in
             XCTAssertEqual(error as? ArchiveError, .doesNotExist)
