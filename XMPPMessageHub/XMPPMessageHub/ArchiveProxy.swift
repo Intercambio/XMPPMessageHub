@@ -44,6 +44,9 @@ class ArchiveProxy: Archive {
     var account: JID { return archive.account }
     
     func insert(_ document: PXDocument, metadata: Metadata) throws -> Message {
+        if let message = document.root as? MessageStanza {
+            message.originID = UUID().uuidString.lowercased()
+        }
         let message = try archive.insert(document, metadata: metadata)
         delegate?.archiveProxy(self, didInsert: message, with: document)
         return message
