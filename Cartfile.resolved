@@ -1,3 +1,3 @@
 github "Internetslum/PureXML" "1.1"
 github "stephencelis/SQLite.swift" "0.11.1"
-git "ssh://git@garage.tobias-kraentzer.de/source/XMPPFoundation.git" "9a622513373a2c775f19dc796dad84642c0eb5ab"
+git "ssh://git@garage.tobias-kraentzer.de/source/XMPPFoundation.git" "0fe68dedcebcdf52d3a7d1e404948668db6790ee"

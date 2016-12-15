@@ -67,6 +67,11 @@ class ArchiveTests: TestCase {
         document.root.setValue("chat", forAttribute: "type")
         document.root.setValue("123", forAttribute: "id")
         
+        let id = "1234566"
+        
+        let originId = document.root.add(withName: "origin-id", namespace: "urn:xmpp:sid:0", content: nil)
+        originId?.setValue(id, forAttribute: "id")
+        
         do {
             expectation(forNotification: Notification.Name.ArchiveDidChange.rawValue,
                         object: archive) { notification in
@@ -79,17 +84,11 @@ class ArchiveTests: TestCase {
             metadata.created = Date()
             let (message, _) = try archive.insert(document, metadata: metadata)
             XCTAssertNotNil(message)
-        
+            XCTAssertEqual(message.messageID.originID, "1234566")
+            
             let document = try archive.document(for: message.messageID)
             XCTAssertNotNil(document)
             XCTAssertEqual(document.root.value(forAttribute: "id") as? String, "123")
-            
-            if let element = document.root.nodes(forXPath: "./sid:origin-id",
-                                                 usingNamespaces: ["sid":"urn:xmpp:sid:0"]).first as? PXElement {
-                XCTAssertEqual(element.value(forAttribute: "id") as? String, message.messageID.uuid.uuidString.lowercased())
-            } else {
-                XCTFail("Expecting an 'origin-id' element.")
-            }
             
             let messages = try archive.all()
             XCTAssertEqual(messages[0].messageID, message.messageID)
@@ -191,7 +190,8 @@ class ArchiveTests: TestCase {
                                   account:JID("a@example.com")!,
                                   counterpart: JID("b@example.com")!,
                                   direction: .outbound,
-                                  type: .normal)
+                                  type: .normal,
+                                  originID: nil)
         let metadata = Metadata()
         XCTAssertThrowsError(try archive.update(metadata, for: messageID)) {error in
             XCTAssertEqual(error as? ArchiveError, .doesNotExist)
@@ -228,7 +228,8 @@ class ArchiveTests: TestCase {
                                   account:JID("a@example.com")!,
                                   counterpart: JID("b@example.com")!,
                                   direction: .outbound,
-                                  type: .normal)
+                                  type: .normal,
+                                  originID: nil)
         
         XCTAssertThrowsError(try archive.message(with: messageID)) {error in
             XCTAssertEqual(error as? ArchiveError, .doesNotExist)

@@ -40,6 +40,8 @@ public struct MessageID: Equatable, Hashable {
     public let direction: MessageDirection
     public let type: MessageType
     
+    public let originID: String?
+
     public static func ==(lhs: MessageID, rhs: MessageID) -> Bool {
         return lhs.uuid == rhs.uuid
     }
