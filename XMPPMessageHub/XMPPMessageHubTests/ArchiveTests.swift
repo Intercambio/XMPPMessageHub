@@ -99,6 +99,35 @@ class ArchiveTests: TestCase {
         }
     }
     
+    func testInsertDuplicateOriginID() {
+        guard let archive = self.archive else { return }
+        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        
+        document.root.setValue("from@example.com", forAttribute: "from")
+        document.root.setValue("to@example.com", forAttribute: "to")
+        document.root.setValue("chat", forAttribute: "type")
+        document.root.setValue("123", forAttribute: "id")
+        
+        let id = "1234566"
+        
+        let originId = document.root.add(withName: "origin-id", namespace: "urn:xmpp:sid:0", content: nil)
+        originId?.setValue(id, forAttribute: "id")
+        
+        do {
+    
+            let metadata = Metadata()
+            let message = try archive.insert(document, metadata: metadata)
+            XCTAssertNotNil(message)
+
+            XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) {error in
+                XCTAssertEqual(error as? ArchiveError, .duplicateMessage)
+            }
+            
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+    
     func testInsertInvalidDocument() {
         guard let archive = self.archive else { return }
         guard let document = PXDocument(elementName: "foo", namespace: "bar", prefix: nil) else { return }
@@ -354,7 +383,7 @@ class ArchiveTests: TestCase {
         }
     }
     
-    func testAccessPerformance() {
+    func _testAccessPerformance() {
         guard let archive = self.archive else { return }
         guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
         

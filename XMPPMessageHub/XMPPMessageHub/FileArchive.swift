@@ -73,6 +73,14 @@ public class FileArchive: Archive {
             
             try store.write(document, with: uuid)
             try db.transaction {
+                
+                if messageID.originID != nil {
+                    let exists = try self.existsMessage(with: messageID)
+                    if exists {
+                        throw ArchiveError.duplicateMessage
+                    }
+                }
+                
                 let _ = try db.run(
                     Schema.message.insert(
                         Schema.message_uuid <- messageID.uuid,
@@ -99,6 +107,26 @@ public class FileArchive: Archive {
             self.postChangeNotificationFor(inserted: [message])
             return message
         }
+    }
+    
+    private func existsMessage(with messageID: MessageID) throws -> Bool {
+        guard
+            let db = self.db,
+            let originID = messageID.originID
+            else { throw ArchiveError.notSetup }
+        
+        let account = messageID.account.bare()
+        let counterpart = messageID.counterpart.bare()
+        let direction = messageID.direction
+        
+        let query = Schema.message.filter(
+            Schema.message_origin_id == originID
+            && Schema.message_account == account
+            && Schema.message_counterpart == counterpart
+            && Schema.message_direction == direction)
+        
+        let row = try db.pluck(query)
+        return row != nil
     }
     
     public func update(_ metadata: Metadata, for messageID: MessageID) throws -> Message {

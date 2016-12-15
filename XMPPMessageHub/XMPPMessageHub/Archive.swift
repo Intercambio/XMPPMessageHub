@@ -16,6 +16,7 @@ public enum ArchiveError:  Error {
     case internalError
     case accountMismatch
     case doesNotExist
+    case duplicateMessage
 }
 
 public protocol Archive {
