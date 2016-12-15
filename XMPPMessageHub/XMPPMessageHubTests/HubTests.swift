@@ -121,7 +121,7 @@ class HubTests: TestCase {
                             return message.messageID.account == JID("romeo@example.com")!
             }
             
-            let _ = try archive.insert(document, metadata: Metadata(), copy: false)
+            let _ = try archive.insert(document, metadata: Metadata())
             waitForExpectations(timeout: 1.0, handler: nil)
             
             let messages = try archive.all()
