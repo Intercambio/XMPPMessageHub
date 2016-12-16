@@ -18,6 +18,8 @@ extension FileArchive {
         static let message_counterpart = Expression<JID>("counterpart")
         static let message_direction = Expression<MessageDirection>("direction")
         static let message_type = Expression<MessageType>("type")
+        static let message_origin_id = Expression<String?>("origin_id")
+        static let message_stanza_id = Expression<String?>("stanza_id")
         
         static let metadata = Table("metadata")
         static let metadata_uuid = Expression<UUID>("uuid")
@@ -94,9 +96,13 @@ extension FileArchive {
                 t.column(Schema.message_direction)
                 t.column(Schema.message_counterpart)
                 t.column(Schema.message_type)
+                t.column(Schema.message_origin_id)
+                t.column(Schema.message_stanza_id)
             })
             try db.run(Schema.message.createIndex(Schema.message_account))
             try db.run(Schema.message.createIndex(Schema.message_counterpart))
+            try db.run(Schema.message.createIndex(Schema.message_origin_id))
+            try db.run(Schema.message.createIndex(Schema.message_stanza_id))
             try db.run(Schema.metadata.create { t in
                 t.column(Schema.metadata_uuid, primaryKey: true)
                 t.column(Schema.metadata_created)

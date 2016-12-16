@@ -68,19 +68,35 @@ public class FileArchive: Archive {
                 let db = self.db
                 else { throw ArchiveError.notSetup }
             
-            
             let uuid = UUID()
             let messageID = try self.makeMessageID(for: document, with: uuid)
             
             try store.write(document, with: uuid)
             try db.transaction {
+                
+                if messageID.originID != nil {
+                    let exists = try self.existsOriginID(with: messageID)
+                    if exists {
+                        throw ArchiveError.duplicateMessage
+                    }
+                }
+                
+                if messageID.stanzaID != nil {
+                    let exists = try self.existsRemoteID(with: messageID)
+                    if exists {
+                        throw ArchiveError.duplicateMessage
+                    }
+                }
+                
                 let _ = try db.run(
                     Schema.message.insert(
                         Schema.message_uuid <- messageID.uuid,
                         Schema.message_account <- messageID.account,
                         Schema.message_counterpart <- messageID.counterpart,
                         Schema.message_direction <- messageID.direction,
-                        Schema.message_type <- messageID.type
+                        Schema.message_type <- messageID.type,
+                        Schema.message_origin_id <- messageID.originID,
+                        Schema.message_stanza_id <- messageID.stanzaID
                     )
                 )
                 let _ = try db.run(
@@ -99,6 +115,46 @@ public class FileArchive: Archive {
             self.postChangeNotificationFor(inserted: [message])
             return message
         }
+    }
+    
+    private func existsOriginID(with messageID: MessageID) throws -> Bool {
+        guard
+            let db = self.db,
+            let originID = messageID.originID
+            else { throw ArchiveError.notSetup }
+        
+        let account = messageID.account.bare()
+        let counterpart = messageID.counterpart.bare()
+        let direction = messageID.direction
+        
+        let query = Schema.message.filter(
+            Schema.message_origin_id == originID
+            && Schema.message_account == account
+            && Schema.message_counterpart == counterpart
+            && Schema.message_direction == direction)
+        
+        let row = try db.pluck(query)
+        return row != nil
+    }
+
+    private func existsRemoteID(with messageID: MessageID) throws -> Bool {
+        guard
+            let db = self.db,
+            let stanzaID = messageID.stanzaID
+            else { throw ArchiveError.notSetup }
+        
+        let account = messageID.account.bare()
+        let counterpart = messageID.counterpart.bare()
+        let direction = messageID.direction
+        
+        let query = Schema.message.filter(
+            Schema.message_stanza_id == stanzaID
+                && Schema.message_account == account
+                && Schema.message_counterpart == counterpart
+                && Schema.message_direction == direction)
+        
+        let row = try db.pluck(query)
+        return row != nil
     }
     
     public func update(_ metadata: Metadata, for messageID: MessageID) throws -> Message {
@@ -390,6 +446,8 @@ public class FileArchive: Archive {
             Schema.message[Schema.message_counterpart],
             Schema.message[Schema.message_direction],
             Schema.message[Schema.message_type],
+            Schema.message[Schema.message_origin_id],
+            Schema.message[Schema.message_stanza_id],
             Schema.metadata[Schema.metadata_created],
             Schema.metadata[Schema.metadata_transmitted],
             Schema.metadata[Schema.metadata_read],
@@ -407,8 +465,17 @@ public class FileArchive: Archive {
         let counterpart = row.get(Schema.message[Schema.message_counterpart])
         let direction = row.get(Schema.message[Schema.message_direction])
         let type = row.get(Schema.message[Schema.message_type])
+        let originID = row.get(Schema.message[Schema.message_origin_id])
+        let stanzaID = row.get(Schema.message[Schema.message_stanza_id])
         
-        let messageID = MessageID(uuid: uuid, account: account, counterpart: counterpart, direction: direction, type: type)
+        let messageID = MessageID(
+            uuid: uuid,
+            account: account,
+            counterpart: counterpart,
+            direction: direction,
+            type: type,
+            originID: originID,
+            stanzaID: stanzaID)
         
         var metadata = Metadata()
         metadata.created = row.get(Schema.metadata[Schema.metadata_created])
@@ -417,7 +484,9 @@ public class FileArchive: Archive {
         metadata.error = row.get(Schema.metadata[Schema.metadata_error])
         metadata.isCarbonCopy = row.get(Schema.metadata[Schema.metadata_is_carbon_copy])
         
-        return Message(messageID: messageID, metadata: metadata)
+        return Message(
+            messageID: messageID,
+            metadata: metadata)
     }
     
     private func makeMessageID(for document: PXDocument, with uuid: UUID) throws -> MessageID {
@@ -434,8 +503,17 @@ public class FileArchive: Archive {
         let direction: MessageDirection = account.isEqual(from.bare()) ? .outbound : .inbound
         let counterpart = direction == .outbound ? to.bare() : from.bare()
         let type = message.type.messageType
+        let originID = message.originID
+        let stanzaID = message.stanzaID(by: account.bare())
         
-        return MessageID(uuid: uuid, account: account, counterpart: counterpart, direction: direction, type: type)
+        return MessageID(
+            uuid: uuid,
+            account: account,
+            counterpart: counterpart,
+            direction: direction,
+            type: type,
+            originID: originID,
+            stanzaID: stanzaID)
     }
 }
 

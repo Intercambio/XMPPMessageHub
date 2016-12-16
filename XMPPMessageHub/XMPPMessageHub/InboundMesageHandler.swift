@@ -66,7 +66,7 @@ class InboundMesageHandler: NSObject, MessageHandler {
                 }
                 
                 if let archive = self.archiveByAccount[account] {
-                    try self.insert(result.document, with: result.metadata, in: archive)
+                    try self.insert(result.document, with: result.metadata, in: archive, copy: false)
                     completion?(nil)
                 } else {
                     let pending = PendingMessageDispatch(document: result.document, metadata: result.metadata, account: account, completion: completion)
@@ -81,7 +81,7 @@ class InboundMesageHandler: NSObject, MessageHandler {
     
     // MARK: -
     
-    private func insert(_ document: PXDocument, with metadata: Metadata, in archive: Archive) throws {
+    private func insert(_ document: PXDocument, with metadata: Metadata, in archive: Archive, copy: Bool) throws {
         let message = try archive.insert(document, metadata: metadata)
         delegate?.inboundMessageHandler(self, didReceive: message)
     }
@@ -101,7 +101,7 @@ class InboundMesageHandler: NSObject, MessageHandler {
                 }
                 
                 do {
-                    try self.insert(pending.document, with: pending.metadata, in: archive)
+                    try self.insert(pending.document, with: pending.metadata, in: archive, copy: false)
                     pending.completion?(nil)
                 } catch {
                     pending.completion?(error)

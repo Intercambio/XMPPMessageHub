@@ -129,6 +129,7 @@ class HubTests: TestCase {
             
             let message = messages[0]
             XCTAssertNotNil(message.metadata.transmitted)
+            XCTAssertNotNil(message.messageID.originID)
             
         } catch {
             XCTFail("\(error)")
