@@ -23,17 +23,19 @@ public class Hub: NSObject, ArchvieManager, MessageHandler, DispatcherHandler {
     fileprivate let messageCarbonsDispatchHandler: MessageCarbonsDispatchHandler
     fileprivate let queue: DispatchQueue
     
+    private let inboundFilter: [MessageFilter]
+    
     private var archiveByAccount: [JID:Archive] = [:]
     
     required public init(archvieManager: ArchvieManager) {
-        let inboundFilter: [MessageFilter] = [
+        inboundFilter = [
             MessageCarbonsFilter(direction: .received),
             MessageCarbonsFilter(direction: .sent)
         ]
         let outboundFilter: [MessageFilter] = [
         ]
         self.archvieManager = archvieManager
-        self.inboundMessageHandler = InboundMesageHandler(archvieManager: archvieManager, inboundFilter: inboundFilter)
+        self.inboundMessageHandler = InboundMesageHandler(archvieManager: archvieManager)
         self.outboundMessageHandler = OutboundMessageHandler(outboundFilter: outboundFilter)
         self.messageCarbonsDispatchHandler = MessageCarbonsDispatchHandler()
         queue = DispatchQueue(
@@ -72,8 +74,21 @@ public class Hub: NSObject, ArchvieManager, MessageHandler, DispatcherHandler {
     
     public func handleMessage(_ document: PXDocument,
                               completion: ((Error?) -> Void)?) {
-        queue.async {
-           self.inboundMessageHandler.handleMessage(document, completion: completion)
+        queue.async(flags: [.barrier]) {
+            do {
+                let now = Date()
+                let metadata = Metadata(created: now, transmitted: now, read: nil, error: nil, isCarbonCopy: false)
+                
+                let result = try self.inboundFilter.reduce((document: document, metadata: metadata, userInfo: [:])) { input, filter in
+                    return try filter.apply(to: input.document, with: input.metadata, userInfo: [:])
+                }
+                
+                self.inboundMessageHandler.insert(result.document, with: result.metadata, userInfo: result.userInfo) { (message, error) in
+                    completion?(error)
+                }
+            } catch {
+                completion?(error)
+            }
         }
     }
     
