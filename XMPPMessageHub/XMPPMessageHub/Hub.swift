@@ -42,7 +42,6 @@ public class Hub: NSObject, ArchvieManager, MessageHandler, DispatcherHandler {
             label: "Hub",
             attributes: [.concurrent])
         super.init()
-        self.inboundMessageHandler.delegate = self
         self.outboundMessageHandler.delegate = self
         self.messageCarbonsDispatchHandler.delegate = self
     }
@@ -119,7 +118,7 @@ public class Hub: NSObject, ArchvieManager, MessageHandler, DispatcherHandler {
     }
 }
 
-extension Hub: ArchiveProxyDelegate, InboundMesageHandlerDelegate, OutboundMessageHandlerDelegate, MessageCarbonsDispatchHandlerDelegate {
+extension Hub: ArchiveProxyDelegate, OutboundMessageHandlerDelegate, MessageCarbonsDispatchHandlerDelegate {
     
     // MARK: - ArchiveProxyDelegate
     
@@ -127,12 +126,6 @@ extension Hub: ArchiveProxyDelegate, InboundMesageHandlerDelegate, OutboundMessa
         queue.async(flags: [.barrier]) {
             self.outboundMessageHandler.send(message, with: document, in: proxy.archive)
         }
-    }
-    
-    // MARK: - InboundMesageHandlerDelegate
-    
-    func inboundMessageHandler(_ handler: InboundMesageHandler, didReceive message: Message, userInfo: [AnyHashable:Any]) {
-        NSLog("Did receive message: \(message.messageID)")
     }
     
     // MARK: - OutboundMessageHandlerDelegate

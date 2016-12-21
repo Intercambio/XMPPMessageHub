@@ -14,13 +14,7 @@ enum InboundMesageHandlerError: Error {
     case invalidDocument
 }
 
-protocol InboundMesageHandlerDelegate: class {
-    func inboundMessageHandler(_ handler: InboundMesageHandler, didReceive message: Message, userInfo: [AnyHashable:Any]) -> Void
-}
-
 class InboundMesageHandler {
-    
-    weak var delegate: InboundMesageHandlerDelegate?
     
     private struct PendingMessageDispatch {
         let document: PXDocument
@@ -72,9 +66,7 @@ class InboundMesageHandler {
     // MARK: -
     
     private func insert(_ document: PXDocument, with metadata: Metadata, userInfo: [AnyHashable:Any], in archive: Archive) throws -> Message {
-        let message = try archive.insert(document, metadata: metadata)
-        delegate?.inboundMessageHandler(self, didReceive: message, userInfo: userInfo)
-        return message
+        return try archive.insert(document, metadata: metadata)
     }
     
     private func openArchive(for account: JID) {
