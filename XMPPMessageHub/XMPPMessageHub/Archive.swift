@@ -19,6 +19,10 @@ public enum ArchiveError:  Error {
     case duplicateMessage
 }
 
+public struct MessageAlreadyExist: Error {
+    public let existingMessageID: MessageID
+}
+
 public protocol Archive {
     var account: JID { get }
     

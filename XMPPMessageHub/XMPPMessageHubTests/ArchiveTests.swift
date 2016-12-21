@@ -123,7 +123,11 @@ class ArchiveTests: TestCase {
             XCTAssertNotNil(message)
 
             XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) {error in
-                XCTAssertEqual(error as? ArchiveError, .duplicateMessage)
+                if let error = error as? MessageAlreadyExist {
+                    XCTAssertEqual(error.existingMessageID, message.messageID)
+                } else {
+                    XCTFail("Expecting 'MessageAlreadyExist'")
+                }
             }
             
         } catch {
@@ -151,7 +155,11 @@ class ArchiveTests: TestCase {
             XCTAssertNotNil(message)
             
             XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) {error in
-                XCTAssertEqual(error as? ArchiveError, .duplicateMessage)
+                if let error = error as? MessageAlreadyExist {
+                    XCTAssertEqual(error.existingMessageID, message.messageID)
+                } else {
+                    XCTFail("Expecting 'MessageAlreadyExist'")
+                }
             }
             
         } catch {
