@@ -19,7 +19,7 @@ class MessageCarbonsFilterTests: TestCase {
         
         do {
             let filter = MessageCarbonsFilter(direction: .received)
-            let result = try filter.apply(to: document, with: Metadata())
+            let result = try filter.apply(to: document, with: Metadata(), userInfo: [:])
             
             let document = result.document
             XCTAssertEqual(document.root.value(forAttribute: "id") as? String, "456")
@@ -41,7 +41,7 @@ class MessageCarbonsFilterTests: TestCase {
         
         do {
             let filter = MessageCarbonsFilter(direction: .sent)
-            let result = try filter.apply(to: document, with: Metadata())
+            let result = try filter.apply(to: document, with: Metadata(), userInfo: [:])
             
             let document = result.document
             XCTAssertEqual(document.root.value(forAttribute: "id") as? String, "456")

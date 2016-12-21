@@ -116,7 +116,7 @@ extension Hub: ArchiveProxyDelegate, InboundMesageHandlerDelegate, OutboundMessa
     
     // MARK: - InboundMesageHandlerDelegate
     
-    func inboundMessageHandler(_ handler: InboundMesageHandler, didReceive message: Message) {
+    func inboundMessageHandler(_ handler: InboundMesageHandler, didReceive message: Message, userInfo: [AnyHashable:Any]) {
         NSLog("Did receive message: \(message.messageID)")
     }
     

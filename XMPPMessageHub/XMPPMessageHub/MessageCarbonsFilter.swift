@@ -22,7 +22,7 @@ class MessageCarbonsFilter: MessageFilter {
         self.direction = direction
     }
     
-    func apply(to document: PXDocument, with metadata: Metadata) throws -> MessageFilter.Result {
+    func apply(to document: PXDocument, with metadata: Metadata, userInfo: [AnyHashable:Any]) throws -> MessageFilter.Result {
         let namespaces: [String:String] = [
             "a":"jabber:client",
             "b":"urn:xmpp:carbons:2",
@@ -35,25 +35,25 @@ class MessageCarbonsFilter: MessageFilter {
         guard
             let message = document.root.nodes(forXPath: xpath, usingNamespaces: namespaces).first as? PXElement,
             let newDocument = PXDocument(element: message)
-            else { return (document: document, metadata: metadata) }
+            else { return (document: document, metadata: metadata, userInfo: userInfo) }
         
         guard
             let envelopeFromString = document.root.value(forAttribute: "from") as? String,
             let envelopeFrom = JID(envelopeFromString)
-            else { return (document: document, metadata: metadata) }
+            else { return (document: document, metadata: metadata, userInfo: userInfo) }
         
         guard
             let jidString = message.value(forAttribute: jidAttribute) as? String,
             let jid = JID(jidString)
-            else { return (document: document, metadata: metadata) }
+            else { return (document: document, metadata: metadata, userInfo: userInfo) }
         
         guard
             jid.bare() == envelopeFrom.bare()
-            else { return (document: document, metadata: metadata) }
+            else { return (document: document, metadata: metadata, userInfo: userInfo) }
         
         var newMetadata = metadata
         newMetadata.isCarbonCopy = true
         
-        return (document: newDocument, metadata: newMetadata)
+        return (document: newDocument, metadata: newMetadata, userInfo: userInfo)
     }
 }

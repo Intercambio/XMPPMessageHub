@@ -40,8 +40,8 @@ class OutboundMessageHandler {
                 else { return }
             
             do {
-                let result = try self.outboundFilter.reduce((document: document, metadata: message.metadata)) { input, filter in
-                    return try filter.apply(to: input.document, with: input.metadata)
+                let result = try self.outboundFilter.reduce((document: document, metadata: message.metadata, userInfo: [:])) { input, filter in
+                    return try filter.apply(to: input.document, with: input.metadata, userInfo: [:])
                 }
                 
                 self.messagesBeeingTransmitted.append(message.messageID)

@@ -15,7 +15,7 @@ enum InboundMesageHandlerError: Error {
 }
 
 protocol InboundMesageHandlerDelegate: class {
-    func inboundMessageHandler(_ handler: InboundMesageHandler, didReceive message: Message) -> Void
+    func inboundMessageHandler(_ handler: InboundMesageHandler, didReceive message: Message, userInfo: [AnyHashable:Any]) -> Void
 }
 
 class InboundMesageHandler: NSObject, MessageHandler {
@@ -25,6 +25,7 @@ class InboundMesageHandler: NSObject, MessageHandler {
     private struct PendingMessageDispatch {
         let document: PXDocument
         let metadata: Metadata
+        let userInfo: [AnyHashable:Any]
         let account: JID
         var completion: ((Error?) -> Void)?
     }
@@ -61,15 +62,15 @@ class InboundMesageHandler: NSObject, MessageHandler {
                 let now = Date()
                 let metadata = Metadata(created: now, transmitted: now, read: nil, error: nil, isCarbonCopy: false)
                 
-                let result = try self.inboundFilter.reduce((document: document, metadata: metadata)) { input, filter in
-                    return try filter.apply(to: input.document, with: input.metadata)
+                let result = try self.inboundFilter.reduce((document: document, metadata: metadata, userInfo: [:])) { input, filter in
+                    return try filter.apply(to: input.document, with: input.metadata, userInfo: [:])
                 }
                 
                 if let archive = self.archiveByAccount[account] {
-                    try self.insert(result.document, with: result.metadata, in: archive, copy: false)
+                    try self.insert(result.document, with: result.metadata, userInfo: result.userInfo, in: archive, copy: false)
                     completion?(nil)
                 } else {
-                    let pending = PendingMessageDispatch(document: result.document, metadata: result.metadata, account: account, completion: completion)
+                    let pending = PendingMessageDispatch(document: result.document, metadata: result.metadata, userInfo: result.userInfo, account: account, completion: completion)
                     self.pendingMessageDispatch.append(pending)
                     self.openArchive(for: account)
                 }
@@ -81,9 +82,9 @@ class InboundMesageHandler: NSObject, MessageHandler {
     
     // MARK: -
     
-    private func insert(_ document: PXDocument, with metadata: Metadata, in archive: Archive, copy: Bool) throws {
+    private func insert(_ document: PXDocument, with metadata: Metadata, userInfo: [AnyHashable:Any], in archive: Archive, copy: Bool) throws {
         let message = try archive.insert(document, metadata: metadata)
-        delegate?.inboundMessageHandler(self, didReceive: message)
+        delegate?.inboundMessageHandler(self, didReceive: message, userInfo: userInfo)
     }
     
     private func openArchive(for account: JID) {
@@ -101,7 +102,7 @@ class InboundMesageHandler: NSObject, MessageHandler {
                 }
                 
                 do {
-                    try self.insert(pending.document, with: pending.metadata, in: archive, copy: false)
+                    try self.insert(pending.document, with: pending.metadata, userInfo: pending.userInfo, in: archive, copy: false)
                     pending.completion?(nil)
                 } catch {
                     pending.completion?(error)
