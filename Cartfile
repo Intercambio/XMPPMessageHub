@@ -1,5 +1,4 @@
-github "Internetslum/PureXML" ~> 1.1
 github "stephencelis/SQLite.swift" ~> 0.11.0
+github "Internetslum/PureXML" ~> 1.1
+github "Internetslum/XMPPFoundation" "develop"
 github "anagromataf/iso-8601-date-formatter.git" "e3cd1805147c2b869eb1b2a659c221556ee6f01b"
-
-git "ssh://git@garage.tobias-kraentzer.de/source/XMPPFoundation.git" "develop"
