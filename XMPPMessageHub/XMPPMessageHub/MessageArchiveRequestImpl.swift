@@ -8,14 +8,12 @@
 
 import Foundation
 import XMPPFoundation
-import ISO8601
 
-class MessageArchiveRequestImpl: MessageArchiveRequest, MessageFilter, MessageArchiveRequestHandler {
+class MessageArchiveRequestImpl: NSObject, MessageArchiveRequest, MessageHandler {
     
     enum State {
         case intitalized
-        case fetching(pending: [MessageArchvieID], messages: [MessageArchvieID:MessageID])
-        case waiting(pending: [MessageArchvieID], result: MessageArchiveRequestResult)
+        case fetching(messages: [MessageArchvieID:MessageID])
         case finished(result: MessageArchiveRequestResult)
         case failed(error: Error)
     }
@@ -23,8 +21,7 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageFilter, MessageAr
     weak var iqHandler: IQHandler?
     weak var delegate: MessageArchiveRequestDelegate?
     
-    let account: JID
-    let timeout: TimeInterval
+    let archive: Archive
     let queryID: String
     
     private(set) var state: State = .intitalized {
@@ -37,24 +34,23 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageFilter, MessageAr
         }
     }
     
-    private let dateFormatter: ISO8601.ISO8601DateFormatter = ISO8601DateFormatter()
+    private let filter: MessageFilter = MessageArchiveManagementFilter()
     private let queue: DispatchQueue
-    required init(account: JID, timeout: TimeInterval = 120.0) {
-        self.account = account
-        self.timeout = timeout
+    required init(archive: Archive) {
+        self.archive = archive
         self.queryID = UUID().uuidString.lowercased()
         queue = DispatchQueue(
-            label: "MessageArchiveRequest",
+            label: "MessageArchiveRequestImpl",
             attributes: [])
     }
     
-    func performFetch(before: MessageArchvieID?, limit: Int) throws -> (inboundFilter: MessageFilter, handler: MessageArchiveRequestHandler) {
+    func performFetch(before: MessageArchvieID? = nil, limit: Int = 20, timeout: TimeInterval = 120.0) throws {
         try queue.sync {
             guard
                 case .intitalized = self.state
                 else { throw MessageArchiveRequestError.alreadyRunning }
             let request = self.makeRequest(before: before, limit: limit)
-            self.iqHandler?.handleIQRequest(request, timeout: self.timeout) { [weak self] response, error in
+            self.iqHandler?.handleIQRequest(request, timeout: timeout) { [weak self] response, error in
                 guard
                     let this = self
                     else { return }
@@ -66,9 +62,8 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageFilter, MessageAr
                     }
                 }
             }
-            self.state = .fetching(pending: [], messages: [:])
+            self.state = .fetching(messages: [:])
         }
-        return (inboundFilter: self, handler: self)
     }
     
     private func handleResponse(_ document: PXDocument) {
@@ -84,7 +79,7 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageFilter, MessageAr
         }
         
         guard
-            case .fetching(let pending, let messages) = self.state
+            case .fetching(let messages) = self.state
             else { return }
         
         let stable = Bool(fin.value(forAttribute: "stable") as? String ?? "") ?? true
@@ -97,130 +92,48 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageFilter, MessageAr
             complete: complete,
             messages: messages)
         
-        if pending.count == 0 {
-            self.state = .finished(result: result)
-        } else {
-            self.state = .waiting(pending: pending, result: result)
-        }
+        self.state = .finished(result: result)
     }
     
-    // MARK: - MessageFilter
+    // MARK: - MessageHandler
     
-    func apply(to document: PXDocument, with metadata: Metadata, userInfo: [AnyHashable:Any]) throws -> MessageFilter.Result? {
-        return try queue.sync {
-            
-            let namespaces = [
-                "mam": "urn:xmpp:mam:1",
-                "forward": "urn:xmpp:forward:0",
-                "xmpp":"jabber:client",
-                "delay":"urn:xmpp:delay"]
-            
-            guard
-                case .fetching(var pending, let messages) = self.state
-                else {
-                    return (document: document, metadata: metadata, userInfo: userInfo)
-            }
-            
+    func handleMessage(_ document: PXDocument, completion: ((Error?) -> Void)? = nil) {
+        queue.async {
             guard
                 let message = document.root as? MessageStanza,
-                let result = message.nodes(forXPath: "./mam:result", usingNamespaces: namespaces).first as? PXElement,
-                result.value(forAttribute: "queryid") as? String == self.queryID
+                let from = message.from,
+                self.archive.account == from.bare()
                 else {
-                    return (document: document, metadata: metadata, userInfo: userInfo)
-            }
-            
-            guard
-                let archiveID = result.value(forAttribute: "id") as? String,
-                let delayElement = result.nodes(forXPath: "./forward:forwarded/delay:delay", usingNamespaces: namespaces).first as? PXElement,
-                let timestampString = delayElement.value(forAttribute: "stamp") as? String,
-                let timestamp = self.dateFormatter.date(from: timestampString),
-                let originalMessage = result.nodes(forXPath: "./forward:forwarded/xmpp:message", usingNamespaces: namespaces).first as? MessageStanza
-                else {
-                    throw MessageArchiveRequestError.unexpectedResponse
-            }
-            
-            var newMetadata = metadata
-            newMetadata.created = timestamp
-            newMetadata.transmitted = timestamp
-            
-            var newUserInfo = userInfo
-            newUserInfo[MessageArchvieIDKey] = archiveID
-            
-            pending.append(archiveID)
-            
-            self.state = .fetching(pending: pending, messages: messages)
-            
-            return (document: PXDocument(element: originalMessage)!,
-                    metadata: newMetadata,
-                    userInfo: newUserInfo)
-        }
-    }
-    
-    // MARK: - MessageArchiveRequestHandler
-    
-    func savedMessage(with messageID: MessageID, userInfo: [AnyHashable:Any]) {
-        queue.async {
-            guard
-                let archiveID = userInfo[MessageArchvieIDKey] as? String
-                else { return }
-            
-            if case .fetching(var pending, var messages) = self.state {
-                if let idx = pending.index(of: archiveID) {
-                    pending.remove(at: idx)
-                    messages[archiveID] = messageID
-                    self.state = .fetching(pending: pending, messages: messages)
+                    completion?(nil)
+                    return
                 }
-            }
             
-            if case .waiting(var pending, var result) = self.state {
-                if let idx = pending.index(of: archiveID) {
-                    pending.remove(at: idx)
-                    result.messages[archiveID] = messageID
+            do {
+                if case .fetching(var messages) = self.state {
+                    let now = Date()
+                    let metadata = Metadata(created: now, transmitted: now, read: nil, error: nil, isCarbonCopy: false)
                     
-                    if pending.count == 0 {
-                        self.state = .finished(result: result)
-                    } else {
-                        self.state = .waiting(pending: pending, result: result)
+                    guard
+                        let result = try self.filter.apply(to: document, with: metadata, userInfo: [:]),
+                        let archiveID = result.userInfo[MessageArchvieIDKey] as? String,
+                        result.userInfo[MessageArchvieQueryIDKey] as? String == self.queryID
+                        else {
+                            completion?(nil)
+                            return
                     }
-                }
-            }
-        }
-    }
-    
-    func failedSavingMessage(with error:Error, userInfo: [AnyHashable:Any]) {
-        queue.async {
-            guard
-                let archiveID = userInfo[MessageArchvieIDKey] as? String
-                else { return }
-            
-            let existingMessageID = (error as? MessageAlreadyExist)?.existingMessageID
-            
-            if case .fetching(var pending, var messages) = self.state {
-                if let idx = pending.index(of: archiveID) {
-                    pending.remove(at: idx)
-                    if let messageID = existingMessageID {
-                        messages[archiveID] = messageID
-                        self.state = .fetching(pending: pending, messages: messages)
-                    } else {
-                        self.state = .failed(error: error)
+                    
+                    do {
+                        let message = try self.archive.insert(result.document, metadata: result.metadata)
+                        messages[archiveID] = message.messageID
+                    } catch let error as MessageAlreadyExist {
+                        messages[archiveID] = error.existingMessageID
                     }
+                    
+                    self.state = .fetching(messages: messages)
                 }
-            }
-            
-            if case .waiting(var pending, var result) = self.state {
-                if let idx = pending.index(of: archiveID) {
-                    pending.remove(at: idx)
-                    if let messageID = existingMessageID {
-                        result.messages[archiveID] = messageID
-                        if pending.count == 0 {
-                            self.state = .finished(result: result)
-                        } else {
-                            self.state = .waiting(pending: pending, result: result)
-                        }
-                    } else {
-                        self.state = .failed(error: error)
-                    }
-                }
+                completion?(nil)
+            } catch {
+                completion?(error)
             }
         }
     }
@@ -228,7 +141,7 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageFilter, MessageAr
     // MARK: - Helper
     
     private func makeRequest(before: MessageArchvieID?, limit: Int) -> PXDocument {
-        let document = IQStanza.makeDocumentWithIQStanza(from: nil, to: account)
+        let document = IQStanza.makeDocumentWithIQStanza(from: nil, to: archive.account.bare())
         let iq = document.root as! IQStanza
         iq.type = .set
         let query = iq.add(withName: "query", namespace: "urn:xmpp:mam:1", content: nil)!

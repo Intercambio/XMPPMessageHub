@@ -16,7 +16,7 @@ struct MessageArchiveRequestResult {
     let last: MessageArchvieID
     let stable: Bool
     let complete: Bool
-    var messages: [MessageArchvieID:MessageID]
+    let messages: [MessageArchvieID:MessageID]
 }
 
 enum MessageArchiveRequestError: Error {
@@ -30,14 +30,9 @@ protocol MessageArchiveRequestDelegate: class {
     func messageArchiveRequest(_ request: MessageArchiveRequest, didFailWith error: Error) -> Void
 }
 
-protocol MessageArchiveRequestHandler {
-    func savedMessage(with messageID: MessageID, userInfo: [AnyHashable:Any]) -> Void
-    func failedSavingMessage(with error:Error, userInfo: [AnyHashable:Any]) -> Void
-}
-
-protocol MessageArchiveRequest {
-    init(account: JID, timeout: TimeInterval)
-    weak var iqHandler: IQHandler? { get set }
+protocol MessageArchiveRequest: MessageHandler {
+    init(archive: Archive)
     weak var delegate: MessageArchiveRequestDelegate? { get set }
-    func performFetch(before: MessageArchvieID?, limit: Int) throws -> (inboundFilter: MessageFilter, handler: MessageArchiveRequestHandler)
+    weak var iqHandler: IQHandler? { get set }
+    func performFetch(before: MessageArchvieID?, limit: Int, timeout: TimeInterval) throws -> Void
 }

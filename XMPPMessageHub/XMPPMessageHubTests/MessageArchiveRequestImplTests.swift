@@ -15,6 +15,7 @@ import ISO8601
 class MessageArchiveRequestImplTests: TestCase {
     
     func testPerformFetchWithError() {
+        let archive = TestArchive(account: JID("romeo@example.com")!)
         let delegate = Delegate()
         let iqHandler = IQHandler()
         iqHandler.handler = { document, timeout, complition in
@@ -22,7 +23,7 @@ class MessageArchiveRequestImplTests: TestCase {
             complition?(nil, error)
         }
 
-        let request = MessageArchiveRequestImpl(account: JID("romeo@example.com")!)
+        let request = MessageArchiveRequestImpl(archive: archive)
         request.iqHandler = iqHandler
         request.delegate = delegate
         
@@ -40,45 +41,11 @@ class MessageArchiveRequestImplTests: TestCase {
         }
     }
     
-    func testFilter() {
-        guard
-            let document = PXDocument(named: "xep_0313_message.xml", in: Bundle(for: MessageCarbonsFilterTests.self))
-            else { XCTFail(); return }
-        
-        let namespaces = ["x":"urn:xmpp:mam:1"]
-        let resultElement = document.root.nodes(forXPath: "./x:result", usingNamespaces: namespaces).first as? PXElement
-        
-        let request = MessageArchiveRequestImpl(account: JID("romeo@example.com")!)
-        
-        resultElement?.setValue(request.queryID, forAttribute: "queryid")
-        
-        let dateFormatter = ISO8601.ISO8601DateFormatter()
-        let timestamp = dateFormatter.date(from: "2010-07-10T23:08:25Z")
-        
-        do {
-            
-            let (filter, _) = try request.performFetch(before: nil, limit: 10)
-            let result = try filter.apply(to: document, with: Metadata(), userInfo: [:])
-            
-            let document = result?.document
-            XCTAssertEqual(document?.root.value(forAttribute: "from") as? String, "witch@shakespeare.lit")
-            XCTAssertEqual(document?.root.value(forAttribute: "to") as? String, "macbeth@shakespeare.lit")
-            
-            let metadata = result?.metadata
-            XCTAssertEqual(metadata?.created, timestamp)
-            XCTAssertEqual(metadata?.transmitted, timestamp)
-            
-            let userInfo = result?.userInfo
-            XCTAssertEqual(userInfo?[MessageArchvieIDKey] as? String, "28482-98726-73623")
-            
-        } catch {
-            XCTFail("\(error)")
-        }
-    }
-    
     func testPerformFetch() {
+        let archive = TestArchive(account: JID("romeo@example.com")!)
         let delegate = Delegate()
         let iqHandler = IQHandler()
+        
         iqHandler.handler = { document, timeout, complition in
             if let request = document.root as? IQStanza {
                 let response = IQStanza.makeDocumentWithIQStanza(from: request.to, to: request.from)
@@ -98,7 +65,7 @@ class MessageArchiveRequestImplTests: TestCase {
             }
         }
         
-        let request = MessageArchiveRequestImpl(account: JID("romeo@example.com")!)
+        let request = MessageArchiveRequestImpl(archive: archive)
         request.iqHandler = iqHandler
         request.delegate = delegate
         
@@ -123,6 +90,40 @@ class MessageArchiveRequestImplTests: TestCase {
     }
     
     // MARK: - Helper
+    
+    enum TestError: Error {
+        case notImplemented
+    }
+    
+    class TestArchive: Archive {
+        let account: JID
+        init(account: JID) {
+            self.account = account.bare()
+        }
+        
+        func insert(_ document: PXDocument, metadata: Metadata) throws -> Message {
+            let messageID = MessageID(
+                uuid: UUID(),
+                account: account,
+                counterpart: JID("juliet@example.com")!,
+                direction: .inbound,
+                type: .normal,
+                originID: nil,
+                stanzaID: nil)
+            return Message(messageID: messageID, metadata: metadata)
+        }
+        
+        func update(_ metadata: Metadata, for messageID: MessageID) throws -> Message { throw TestError.notImplemented }
+        func update(transmitted: Date?, error: TransmissionError?, for messageID: MessageID) throws -> Message { throw TestError.notImplemented }
+        func delete(_ messageID: MessageID) throws {}
+        func message(with messageID: MessageID) throws -> Message { throw TestError.notImplemented }
+        func document(for messageID: MessageID) throws -> PXDocument { throw TestError.notImplemented }
+        func all() throws -> [Message] { return [] }
+        func recent() throws -> [Message] { return [] }
+        func pending() throws -> [Message] { return [] }
+        func conversation(with counterpart: JID) throws -> [Message] { return [] }
+        func counterparts() throws -> [JID] { return [] }
+    }
     
     class IQHandler: NSObject, XMPPFoundation.IQHandler {
         
