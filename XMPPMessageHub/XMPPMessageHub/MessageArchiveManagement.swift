@@ -11,8 +11,6 @@ import XMPPFoundation
 
 typealias MessageArchvieID = String
 
-let MessageArchvieIDKey = "MessageArchvieIDKey"
-
 struct MessageArchiveRequestResult {
     let first: MessageArchvieID
     let last: MessageArchvieID

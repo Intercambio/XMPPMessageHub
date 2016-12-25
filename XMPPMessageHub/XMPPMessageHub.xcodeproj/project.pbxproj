@@ -24,6 +24,14 @@
 		F62CF7471E0AD0C000E77159 /* MessageArchiveManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62CF7451E0AD0C000E77159 /* MessageArchiveManagement.swift */; };
 		F646381F1E0FD3A0002C04E7 /* MessageArchiveRequestImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F646381E1E0FD3A0002C04E7 /* MessageArchiveRequestImpl.swift */; };
 		F64638201E0FD3A0002C04E7 /* MessageArchiveRequestImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F646381E1E0FD3A0002C04E7 /* MessageArchiveRequestImpl.swift */; };
+		F64638281E105745002C04E7 /* MessageArchiveManagementFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64638271E105745002C04E7 /* MessageArchiveManagementFilter.swift */; };
+		F64638291E105745002C04E7 /* MessageArchiveManagementFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64638271E105745002C04E7 /* MessageArchiveManagementFilter.swift */; };
+		F646382B1E1059AC002C04E7 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = F646382A1E1059AC002C04E7 /* Error.swift */; };
+		F646382C1E1059AC002C04E7 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = F646382A1E1059AC002C04E7 /* Error.swift */; };
+		F646382E1E105A0D002C04E7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F646382D1E105A0D002C04E7 /* Constants.swift */; };
+		F646382F1E105A0D002C04E7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F646382D1E105A0D002C04E7 /* Constants.swift */; };
+		F64638311E105A6A002C04E7 /* MessageArchiveManagementFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64638301E105A6A002C04E7 /* MessageArchiveManagementFilterTests.swift */; };
+		F64638321E105A6A002C04E7 /* MessageArchiveManagementFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64638301E105A6A002C04E7 /* MessageArchiveManagementFilterTests.swift */; };
 		F664252C1DF6371C001F8F6E /* MessageFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F664252B1DF6371C001F8F6E /* MessageFilter.swift */; };
 		F664252D1DF6371C001F8F6E /* MessageFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F664252B1DF6371C001F8F6E /* MessageFilter.swift */; };
 		F664252F1DF638DF001F8F6E /* MessageCarbonsFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F664252E1DF638DF001F8F6E /* MessageCarbonsFilter.swift */; };
@@ -132,6 +140,10 @@
 		F625A54C1DF4624E0005AFD3 /* ArchiveProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveProxy.swift; sourceTree = "<group>"; };
 		F62CF7451E0AD0C000E77159 /* MessageArchiveManagement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MessageArchiveManagement.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F646381E1E0FD3A0002C04E7 /* MessageArchiveRequestImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MessageArchiveRequestImpl.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		F64638271E105745002C04E7 /* MessageArchiveManagementFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageArchiveManagementFilter.swift; sourceTree = "<group>"; };
+		F646382A1E1059AC002C04E7 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		F646382D1E105A0D002C04E7 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		F64638301E105A6A002C04E7 /* MessageArchiveManagementFilterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageArchiveManagementFilterTests.swift; sourceTree = "<group>"; };
 		F664252B1DF6371C001F8F6E /* MessageFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageFilter.swift; sourceTree = "<group>"; };
 		F664252E1DF638DF001F8F6E /* MessageCarbonsFilter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCarbonsFilter.swift; sourceTree = "<group>"; };
 		F66425311DF63A12001F8F6E /* MessageCarbonsFilterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCarbonsFilterTests.swift; sourceTree = "<group>"; };
@@ -234,6 +246,7 @@
 			children = (
 				F664252B1DF6371C001F8F6E /* MessageFilter.swift */,
 				F664252E1DF638DF001F8F6E /* MessageCarbonsFilter.swift */,
+				F64638271E105745002C04E7 /* MessageArchiveManagementFilter.swift */,
 			);
 			name = Filter;
 			sourceTree = "<group>";
@@ -271,6 +284,8 @@
 			isa = PBXGroup;
 			children = (
 				F6FCE9771DE3C4810088A662 /* Message.swift */,
+				F646382A1E1059AC002C04E7 /* Error.swift */,
+				F646382D1E105A0D002C04E7 /* Constants.swift */,
 				F69A25751DF4345F007D5C35 /* Hub */,
 				F66425401DF94DF9001F8F6E /* Handler */,
 				F664252A1DF63708001F8F6E /* Filter */,
@@ -293,6 +308,7 @@
 				F66425311DF63A12001F8F6E /* MessageCarbonsFilterTests.swift */,
 				F6FAE86F1DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift */,
 				F60046A41E0BC32A005B5175 /* MessageArchiveRequestImplTests.swift */,
+				F64638301E105A6A002C04E7 /* MessageArchiveManagementFilterTests.swift */,
 				F66425341DF63AFF001F8F6E /* xep_0280_received.xml */,
 				F66425371DF645BC001F8F6E /* xep_0280_sent.xml */,
 				F60046A71E0BDF56005B5175 /* xep_0313_message.xml */,
@@ -598,6 +614,7 @@
 				F664252C1DF6371C001F8F6E /* MessageFilter.swift in Sources */,
 				F664252F1DF638DF001F8F6E /* MessageCarbonsFilter.swift in Sources */,
 				F625A54D1DF4624E0005AFD3 /* ArchiveProxy.swift in Sources */,
+				F64638281E105745002C04E7 /* MessageArchiveManagementFilter.swift in Sources */,
 				F6FCE9721DE3B1AA0088A662 /* FileArchiveSetup.swift in Sources */,
 				F6FCE9781DE3C4810088A662 /* Message.swift in Sources */,
 				F62CF7461E0AD0C000E77159 /* MessageArchiveManagement.swift in Sources */,
@@ -608,9 +625,11 @@
 				F69A257D1DF440F2007D5C35 /* FileArchvieManager.swift in Sources */,
 				F664253E1DF6A93B001F8F6E /* OutboundMessageHandler.swift in Sources */,
 				F673D21C1DE1C245009B3C99 /* FileArchive.swift in Sources */,
+				F646382E1E105A0D002C04E7 /* Constants.swift in Sources */,
 				F66425421DF94E15001F8F6E /* MessageCarbonsDispatchHandler.swift in Sources */,
 				F688F46F1DF304E400B4D3B4 /* Archive.swift in Sources */,
 				F6FCE9831DEB6AEE0088A662 /* FileArchiveDocumentStore.swift in Sources */,
+				F646382B1E1059AC002C04E7 /* Error.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -618,6 +637,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F64638311E105A6A002C04E7 /* MessageArchiveManagementFilterTests.swift in Sources */,
 				F673D23B1DE1C352009B3C99 /* ArchiveTests.swift in Sources */,
 				F6FAE8701DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift in Sources */,
 				F625A54A1DF44F2B0005AFD3 /* HubTests.swift in Sources */,
@@ -638,6 +658,7 @@
 				F664252D1DF6371C001F8F6E /* MessageFilter.swift in Sources */,
 				F66425301DF638DF001F8F6E /* MessageCarbonsFilter.swift in Sources */,
 				F625A54E1DF4624E0005AFD3 /* ArchiveProxy.swift in Sources */,
+				F64638291E105745002C04E7 /* MessageArchiveManagementFilter.swift in Sources */,
 				F6FCE9731DE3B1AA0088A662 /* FileArchiveSetup.swift in Sources */,
 				F6FCE9791DE3C4810088A662 /* Message.swift in Sources */,
 				F62CF7471E0AD0C000E77159 /* MessageArchiveManagement.swift in Sources */,
@@ -648,9 +669,11 @@
 				F69A257E1DF440F2007D5C35 /* FileArchvieManager.swift in Sources */,
 				F664253F1DF6A93B001F8F6E /* OutboundMessageHandler.swift in Sources */,
 				F673D21D1DE1C245009B3C99 /* FileArchive.swift in Sources */,
+				F646382F1E105A0D002C04E7 /* Constants.swift in Sources */,
 				F66425431DF94E15001F8F6E /* MessageCarbonsDispatchHandler.swift in Sources */,
 				F688F4701DF304E400B4D3B4 /* Archive.swift in Sources */,
 				F6FCE9841DEB6AEE0088A662 /* FileArchiveDocumentStore.swift in Sources */,
+				F646382C1E1059AC002C04E7 /* Error.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -658,6 +681,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F64638321E105A6A002C04E7 /* MessageArchiveManagementFilterTests.swift in Sources */,
 				F673D23C1DE1C352009B3C99 /* ArchiveTests.swift in Sources */,
 				F6FAE8711DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift in Sources */,
 				F625A54B1DF44F2B0005AFD3 /* HubTests.swift in Sources */,
