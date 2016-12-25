@@ -54,9 +54,9 @@ class InvertedMessageFilter: MessageFilter {
     func apply(to document: PXDocument, with metadata: Metadata, userInfo: [AnyHashable : Any]) throws -> MessageFilter.Result? {
         guard
             try filter.apply(to: document, with: metadata, userInfo: userInfo) != nil
-            else { return nil }
+            else { return (document: document, metadata: metadata, userInfo: userInfo) }
         
-        return (document: document, metadata: metadata, userInfo: userInfo)
+        return nil
     }
     
     var inverte: MessageFilter { return self }
