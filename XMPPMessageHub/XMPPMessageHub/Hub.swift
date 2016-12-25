@@ -29,8 +29,9 @@ public class Hub: NSObject, ArchvieManager, MessageHandler, DispatcherHandler {
     
     required public init(archvieManager: ArchvieManager) {
         inboundFilter = [
-            MessageCarbonsFilter(direction: .received),
-            MessageCarbonsFilter(direction: .sent)
+            MessageCarbonsFilter(direction: .received).optional,
+            MessageCarbonsFilter(direction: .sent).optional,
+            MessageArchiveManagementFilter().inverte
         ]
         let outboundFilter: [MessageFilter] = [
         ]
