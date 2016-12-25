@@ -14,59 +14,88 @@ enum InboundMesageHandlerError: Error {
     case invalidDocument
 }
 
-class InboundMesageHandler {
+protocol InboundMesageHandlerDelegate: class {
+    func inboundMessageHandler(_ handler: InboundMesageHandler, didReceive message: Message, userInfo: [AnyHashable:Any]) -> Void
+}
+
+class InboundMesageHandler: NSObject, MessageHandler {
+    
+    weak var delegate: InboundMesageHandlerDelegate?
     
     private struct PendingMessageDispatch {
         let document: PXDocument
         let metadata: Metadata
         let userInfo: [AnyHashable:Any]
         let account: JID
-        var completion: ((Message?, Error?)->Void)?
+        var completion: ((Error?) -> Void)?
     }
     
     private var archiveByAccount: [JID:Archive] = [:]
     private var pendingMessageDispatch: [PendingMessageDispatch] = []
     private let queue: DispatchQueue
     private let archvieManager: ArchvieManager
+    private let inboundFilter: [MessageFilter]
     
-    required init(archvieManager: ArchvieManager) {
+    required init(archvieManager: ArchvieManager, inboundFilter: [MessageFilter]) {
         self.archvieManager = archvieManager
+        self.inboundFilter = inboundFilter
         queue = DispatchQueue(
             label: "InboundMesageHandler",
             attributes: [.concurrent])
     }
     
-    // MARK: -
-
-    func insert(_ document: PXDocument, with metadata: Metadata, userInfo: [AnyHashable:Any], completion: ((Message?, Error?)->Void)?) {
+    // MARK: - CoreXMPP.MessageHandler
+    
+    func handleMessage(_ document: PXDocument,
+                              completion: ((Error?) -> Void)?) {
+        guard
+            let message = document.root as? MessageStanza,
+            let to = message.to
+            else {
+                completion?(InboundMesageHandlerError.invalidDocument)
+                return
+        }
+        
         queue.async(flags: [.barrier]) {
-            guard
-                let message = document.root as? MessageStanza,
-                let account = message.to?.bare()
-                else {
-                    completion?(nil, InboundMesageHandlerError.invalidDocument)
-                    return
-            }
-            
+            let account = to.bare()
             do {
+                let now = Date()
+                let metadata = Metadata(created: now, transmitted: now, read: nil, error: nil, isCarbonCopy: false)
+                let initial: MessageFilter.Result? = (document: document, metadata: metadata, userInfo: [:])
+                let filtered = try self.inboundFilter.reduce(initial) { input, filter in
+                    guard
+                        let result = input
+                        else { return nil }
+                    return try filter.apply(to: result.document, with: result.metadata, userInfo: result.userInfo)
+                }
+                
+                guard
+                    let result = filtered
+                    else {
+                        completion?(nil)
+                        return
+                    }
+                
                 if let archive = self.archiveByAccount[account] {
-                    let message = try self.insert(document, with: metadata, userInfo: userInfo, in: archive)
-                    completion?(message, nil)
+                    try self.insert(result.document, with: result.metadata, userInfo: result.userInfo, in: archive)
+                    completion?(nil)
                 } else {
-                    let pending = PendingMessageDispatch(document: document, metadata: metadata, userInfo: userInfo, account: account, completion: completion)
+                    let pending = PendingMessageDispatch(document: result.document, metadata: result.metadata, userInfo: result.userInfo, account: account, completion: completion)
                     self.pendingMessageDispatch.append(pending)
                     self.openArchive(for: account)
                 }
+                
             } catch {
-                completion?(nil, error)
+                completion?(error)
             }
         }
     }
     
     // MARK: -
     
-    private func insert(_ document: PXDocument, with metadata: Metadata, userInfo: [AnyHashable:Any], in archive: Archive) throws -> Message {
-        return try archive.insert(document, metadata: metadata)
+    private func insert(_ document: PXDocument, with metadata: Metadata, userInfo: [AnyHashable:Any], in archive: Archive) throws {
+        let message = try archive.insert(document, metadata: metadata)
+        delegate?.inboundMessageHandler(self, didReceive: message, userInfo: userInfo)
     }
     
     private func openArchive(for account: JID) {
@@ -79,15 +108,15 @@ class InboundMesageHandler {
                 guard
                     let archive = archive
                     else {
-                        pending.completion?(nil, error)
+                        pending.completion?(error)
                         return false
                 }
                 
                 do {
-                    let message = try self.insert(pending.document, with: pending.metadata, userInfo: pending.userInfo, in: archive)
-                    pending.completion?(message, nil)
+                    try self.insert(pending.document, with: pending.metadata, userInfo: pending.userInfo, in: archive)
+                    pending.completion?(nil)
                 } catch {
-                    pending.completion?(nil, error)
+                    pending.completion?(error)
                 }
                 return false
             })

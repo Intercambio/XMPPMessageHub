@@ -23,12 +23,10 @@ public class Hub: NSObject, ArchvieManager, MessageHandler, DispatcherHandler {
     fileprivate let messageCarbonsDispatchHandler: MessageCarbonsDispatchHandler
     fileprivate let queue: DispatchQueue
     
-    private let inboundFilter: [MessageFilter]
-    
     private var archiveByAccount: [JID:Archive] = [:]
     
     required public init(archvieManager: ArchvieManager) {
-        inboundFilter = [
+        let inboundFilter: [MessageFilter] = [
             MessageCarbonsFilter(direction: .received).optional,
             MessageCarbonsFilter(direction: .sent).optional,
             MessageArchiveManagementFilter().inverte
@@ -36,13 +34,14 @@ public class Hub: NSObject, ArchvieManager, MessageHandler, DispatcherHandler {
         let outboundFilter: [MessageFilter] = [
         ]
         self.archvieManager = archvieManager
-        self.inboundMessageHandler = InboundMesageHandler(archvieManager: archvieManager)
+        self.inboundMessageHandler = InboundMesageHandler(archvieManager: archvieManager, inboundFilter: inboundFilter)
         self.outboundMessageHandler = OutboundMessageHandler(outboundFilter: outboundFilter)
         self.messageCarbonsDispatchHandler = MessageCarbonsDispatchHandler()
         queue = DispatchQueue(
             label: "Hub",
             attributes: [.concurrent])
         super.init()
+        self.inboundMessageHandler.delegate = self
         self.outboundMessageHandler.delegate = self
         self.messageCarbonsDispatchHandler.delegate = self
     }
@@ -72,45 +71,16 @@ public class Hub: NSObject, ArchvieManager, MessageHandler, DispatcherHandler {
     
     // MARK: - MessageHandler
     
-    public func handleMessage(_ document: PXDocument,
-                              completion: ((Error?) -> Void)?) {
-        queue.async(flags: [.barrier]) {
-            do {
-                let now = Date()
-                let metadata = Metadata(created: now, transmitted: now, read: nil, error: nil, isCarbonCopy: false)
-                let initial: MessageFilter.Result? = (document: document, metadata: metadata, userInfo: [:])
-                let result = try self.inboundFilter.reduce(initial) { input, filter in
-                    guard
-                        let result = input
-                        else { return nil }
-                    return try filter.apply(to: result.document, with: result.metadata, userInfo: result.userInfo)
-                }
-                
-                if let result = result {
-                    self.inboundMessageHandler.insert(result.document, with: result.metadata, userInfo: result.userInfo) { (message, error) in
-                        completion?(error)
-                    }
-                } else {
-                    completion?(nil)
-                }
-            } catch {
-                completion?(error)
-            }
-        }
+    public func handleMessage(_ document: PXDocument, completion: ((Error?) -> Void)?) {
+        self.inboundMessageHandler.handleMessage(document, completion: completion)
     }
     
     // MARK: - DispatcherHandler
     
     public func didAddConnection(_ jid: JID) {
-        queue.async {
-            
-        }
     }
     
     public func didRemoveConnection(_ jid: JID) {
-        queue.async {
-            
-        }
     }
     
     public func didConnect(_ jid: JID, resumed: Bool) {
@@ -120,13 +90,10 @@ public class Hub: NSObject, ArchvieManager, MessageHandler, DispatcherHandler {
     }
     
     public func didDisconnect(_ jid: JID) {
-        queue.async {
-            
-        }
     }
 }
 
-extension Hub: ArchiveProxyDelegate, OutboundMessageHandlerDelegate, MessageCarbonsDispatchHandlerDelegate {
+extension Hub: ArchiveProxyDelegate, InboundMesageHandlerDelegate, OutboundMessageHandlerDelegate, MessageCarbonsDispatchHandlerDelegate {
     
     // MARK: - ArchiveProxyDelegate
     
@@ -134,6 +101,12 @@ extension Hub: ArchiveProxyDelegate, OutboundMessageHandlerDelegate, MessageCarb
         queue.async(flags: [.barrier]) {
             self.outboundMessageHandler.send(message, with: document, in: proxy.archive)
         }
+    }
+    
+    // MARK: - InboundMesageHandlerDelegate
+    
+    func inboundMessageHandler(_ handler: InboundMesageHandler, didReceive message: Message, userInfo: [AnyHashable : Any]) {
+        NSLog("Did receive message: \(message.messageID)")
     }
     
     // MARK: - OutboundMessageHandlerDelegate
@@ -155,5 +128,4 @@ extension Hub: ArchiveProxyDelegate, OutboundMessageHandlerDelegate, MessageCarb
     func messageCarbonsDispatchHandler(_ handler: MessageCarbonsDispatchHandler, failedToEnableFor account: JID, wirth error: Error) {
         NSLog("Failed to enable message carbons for: \(account.stringValue) with error: \(error)")
     }
-    
 }
