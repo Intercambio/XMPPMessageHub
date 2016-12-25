@@ -40,31 +40,37 @@ class OutboundMessageHandler {
                 else { return }
             
             do {
-                let result = try self.outboundFilter.reduce((document: document, metadata: message.metadata, userInfo: [:])) { input, filter in
-                    return try filter.apply(to: input.document, with: input.metadata, userInfo: [:])
+                let initial: MessageFilter.Result? = (document: document, metadata: message.metadata, userInfo: [:])
+                let result = try self.outboundFilter.reduce(initial) { input, filter in
+                    guard
+                        let result = input
+                        else { return nil }
+                    return try filter.apply(to: result.document, with: result.metadata, userInfo: result.userInfo)
                 }
                 
-                self.messagesBeeingTransmitted.append(message.messageID)
-                handler.handleMessage(result.document) { error in
-                    self.queue.async(flags: [.barrier]) {
-                        if let idx = self.messagesBeeingTransmitted.index(of: message.messageID) {
-                            self.messagesBeeingTransmitted.remove(at: idx)
-                        }
-                        do {
-                            let now = Date()
-                            let message = try archive.update(
-                                transmitted: error == nil ? now :  nil,
-                                error: error as? TransmissionError,
-                                for: message.messageID)
-                            
-                            if let error = error {
-                                self.delegate?.outboundMessageHandler(self, failedToSend: message, with: error)
-                            } else {
-                                self.delegate?.outboundMessageHandler(self, didSent: message)
+                if let result = result {
+                    self.messagesBeeingTransmitted.append(message.messageID)
+                    handler.handleMessage(result.document) { error in
+                        self.queue.async(flags: [.barrier]) {
+                            if let idx = self.messagesBeeingTransmitted.index(of: message.messageID) {
+                                self.messagesBeeingTransmitted.remove(at: idx)
                             }
-                            
-                        } catch {
-                            NSLog("Failed to update message metadata: \(error)")
+                            do {
+                                let now = Date()
+                                let message = try archive.update(
+                                    transmitted: error == nil ? now :  nil,
+                                    error: error as? TransmissionError,
+                                    for: message.messageID)
+                                
+                                if let error = error {
+                                    self.delegate?.outboundMessageHandler(self, failedToSend: message, with: error)
+                                } else {
+                                    self.delegate?.outboundMessageHandler(self, didSent: message)
+                                }
+                                
+                            } catch {
+                                NSLog("Failed to update message metadata: \(error)")
+                            }
                         }
                     }
                 }

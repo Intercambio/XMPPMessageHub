@@ -77,13 +77,20 @@ public class Hub: NSObject, ArchvieManager, MessageHandler, DispatcherHandler {
             do {
                 let now = Date()
                 let metadata = Metadata(created: now, transmitted: now, read: nil, error: nil, isCarbonCopy: false)
-                
-                let result = try self.inboundFilter.reduce((document: document, metadata: metadata, userInfo: [:])) { input, filter in
-                    return try filter.apply(to: input.document, with: input.metadata, userInfo: [:])
+                let initial: MessageFilter.Result? = (document: document, metadata: metadata, userInfo: [:])
+                let result = try self.inboundFilter.reduce(initial) { input, filter in
+                    guard
+                        let result = input
+                        else { return nil }
+                    return try filter.apply(to: result.document, with: result.metadata, userInfo: result.userInfo)
                 }
                 
-                self.inboundMessageHandler.insert(result.document, with: result.metadata, userInfo: result.userInfo) { (message, error) in
-                    completion?(error)
+                if let result = result {
+                    self.inboundMessageHandler.insert(result.document, with: result.metadata, userInfo: result.userInfo) { (message, error) in
+                        completion?(error)
+                    }
+                } else {
+                    completion?(nil)
                 }
             } catch {
                 completion?(error)

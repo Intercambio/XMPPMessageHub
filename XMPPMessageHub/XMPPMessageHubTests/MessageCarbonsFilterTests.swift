@@ -21,13 +21,13 @@ class MessageCarbonsFilterTests: TestCase {
             let filter = MessageCarbonsFilter(direction: .received)
             let result = try filter.apply(to: document, with: Metadata(), userInfo: [:])
             
-            let document = result.document
-            XCTAssertEqual(document.root.value(forAttribute: "id") as? String, "456")
-            XCTAssertEqual(document.root.value(forAttribute: "from") as? String, "juliet@capulet.example/balcony")
-            XCTAssertEqual(document.root.value(forAttribute: "to") as? String, "romeo@montague.example/garden")
+            let document = result?.document
+            XCTAssertEqual(document?.root.value(forAttribute: "id") as? String, "456")
+            XCTAssertEqual(document?.root.value(forAttribute: "from") as? String, "juliet@capulet.example/balcony")
+            XCTAssertEqual(document?.root.value(forAttribute: "to") as? String, "romeo@montague.example/garden")
             
-            let metadata = result.metadata
-            XCTAssertTrue(metadata.isCarbonCopy)
+            let metadata = result?.metadata
+            XCTAssertTrue(metadata?.isCarbonCopy ?? false)
 
         } catch {
             XCTFail("\(error)")
@@ -43,13 +43,13 @@ class MessageCarbonsFilterTests: TestCase {
             let filter = MessageCarbonsFilter(direction: .sent)
             let result = try filter.apply(to: document, with: Metadata(), userInfo: [:])
             
-            let document = result.document
-            XCTAssertEqual(document.root.value(forAttribute: "id") as? String, "456")
-            XCTAssertEqual(document.root.value(forAttribute: "from") as? String, "romeo@montague.example/home")
-            XCTAssertEqual(document.root.value(forAttribute: "to") as? String, "juliet@capulet.example/balcony")
+            let document = result?.document
+            XCTAssertEqual(document?.root.value(forAttribute: "id") as? String, "456")
+            XCTAssertEqual(document?.root.value(forAttribute: "from") as? String, "romeo@montague.example/home")
+            XCTAssertEqual(document?.root.value(forAttribute: "to") as? String, "juliet@capulet.example/balcony")
             
-            let metadata = result.metadata
-            XCTAssertTrue(metadata.isCarbonCopy)
+            let metadata = result?.metadata
+            XCTAssertTrue(metadata?.isCarbonCopy ?? false)
             
         } catch {
             XCTFail("\(error)")

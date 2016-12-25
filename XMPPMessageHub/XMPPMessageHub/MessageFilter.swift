@@ -11,5 +11,5 @@ import PureXML
 
 public protocol MessageFilter {
     typealias Result = (document: PXDocument, metadata: Metadata, userInfo: [AnyHashable:Any])
-    func apply(to document: PXDocument, with metadata: Metadata, userInfo: [AnyHashable:Any]) throws -> Result
+    func apply(to document: PXDocument, with metadata: Metadata, userInfo: [AnyHashable:Any]) throws -> Result?
 }

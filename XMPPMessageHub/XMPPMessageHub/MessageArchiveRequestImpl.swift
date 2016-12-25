@@ -106,7 +106,7 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageFilter, MessageAr
     
     // MARK: - MessageFilter
     
-    func apply(to document: PXDocument, with metadata: Metadata, userInfo: [AnyHashable:Any]) throws -> MessageFilter.Result {
+    func apply(to document: PXDocument, with metadata: Metadata, userInfo: [AnyHashable:Any]) throws -> MessageFilter.Result? {
         return try queue.sync {
             
             let namespaces = [

@@ -60,16 +60,16 @@ class MessageArchiveRequestImplTests: TestCase {
             let (filter, _) = try request.performFetch(before: nil, limit: 10)
             let result = try filter.apply(to: document, with: Metadata(), userInfo: [:])
             
-            let document = result.document
-            XCTAssertEqual(document.root.value(forAttribute: "from") as? String, "witch@shakespeare.lit")
-            XCTAssertEqual(document.root.value(forAttribute: "to") as? String, "macbeth@shakespeare.lit")
+            let document = result?.document
+            XCTAssertEqual(document?.root.value(forAttribute: "from") as? String, "witch@shakespeare.lit")
+            XCTAssertEqual(document?.root.value(forAttribute: "to") as? String, "macbeth@shakespeare.lit")
             
-            let metadata = result.metadata
-            XCTAssertEqual(metadata.created, timestamp)
-            XCTAssertEqual(metadata.transmitted, timestamp)
+            let metadata = result?.metadata
+            XCTAssertEqual(metadata?.created, timestamp)
+            XCTAssertEqual(metadata?.transmitted, timestamp)
             
-            let userInfo = result.userInfo
-            XCTAssertEqual(userInfo[MessageArchvieIDKey] as? String, "28482-98726-73623")
+            let userInfo = result?.userInfo
+            XCTAssertEqual(userInfo?[MessageArchvieIDKey] as? String, "28482-98726-73623")
             
         } catch {
             XCTFail("\(error)")

@@ -22,7 +22,7 @@ class MessageCarbonsFilter: MessageFilter {
         self.direction = direction
     }
     
-    func apply(to document: PXDocument, with metadata: Metadata, userInfo: [AnyHashable:Any]) throws -> MessageFilter.Result {
+    func apply(to document: PXDocument, with metadata: Metadata, userInfo: [AnyHashable:Any]) throws -> MessageFilter.Result? {
         let namespaces: [String:String] = [
             "a":"jabber:client",
             "b":"urn:xmpp:carbons:2",
