@@ -1,5 +1,5 @@
 //
-//  MessageArchiveRequestTests.swift
+//  MessageArchiveRequestImplTests.swift
 //  XMPPMessageHub
 //
 //  Created by Tobias Kräntzer on 22.12.16.
@@ -12,7 +12,7 @@ import XMPPFoundation
 import ISO8601
 @testable import XMPPMessageHub
 
-class MessageArchiveRequestTests: TestCase {
+class MessageArchiveRequestImplTests: TestCase {
     
     func testPerformFetchWithError() {
         let delegate = Delegate()
@@ -22,17 +22,17 @@ class MessageArchiveRequestTests: TestCase {
             complition?(nil, error)
         }
 
-        let request = MessageArchiveRequest(account: JID("romeo@example.com")!)
+        let request = MessageArchiveRequestImpl(account: JID("romeo@example.com")!)
         request.iqHandler = iqHandler
         request.delegate = delegate
         
         do {
             expectation(forNotification: "MessageArchiveRequestTests.didFailWith", object: delegate, handler: nil)
-            try request.performFetch(before: nil, limit: 30)
+            let _ = try request.performFetch(before: nil, limit: 30)
             waitForExpectations(timeout: 1.0, handler: nil)
             
             guard
-                case MessageArchiveRequest.State.failed(_) = request.state
+                case MessageArchiveRequestImpl.State.failed(_) = request.state
                 else { XCTFail(); return }
             
         } catch {
@@ -48,8 +48,7 @@ class MessageArchiveRequestTests: TestCase {
         let namespaces = ["x":"urn:xmpp:mam:1"]
         let resultElement = document.root.nodes(forXPath: "./x:result", usingNamespaces: namespaces).first as? PXElement
         
-        let request = MessageArchiveRequest(account: JID("romeo@example.com")!)
-        try? request.performFetch(before: nil, limit: 10)
+        let request = MessageArchiveRequestImpl(account: JID("romeo@example.com")!)
         
         resultElement?.setValue(request.queryID, forAttribute: "queryid")
         
@@ -57,7 +56,9 @@ class MessageArchiveRequestTests: TestCase {
         let timestamp = dateFormatter.date(from: "2010-07-10T23:08:25Z")
         
         do {
-            let result = try request.apply(to: document, with: Metadata(), userInfo: [:])
+            
+            let (filter, _) = try request.performFetch(before: nil, limit: 10)
+            let result = try filter.apply(to: document, with: Metadata(), userInfo: [:])
             
             let document = result.document
             XCTAssertEqual(document.root.value(forAttribute: "from") as? String, "witch@shakespeare.lit")
@@ -97,13 +98,13 @@ class MessageArchiveRequestTests: TestCase {
             }
         }
         
-        let request = MessageArchiveRequest(account: JID("romeo@example.com")!)
+        let request = MessageArchiveRequestImpl(account: JID("romeo@example.com")!)
         request.iqHandler = iqHandler
         request.delegate = delegate
         
         do {
             expectation(forNotification: "MessageArchiveRequestTests.didFinishWith", object: delegate, handler: nil)
-            try request.performFetch(before: nil, limit: 30)
+            let _ = try request.performFetch(before: nil, limit: 30)
             waitForExpectations(timeout: 1.0, handler: nil)
             
             switch request.state {
@@ -139,7 +140,7 @@ class MessageArchiveRequestTests: TestCase {
         func messageArchiveRequest(_ request: MessageArchiveRequest, didFailWith error: Error) {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "MessageArchiveRequestTests.didFailWith"), object: self)
         }
-        func messageArchiveRequest(_ request: MessageArchiveRequest, didFinishWith result: MessageArchiveResult) {
+        func messageArchiveRequest(_ request: MessageArchiveRequest, didFinishWith result: MessageArchiveRequestResult) {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "MessageArchiveRequestTests.didFinishWith"), object: self)
         }
     }
