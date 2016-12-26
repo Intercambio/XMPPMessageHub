@@ -232,11 +232,63 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F62CF7441E0AD0A500E77159 /* Message Archive Management */ = {
+		F6134F971E113B6D007EC90B /* Filter */ = {
+			isa = PBXGroup;
+			children = (
+				F66425311DF63A12001F8F6E /* MessageCarbonsFilterTests.swift */,
+				F64638301E105A6A002C04E7 /* MessageArchiveManagementFilterTests.swift */,
+			);
+			name = Filter;
+			sourceTree = "<group>";
+		};
+		F6134F981E113B84007EC90B /* Archive */ = {
+			isa = PBXGroup;
+			children = (
+				F69A257F1DF441A9007D5C35 /* FileArchvieManagerTests.swift */,
+				F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */,
+				F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */,
+				F6FCE9851DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift */,
+			);
+			name = Archive;
+			sourceTree = "<group>";
+		};
+		F6134F991E113B8D007EC90B /* Hub */ = {
+			isa = PBXGroup;
+			children = (
+				F625A5491DF44F2B0005AFD3 /* HubTests.swift */,
+			);
+			name = Hub;
+			sourceTree = "<group>";
+		};
+		F6134F9A1E113B93007EC90B /* Handler */ = {
+			isa = PBXGroup;
+			children = (
+				F6FAE86F1DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift */,
+				F6134F9C1E113BD2007EC90B /* MAM */,
+			);
+			name = Handler;
+			sourceTree = "<group>";
+		};
+		F6134F9B1E113BBE007EC90B /* MAM */ = {
 			isa = PBXGroup;
 			children = (
 				F62CF7451E0AD0C000E77159 /* MessageArchiveManagement.swift */,
 				F646381E1E0FD3A0002C04E7 /* MessageArchiveRequestImpl.swift */,
+			);
+			name = MAM;
+			sourceTree = "<group>";
+		};
+		F6134F9C1E113BD2007EC90B /* MAM */ = {
+			isa = PBXGroup;
+			children = (
+				F60046A41E0BC32A005B5175 /* MessageArchiveRequestImplTests.swift */,
+			);
+			name = MAM;
+			sourceTree = "<group>";
+		};
+		F62CF7441E0AD0A500E77159 /* Message Archive Management */ = {
+			isa = PBXGroup;
+			children = (
 			);
 			name = "Message Archive Management";
 			sourceTree = "<group>";
@@ -254,7 +306,10 @@
 		F66425401DF94DF9001F8F6E /* Handler */ = {
 			isa = PBXGroup;
 			children = (
+				F664253A1DF6A429001F8F6E /* InboundMesageHandler.swift */,
+				F664253D1DF6A93B001F8F6E /* OutboundMessageHandler.swift */,
 				F66425411DF94E15001F8F6E /* MessageCarbonsDispatchHandler.swift */,
+				F6134F9B1E113BBE007EC90B /* MAM */,
 			);
 			name = Handler;
 			sourceTree = "<group>";
@@ -300,18 +355,10 @@
 			isa = PBXGroup;
 			children = (
 				F6FCE96B1DE1C87F0088A662 /* TestCase.swift */,
-				F625A5491DF44F2B0005AFD3 /* HubTests.swift */,
-				F69A257F1DF441A9007D5C35 /* FileArchvieManagerTests.swift */,
-				F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */,
-				F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */,
-				F6FCE9851DEB6BA60088A662 /* ArchiveDocumentStoreTests.swift */,
-				F66425311DF63A12001F8F6E /* MessageCarbonsFilterTests.swift */,
-				F6FAE86F1DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift */,
-				F60046A41E0BC32A005B5175 /* MessageArchiveRequestImplTests.swift */,
-				F64638301E105A6A002C04E7 /* MessageArchiveManagementFilterTests.swift */,
-				F66425341DF63AFF001F8F6E /* xep_0280_received.xml */,
-				F66425371DF645BC001F8F6E /* xep_0280_sent.xml */,
-				F60046A71E0BDF56005B5175 /* xep_0313_message.xml */,
+				F6134F991E113B8D007EC90B /* Hub */,
+				F6134F9A1E113B93007EC90B /* Handler */,
+				F6134F981E113B84007EC90B /* Archive */,
+				F6134F971E113B6D007EC90B /* Filter */,
 				F673D23D1DE1C435009B3C99 /* Supporting Files */,
 			);
 			path = XMPPMessageHubTests;
@@ -351,6 +398,9 @@
 		F673D23D1DE1C435009B3C99 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				F66425341DF63AFF001F8F6E /* xep_0280_received.xml */,
+				F66425371DF645BC001F8F6E /* xep_0280_sent.xml */,
+				F60046A71E0BDF56005B5175 /* xep_0313_message.xml */,
 				F673D2011DE1C02D009B3C99 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -381,8 +431,6 @@
 			isa = PBXGroup;
 			children = (
 				F69A25761DF43470007D5C35 /* Hub.swift */,
-				F664253A1DF6A429001F8F6E /* InboundMesageHandler.swift */,
-				F664253D1DF6A93B001F8F6E /* OutboundMessageHandler.swift */,
 			);
 			name = Hub;
 			sourceTree = "<group>";

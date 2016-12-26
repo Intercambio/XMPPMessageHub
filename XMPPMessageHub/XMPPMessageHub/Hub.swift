@@ -12,38 +12,37 @@ import PureXML
 
 public class Hub: NSObject, ArchvieManager, MessageHandler, DispatcherHandler {
     
-    public static let MessageKey = "XMPPMessageHubMessageKey"
+    public weak var messageHandler: MessageHandler? {
+        didSet {
+            outboundMessageHandler.messageHandler = messageHandler
+        }
+    }
     
-    public weak var messageHandler: MessageHandler? { didSet { outboundMessageHandler.messageHandler = messageHandler } }
-    public weak var iqHandler: IQHandler? { didSet { messageCarbonsDispatchHandler.iqHandler = iqHandler } }
+    public weak var iqHandler: IQHandler? {
+        didSet {
+            messageCarbonsDispatchHandler.iqHandler = iqHandler
+        }
+    }
     
-    fileprivate let archvieManager: ArchvieManager
     fileprivate let inboundMessageHandler: InboundMesageHandler
     fileprivate let outboundMessageHandler: OutboundMessageHandler
     fileprivate let messageCarbonsDispatchHandler: MessageCarbonsDispatchHandler
+    
     fileprivate let queue: DispatchQueue
     
+    private let archvieManager: ArchvieManager
     private var archiveByAccount: [JID:Archive] = [:]
     
     required public init(archvieManager: ArchvieManager) {
-        let inboundFilter: [MessageFilter] = [
-            MessageCarbonsFilter(direction: .received).optional,
-            MessageCarbonsFilter(direction: .sent).optional,
-            MessageArchiveManagementFilter().inverte
-        ]
-        let outboundFilter: [MessageFilter] = [
-        ]
+        inboundMessageHandler = InboundMesageHandler(archvieManager: archvieManager)
+        outboundMessageHandler = OutboundMessageHandler()
+        messageCarbonsDispatchHandler = MessageCarbonsDispatchHandler()
+        queue = DispatchQueue(label: "Hub", attributes: [.concurrent])
         self.archvieManager = archvieManager
-        self.inboundMessageHandler = InboundMesageHandler(archvieManager: archvieManager, inboundFilter: inboundFilter)
-        self.outboundMessageHandler = OutboundMessageHandler(outboundFilter: outboundFilter)
-        self.messageCarbonsDispatchHandler = MessageCarbonsDispatchHandler()
-        queue = DispatchQueue(
-            label: "Hub",
-            attributes: [.concurrent])
         super.init()
-        self.inboundMessageHandler.delegate = self
-        self.outboundMessageHandler.delegate = self
-        self.messageCarbonsDispatchHandler.delegate = self
+        inboundMessageHandler.delegate = self
+        outboundMessageHandler.delegate = self
+        messageCarbonsDispatchHandler.delegate = self
     }
     
     // MARK: - ArchvieManager
@@ -84,9 +83,7 @@ public class Hub: NSObject, ArchvieManager, MessageHandler, DispatcherHandler {
     }
     
     public func didConnect(_ jid: JID, resumed: Bool) {
-        queue.async {
-            self.messageCarbonsDispatchHandler.didConnect(jid, resumed: resumed)
-        }
+        self.messageCarbonsDispatchHandler.didConnect(jid, resumed: resumed)
     }
     
     public func didDisconnect(_ jid: JID) {

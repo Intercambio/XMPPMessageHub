@@ -36,3 +36,7 @@ protocol MessageArchiveRequest: MessageHandler {
     weak var iqHandler: IQHandler? { get set }
     func performFetch(before: MessageArchvieID?, limit: Int, timeout: TimeInterval) throws -> Void
 }
+
+protocol MessageArchiveManagement: MessageHandler {
+    weak var iqHandler: IQHandler? { get set }
+}
