@@ -35,6 +35,7 @@ class HubTests: TestCase {
     
     func testReceiveMessage() {
         guard
+            let dispatcher = self.dispatcher,
             let hub = self.hub
             else { XCTFail(); return }
         
@@ -61,11 +62,12 @@ class HubTests: TestCase {
             else { return }
         
         expectation(forNotification: Notification.Name.ArchiveDidChange.rawValue, object: archive, handler: nil)
+        
         let dispatchExp = self.expectation(description: "Message Handled")
-        hub.handleMessage(stanza) { error in
+        dispatcher.send(stanza, completion: { (error) in
             XCTAssertNil(error)
             dispatchExp.fulfill()
-        }
+        })
         waitForExpectations(timeout: 1.0, handler: nil)
         
         do {
@@ -155,6 +157,21 @@ class HubTests: TestCase {
         
         public func handleMessage(_ stanza: MessageStanza, completion: ((Error?) -> Void)? = nil) {
             completion?(nil)
+        }
+        
+        func send(_ message: MessageStanza, completion: ((Error?)->Void)?) {
+            let group = DispatchGroup()
+            for handler in handlers.allObjects {
+                if let messaheHandler = handler as? MessageHandler {
+                    group.enter()
+                    messaheHandler.handleMessage(message, completion: { (error) in
+                        group.leave()
+                    })
+                }
+            }
+            group.notify(queue: DispatchQueue.main) { 
+                completion?(nil)
+            }
         }
     }
 }

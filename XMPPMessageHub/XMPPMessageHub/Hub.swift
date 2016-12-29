@@ -29,7 +29,7 @@ public class Hub: NSObject, ArchvieManager {
     private var archiveByAccount: [JID:Archive] = [:]
     
     required public init(dispatcher: Dispatcher, archvieManager: ArchvieManager) {
-        inboundMessageHandler = InboundMesageHandler(archvieManager: archvieManager)
+        inboundMessageHandler = InboundMesageHandler(dispatcher: dispatcher, archvieManager: archvieManager)
         outboundMessageHandler = OutboundMessageHandler(dispatcher: dispatcher)
         messageCarbonsDispatchHandler = MessageCarbonsDispatchHandler()
         queue = DispatchQueue(label: "Hub", attributes: [.concurrent])
@@ -70,12 +70,7 @@ public class Hub: NSObject, ArchvieManager {
     }
 }
 
-extension Hub: ConnectionHandler, MessageHandler {
-    // MARK: - MessageHandler
-    
-    public func handleMessage(_ stanza: MessageStanza, completion: ((Error?) -> Void)?) {
-        self.inboundMessageHandler.handleMessage(stanza, completion: completion)
-    }
+extension Hub: ConnectionHandler {
     
     // MARK: - DispatcherHandler
     

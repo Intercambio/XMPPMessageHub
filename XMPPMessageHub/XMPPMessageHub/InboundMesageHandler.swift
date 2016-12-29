@@ -33,10 +33,12 @@ class InboundMesageHandler: NSObject, MessageHandler {
     private var archiveByAccount: [JID:Archive] = [:]
     private var pendingMessageDispatch: [PendingMessageDispatch] = []
     private let queue: DispatchQueue
+    private let dispatcher: Dispatcher
     private let archvieManager: ArchvieManager
     private let inboundFilter: [MessageFilter]
     
-    required init(archvieManager: ArchvieManager) {
+    required init(dispatcher: Dispatcher, archvieManager: ArchvieManager) {
+        self.dispatcher = dispatcher
         self.archvieManager = archvieManager
         self.inboundFilter = [
             MessageCarbonsFilter(direction: .received).optional,
@@ -46,6 +48,12 @@ class InboundMesageHandler: NSObject, MessageHandler {
         queue = DispatchQueue(
             label: "InboundMesageHandler",
             attributes: [.concurrent])
+        super.init()
+        dispatcher.add(self)
+    }
+    
+    deinit {
+        dispatcher.remove(self)
     }
     
     // MARK: - CoreXMPP.MessageHandler
