@@ -66,10 +66,10 @@ class MessageArchiveRequestImpl: NSObject, MessageArchiveRequest, MessageHandler
         }
     }
     
-    private func handleResponse(_ document: PXDocument) {
+    private func handleResponse(_ stanza: IQStanza) {
         let namespaces = ["x": "urn:xmpp:mam:1"]
         guard
-            let fin = document.root.nodes(forXPath: "./x:fin", usingNamespaces: namespaces).first as? PXElement,
+            let fin = stanza.nodes(forXPath: "./x:fin", usingNamespaces: namespaces).first as? PXElement,
             let rsm = fin.resultSet,
             let first = rsm.first,
             let last = rsm.last
@@ -97,10 +97,9 @@ class MessageArchiveRequestImpl: NSObject, MessageArchiveRequest, MessageHandler
     
     // MARK: - MessageHandler
     
-    func handleMessage(_ document: PXDocument, completion: ((Error?) -> Void)? = nil) {
+    func handleMessage(_ message: MessageStanza, completion: ((Error?) -> Void)? = nil) {
         queue.async {
             guard
-                let message = document.root as? MessageStanza,
                 let from = message.from,
                 self.archive.account == from.bare()
                 else {
@@ -140,13 +139,13 @@ class MessageArchiveRequestImpl: NSObject, MessageArchiveRequest, MessageHandler
     
     // MARK: - Helper
     
-    private func makeRequest(before: MessageArchvieID?, limit: Int) -> PXDocument {
+    private func makeRequest(before: MessageArchvieID?, limit: Int) -> IQStanza {
         let document = IQStanza.makeDocumentWithIQStanza(from: nil, to: archive.account.bare())
         let iq = document.root as! IQStanza
         iq.type = .set
         let query = iq.add(withName: "query", namespace: "urn:xmpp:mam:1", content: nil)!
         query.setValue(queryID, forAttribute: "queryid")
         query.addResultSet(withMax: 20, before: before ?? "")
-        return document
+        return iq
     }
 }

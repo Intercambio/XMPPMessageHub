@@ -22,16 +22,11 @@ class MessageCarbonsDispatchHandlerTests: TestCase {
         handler.delegate = delegate
         handler.iqHandler = iqHandler
         
-        iqHandler.handler = { document, timeout, complition in
-            if let request = document.root as? IQStanza {
-                let response = IQStanza.makeDocumentWithIQStanza(from: request.to, to: request.from)
-                let iq = response.root as! IQStanza
-                iq.type = .result
-                complition?(response, nil)
-            } else {
-                let error = NSError(domain: "MessageCarbonsDispatchHandlerTests", code: 1, userInfo: nil)
-                complition?(nil, error)
-            }
+        iqHandler.handler = { request, timeout, complition in
+            let response = IQStanza.makeDocumentWithIQStanza(from: request.to, to: request.from)
+            let iq = response.root as! IQStanza
+            iq.type = .result
+            complition?(iq, nil)
         }
     
         expectation(forNotification: "MessageCarbonsDispatchHandlerTests.didEnable", object: delegate, handler: nil)
@@ -43,13 +38,13 @@ class MessageCarbonsDispatchHandlerTests: TestCase {
     
     class IQHandler: NSObject, XMPPFoundation.IQHandler {
         
-        typealias Completion = ((PXDocument?, Error?) -> Void)
-        var handler: ((PXDocument, TimeInterval, Completion?) -> Void)?
+        typealias Completion = ((IQStanza?, Error?) -> Void)
+        var handler: ((IQStanza, TimeInterval, Completion?) -> Void)?
         
-        public func handleIQRequest(_ document: PXDocument,
+        public func handleIQRequest(_ request: IQStanza,
                                     timeout: TimeInterval,
-                                    completion: ((PXDocument?, Error?) -> Swift.Void)? = nil) {
-            handler?(document, timeout, completion)
+                                    completion: ((IQStanza?, Error?) -> Swift.Void)? = nil) {
+            handler?(request, timeout, completion)
         }
     }
     

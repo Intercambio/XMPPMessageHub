@@ -32,16 +32,14 @@ class HubTests: TestCase {
     
     func testReceiveMessage() {
         guard
-            let hub = self.hub,
-            let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil)
+            let hub = self.hub
             else { XCTFail(); return }
         
         // Dispatch the message
         
-        document.root.setValue("juliet@example.com", forAttribute: "from")
-        document.root.setValue("romeo@example.com", forAttribute: "to")
-        document.root.setValue("chat", forAttribute: "type")
-        document.root.setValue("456", forAttribute: "id")
+        let stanza = MessageStanza.makeDocumentWithMessageStanza(from: JID("juliet@example.com")!, to: JID("romeo@example.com")!).root as! MessageStanza
+        stanza.type = .chat
+        stanza.identifier = "456"
         
         var requestedArchive: Archive? = nil
         
@@ -61,7 +59,7 @@ class HubTests: TestCase {
         
         expectation(forNotification: Notification.Name.ArchiveDidChange.rawValue, object: archive, handler: nil)
         let dispatchExp = self.expectation(description: "Message Handled")
-        hub.handleMessage(document) { error in
+        hub.handleMessage(stanza) { error in
             XCTAssertNil(error)
             dispatchExp.fulfill()
         }
@@ -82,14 +80,12 @@ class HubTests: TestCase {
     
     func testSendMessage() {
         guard
-            let hub = self.hub,
-            let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil)
+            let hub = self.hub
             else { XCTFail(); return }
         
-        document.root.setValue("juliet@example.com", forAttribute: "to")
-        document.root.setValue("romeo@example.com", forAttribute: "from")
-        document.root.setValue("chat", forAttribute: "type")
-        document.root.setValue("456", forAttribute: "id")
+        let stanza = MessageStanza.makeDocumentWithMessageStanza(from: JID("juliet@example.com")!, to: JID("romeo@example.com")!).root as! MessageStanza
+        stanza.type = .chat
+        stanza.identifier = "456"
         
         let dispatcher = Dispatcher()
         hub.messageHandler = dispatcher
@@ -121,7 +117,7 @@ class HubTests: TestCase {
                             return message.messageID.account == JID("romeo@example.com")!
             }
             
-            let _ = try archive.insert(document, metadata: Metadata())
+            let _ = try archive.insert(stanza, metadata: Metadata())
             waitForExpectations(timeout: 1.0, handler: nil)
             
             let messages = try archive.all()
@@ -137,7 +133,7 @@ class HubTests: TestCase {
     }
     
     class Dispatcher: NSObject, MessageHandler {
-        func handleMessage(_ document: PXDocument, completion: ((Error?) -> Void)? = nil) {
+        func handleMessage(_ stanza: MessageStanza, completion: ((Error?) -> Void)? = nil) {
             completion?(nil)
         }
     }

@@ -46,23 +46,18 @@ class MessageArchiveRequestImplTests: TestCase {
         let delegate = Delegate()
         let iqHandler = IQHandler()
         
-        iqHandler.handler = { document, timeout, complition in
-            if let request = document.root as? IQStanza {
-                let response = IQStanza.makeDocumentWithIQStanza(from: request.to, to: request.from)
-                let iq = response.root as! IQStanza
-                iq.type = .result
-                
-                let query = iq.add(withName: "fin", namespace: "urn:xmpp:mam:1", content: nil)!
-                let rsm = query.add(withName: "set", namespace: "http://jabber.org/protocol/rsm", content: nil) as! XMPPResultSet
-                rsm.first = "123"
-                rsm.last = "abc"
-                rsm.count = 10
-                
-                complition?(response, nil)
-            } else {
-                let error = NSError(domain: "MessageCarbonsDispatchHandlerTests", code: 1, userInfo: nil)
-                complition?(nil, error)
-            }
+        iqHandler.handler = { request, timeout, complition in
+            let response = IQStanza.makeDocumentWithIQStanza(from: request.to, to: request.from)
+            let iq = response.root as! IQStanza
+            iq.type = .result
+            
+            let query = iq.add(withName: "fin", namespace: "urn:xmpp:mam:1", content: nil)!
+            let rsm = query.add(withName: "set", namespace: "http://jabber.org/protocol/rsm", content: nil) as! XMPPResultSet
+            rsm.first = "123"
+            rsm.last = "abc"
+            rsm.count = 10
+            
+            complition?(iq, nil)
         }
         
         let request = MessageArchiveRequestImpl(archive: archive)
@@ -127,13 +122,13 @@ class MessageArchiveRequestImplTests: TestCase {
     
     class IQHandler: NSObject, XMPPFoundation.IQHandler {
         
-        typealias Completion = ((PXDocument?, Error?) -> Void)
-        var handler: ((PXDocument, TimeInterval, Completion?) -> Void)?
+        typealias Completion = ((IQStanza?, Error?) -> Void)
+        var handler: ((IQStanza, TimeInterval, Completion?) -> Void)?
         
-        public func handleIQRequest(_ document: PXDocument,
+        public func handleIQRequest(_ request: IQStanza,
                                     timeout: TimeInterval,
-                                    completion: ((PXDocument?, Error?) -> Swift.Void)? = nil) {
-            handler?(document, timeout, completion)
+                                    completion: ((IQStanza?, Error?) -> Swift.Void)? = nil) {
+            handler?(request, timeout, completion)
         }
     }
     

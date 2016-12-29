@@ -50,10 +50,9 @@ class InboundMesageHandler: NSObject, MessageHandler {
     
     // MARK: - CoreXMPP.MessageHandler
     
-    func handleMessage(_ document: PXDocument,
-                              completion: ((Error?) -> Void)?) {
+    func handleMessage(_ message: MessageStanza,
+                       completion: ((Error?) -> Void)?) {
         guard
-            let message = document.root as? MessageStanza,
             let to = message.to
             else {
                 completion?(InboundMesageHandlerError.invalidDocument)

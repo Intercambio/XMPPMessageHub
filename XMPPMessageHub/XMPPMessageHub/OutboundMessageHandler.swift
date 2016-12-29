@@ -33,12 +33,13 @@ class OutboundMessageHandler {
     func send(_ message: Message, with document: PXDocument, in archive: Archive) {
         queue.async {
             guard
+                let stanza = document.root as? MessageStanza,
                 self.messagesBeeingTransmitted.contains(message.messageID) == false,
                 let handler = self.messageHandler
                 else { return }
             
             self.messagesBeeingTransmitted.append(message.messageID)
-            handler.handleMessage(document) { error in
+            handler.handleMessage(stanza) { error in
                 self.queue.async(flags: [.barrier]) {
                     if let idx = self.messagesBeeingTransmitted.index(of: message.messageID) {
                         self.messagesBeeingTransmitted.remove(at: idx)

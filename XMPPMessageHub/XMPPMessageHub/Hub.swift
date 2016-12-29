@@ -10,7 +10,7 @@ import Foundation
 import XMPPFoundation
 import PureXML
 
-public class Hub: NSObject, ArchvieManager, MessageHandler, DispatcherHandler {
+public class Hub: NSObject, ArchvieManager, MessageHandler, ConnectionHandler {
     
     public weak var messageHandler: MessageHandler? {
         didSet {
@@ -70,17 +70,11 @@ public class Hub: NSObject, ArchvieManager, MessageHandler, DispatcherHandler {
     
     // MARK: - MessageHandler
     
-    public func handleMessage(_ document: PXDocument, completion: ((Error?) -> Void)?) {
-        self.inboundMessageHandler.handleMessage(document, completion: completion)
+    public func handleMessage(_ stanza: MessageStanza, completion: ((Error?) -> Void)?) {
+        self.inboundMessageHandler.handleMessage(stanza, completion: completion)
     }
     
     // MARK: - DispatcherHandler
-    
-    public func didAddConnection(_ jid: JID) {
-    }
-    
-    public func didRemoveConnection(_ jid: JID) {
-    }
     
     public func didConnect(_ jid: JID, resumed: Bool) {
         self.messageCarbonsDispatchHandler.didConnect(jid, resumed: resumed)

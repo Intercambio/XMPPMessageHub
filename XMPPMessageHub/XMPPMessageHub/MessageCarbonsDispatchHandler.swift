@@ -14,7 +14,7 @@ protocol MessageCarbonsDispatchHandlerDelegate: class {
     func messageCarbonsDispatchHandler(_ handler: MessageCarbonsDispatchHandler, failedToEnableFor account: JID, wirth error: Error) -> Void
 }
 
-class MessageCarbonsDispatchHandler: NSObject, DispatcherHandler {
+class MessageCarbonsDispatchHandler: NSObject, ConnectionHandler {
     
     weak var iqHandler: IQHandler?
     weak var delegate: MessageCarbonsDispatchHandlerDelegate?
@@ -58,12 +58,14 @@ class MessageCarbonsDispatchHandler: NSObject, DispatcherHandler {
         }
     }
     
-    private func makeRequest(for account: JID) -> PXDocument {
+    func didDisconnect(_ JID: JID) { }
+    
+    private func makeRequest(for account: JID) -> IQStanza {
         let request = IQStanza.makeDocumentWithIQStanza(from: account, to: account)
         let iq = request.root as! IQStanza
         iq.type = .set
         iq.add(withName: "enable", namespace: "urn:xmpp:carbons:2", content: nil)
         
-        return request
+        return iq
     }
 }
