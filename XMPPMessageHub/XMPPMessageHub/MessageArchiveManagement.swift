@@ -30,13 +30,11 @@ protocol MessageArchiveRequestDelegate: class {
     func messageArchiveRequest(_ request: MessageArchiveRequest, didFailWith error: Error) -> Void
 }
 
-protocol MessageArchiveRequest: MessageHandler {
-    init(archive: Archive)
+protocol MessageArchiveRequest {
+    init(dispatcher: Dispatcher, archive: Archive)
     weak var delegate: MessageArchiveRequestDelegate? { get set }
-    weak var iqHandler: IQHandler? { get set }
     func performFetch(before: MessageArchvieID?, limit: Int, timeout: TimeInterval) throws -> Void
 }
 
-protocol MessageArchiveManagement: MessageHandler {
-    weak var iqHandler: IQHandler? { get set }
+protocol MessageArchiveManagement {
 }

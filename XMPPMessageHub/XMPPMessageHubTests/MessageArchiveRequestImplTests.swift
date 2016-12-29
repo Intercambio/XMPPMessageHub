@@ -16,15 +16,15 @@ class MessageArchiveRequestImplTests: TestCase {
     
     func testPerformFetchWithError() {
         let archive = TestArchive(account: JID("romeo@example.com")!)
+        let dispatcher = TestDispatcher()
         let delegate = Delegate()
-        let iqHandler = IQHandler()
-        iqHandler.handler = { document, timeout, complition in
+        
+        dispatcher.handler = { document, timeout, complition in
             let error = NSError(domain: "MessageArchiveRequestTests", code: 1, userInfo: nil)
             complition?(nil, error)
         }
 
-        let request = MessageArchiveRequestImpl(archive: archive)
-        request.iqHandler = iqHandler
+        let request = MessageArchiveRequestImpl(dispatcher: dispatcher, archive: archive)
         request.delegate = delegate
         
         do {
@@ -43,10 +43,10 @@ class MessageArchiveRequestImplTests: TestCase {
     
     func testPerformFetch() {
         let archive = TestArchive(account: JID("romeo@example.com")!)
+        let dispatcher = TestDispatcher()
         let delegate = Delegate()
-        let iqHandler = IQHandler()
         
-        iqHandler.handler = { request, timeout, complition in
+        dispatcher.handler = { request, timeout, complition in
             let response = IQStanza.makeDocumentWithIQStanza(from: request.to, to: request.from)
             let iq = response.root as! IQStanza
             iq.type = .result
@@ -60,8 +60,7 @@ class MessageArchiveRequestImplTests: TestCase {
             complition?(iq, nil)
         }
         
-        let request = MessageArchiveRequestImpl(archive: archive)
-        request.iqHandler = iqHandler
+        let request = MessageArchiveRequestImpl(dispatcher: dispatcher, archive: archive)
         request.delegate = delegate
         
         do {
@@ -120,10 +119,29 @@ class MessageArchiveRequestImplTests: TestCase {
         func counterparts() throws -> [JID] { return [] }
     }
     
-    class IQHandler: NSObject, XMPPFoundation.IQHandler {
+    class TestDispatcher: Dispatcher {
         
         typealias Completion = ((IQStanza?, Error?) -> Void)
         var handler: ((IQStanza, TimeInterval, Completion?) -> Void)?
+        
+        let handlers: NSHashTable = NSHashTable<Handler>.weakObjects()
+        
+        func add(_ handler: Handler) {
+            add(handler, withIQQueryQNames: nil)
+        }
+        
+        func add(_ handler: Handler, withIQQueryQNames queryQNames: [PXQName]?) {
+            handlers.add(handler)
+        }
+        
+        func remove(_ handler: Handler) {
+            handlers.remove(handler)
+        }
+        
+        public func didConnect(_ JID: JID, resumed: Bool) {}
+        public func didDisconnect(_ JID: JID) {}
+        public func handleMessage(_ stanza: MessageStanza, completion: ((Error?) -> Void)? = nil) {}
+        public func handlePresence(_ stanza: PresenceStanza, completion: ((Error?) -> Swift.Void)? = nil) {}
         
         public func handleIQRequest(_ request: IQStanza,
                                     timeout: TimeInterval,
@@ -131,7 +149,7 @@ class MessageArchiveRequestImplTests: TestCase {
             handler?(request, timeout, completion)
         }
     }
-    
+
     class Delegate: MessageArchiveRequestDelegate {
         func messageArchiveRequest(_ request: MessageArchiveRequest, didFailWith error: Error) {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "MessageArchiveRequestTests.didFailWith"), object: self)

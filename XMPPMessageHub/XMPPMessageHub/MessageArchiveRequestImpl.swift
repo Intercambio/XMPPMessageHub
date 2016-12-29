@@ -9,7 +9,7 @@
 import Foundation
 import XMPPFoundation
 
-class MessageArchiveRequestImpl: NSObject, MessageArchiveRequest, MessageHandler {
+class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
     
     enum State {
         case intitalized
@@ -18,11 +18,11 @@ class MessageArchiveRequestImpl: NSObject, MessageArchiveRequest, MessageHandler
         case failed(error: Error)
     }
     
-    weak var iqHandler: IQHandler?
     weak var delegate: MessageArchiveRequestDelegate?
     
-    let archive: Archive
-    let queryID: String
+    private let dispatcher: Dispatcher
+    private let archive: Archive
+    private let queryID: String
     
     private(set) var state: State = .intitalized {
         didSet {
@@ -36,12 +36,19 @@ class MessageArchiveRequestImpl: NSObject, MessageArchiveRequest, MessageHandler
     
     private let filter: MessageFilter = MessageArchiveManagementFilter()
     private let queue: DispatchQueue
-    required init(archive: Archive) {
+    
+    required init(dispatcher: Dispatcher, archive: Archive) {
+        self.dispatcher = dispatcher
         self.archive = archive
         self.queryID = UUID().uuidString.lowercased()
         queue = DispatchQueue(
             label: "MessageArchiveRequestImpl",
             attributes: [])
+        dispatcher.add(self)
+    }
+    
+    deinit {
+        dispatcher.remove(self)
     }
     
     func performFetch(before: MessageArchvieID? = nil, limit: Int = 20, timeout: TimeInterval = 120.0) throws {
@@ -50,7 +57,7 @@ class MessageArchiveRequestImpl: NSObject, MessageArchiveRequest, MessageHandler
                 case .intitalized = self.state
                 else { throw MessageArchiveRequestError.alreadyRunning }
             let request = self.makeRequest(before: before, limit: limit)
-            self.iqHandler?.handleIQRequest(request, timeout: timeout) { [weak self] response, error in
+            self.dispatcher.handleIQRequest(request, timeout: timeout) { [weak self] response, error in
                 guard
                     let this = self
                     else { return }
