@@ -114,7 +114,7 @@ class MessageArchiveRequestImpl: NSObject, MessageArchiveRequest, MessageHandler
                     let metadata = Metadata(created: now, transmitted: now, read: nil, error: nil, isCarbonCopy: false)
                     
                     guard
-                        let result = try self.filter.apply(to: document, with: metadata, userInfo: [:]),
+                        let result = try self.filter.apply(to: message, with: metadata, userInfo: [:]),
                         let archiveID = result.userInfo[MessageArchvieIDKey] as? String,
                         result.userInfo[MessageArchvieQueryIDKey] as? String == self.queryID
                         else {
@@ -123,7 +123,7 @@ class MessageArchiveRequestImpl: NSObject, MessageArchiveRequest, MessageHandler
                     }
                     
                     do {
-                        let message = try self.archive.insert(result.document, metadata: result.metadata)
+                        let message = try self.archive.insert(result.message, metadata: result.metadata)
                         messages[archiveID] = message.messageID
                     } catch let error as MessageAlreadyExist {
                         messages[archiveID] = error.existingMessageID

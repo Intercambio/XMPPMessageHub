@@ -17,7 +17,8 @@ class MessageArchiveManagementResultFilterTests: TestCase {
     func test() {
         
         guard
-            let document = PXDocument(named: "xep_0313_message.xml", in: Bundle(for: MessageCarbonsFilterTests.self))
+            let document = PXDocument(named: "xep_0313_message.xml", in: Bundle(for: MessageCarbonsFilterTests.self)),
+            let message = document.root as? MessageStanza
             else { XCTFail(); return }
         
         let dateFormatter = ISO8601.ISO8601DateFormatter()
@@ -26,11 +27,11 @@ class MessageArchiveManagementResultFilterTests: TestCase {
         do {
         
             let filter = MessageArchiveManagementFilter()
-            let result = try filter.apply(to: document, with: Metadata(), userInfo: [:])
+            let result = try filter.apply(to: message, with: Metadata(), userInfo: [:])
             
-            let document = result?.document
-            XCTAssertEqual(document?.root.value(forAttribute: "from") as? String, "witch@shakespeare.lit")
-            XCTAssertEqual(document?.root.value(forAttribute: "to") as? String, "macbeth@shakespeare.lit")
+            let stanza = result?.message
+            XCTAssertEqual(stanza?.value(forAttribute: "from") as? String, "witch@shakespeare.lit")
+            XCTAssertEqual(stanza?.value(forAttribute: "to") as? String, "macbeth@shakespeare.lit")
             
             let metadata = result?.metadata
             XCTAssertEqual(metadata?.created, timestamp)

@@ -14,7 +14,7 @@ class MessageArchiveManagementFilter: MessageFilter {
 
     private let dateFormatter: ISO8601.ISO8601DateFormatter = ISO8601DateFormatter()
     
-    func apply(to document: PXDocument, with metadata: Metadata, userInfo: [AnyHashable:Any]) throws -> MessageFilter.Result? {
+    func apply(to message: MessageStanza, with metadata: Metadata, userInfo: [AnyHashable:Any]) throws -> MessageFilter.Result? {
         
         let namespaces = [
             "mam": "urn:xmpp:mam:1",
@@ -23,7 +23,6 @@ class MessageArchiveManagementFilter: MessageFilter {
             "delay":"urn:xmpp:delay"]
         
         guard
-            let message = document.root as? MessageStanza,
             let result = message.nodes(forXPath: "./mam:result", usingNamespaces: namespaces).first as? PXElement
             else {
                 return nil
@@ -50,7 +49,7 @@ class MessageArchiveManagementFilter: MessageFilter {
         newUserInfo[MessageArchvieIDKey] = archiveID
         newUserInfo[MessageArchvieQueryIDKey] = queryID
         
-        return (document: PXDocument(element: originalMessage)!,
+        return (message: originalMessage,
                 metadata: newMetadata,
                 userInfo: newUserInfo)
     }

@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import PureXML
+import XMPPFoundation
 
 public protocol MessageFilter {
-    typealias Result = (document: PXDocument, metadata: Metadata, userInfo: [AnyHashable:Any])
-    func apply(to document: PXDocument, with metadata: Metadata, userInfo: [AnyHashable:Any]) throws -> Result?
+    typealias Result = (message: MessageStanza, metadata: Metadata, userInfo: [AnyHashable:Any])
+    func apply(to message: MessageStanza, with metadata: Metadata, userInfo: [AnyHashable:Any]) throws -> Result?
     
     var optional: MessageFilter { get }
     var inverte: MessageFilter { get }
@@ -33,10 +33,10 @@ class OptionalMessageFilter: MessageFilter {
         self.filter = filter
     }
     
-    func apply(to document: PXDocument, with metadata: Metadata, userInfo: [AnyHashable : Any]) throws -> MessageFilter.Result? {
+    func apply(to message: MessageStanza, with metadata: Metadata, userInfo: [AnyHashable : Any]) throws -> MessageFilter.Result? {
         guard
-            let result = try filter.apply(to: document, with: metadata, userInfo: userInfo)
-            else { return (document: document, metadata: metadata, userInfo: userInfo) }
+            let result = try filter.apply(to: message, with: metadata, userInfo: userInfo)
+            else { return (message: message, metadata: metadata, userInfo: userInfo) }
         
         return result
     }
@@ -51,10 +51,10 @@ class InvertedMessageFilter: MessageFilter {
         self.filter = filter
     }
     
-    func apply(to document: PXDocument, with metadata: Metadata, userInfo: [AnyHashable : Any]) throws -> MessageFilter.Result? {
+    func apply(to message: MessageStanza, with metadata: Metadata, userInfo: [AnyHashable : Any]) throws -> MessageFilter.Result? {
         guard
-            try filter.apply(to: document, with: metadata, userInfo: userInfo) != nil
-            else { return (document: document, metadata: metadata, userInfo: userInfo) }
+            try filter.apply(to: message, with: metadata, userInfo: userInfo) != nil
+            else { return (message: message, metadata: metadata, userInfo: userInfo) }
         
         return nil
     }

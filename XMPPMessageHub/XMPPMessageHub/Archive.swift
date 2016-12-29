@@ -26,6 +26,7 @@ public struct MessageAlreadyExist: Error {
 public protocol Archive {
     var account: JID { get }
     
+    func insert(_ stanza: MessageStanza, metadata: Metadata) throws -> Message
     func insert(_ document: PXDocument, metadata: Metadata) throws -> Message
     func update(_ metadata: Metadata, for messageID: MessageID) throws -> Message
     func update(transmitted: Date?, error: TransmissionError?, for messageID: MessageID) throws -> Message
@@ -40,6 +41,13 @@ public protocol Archive {
     func conversation(with counterpart: JID) throws -> [Message]
 
     func counterparts() throws -> [JID]
+}
+
+extension Archive {
+    public func insert(_ stanza: MessageStanza, metadata: Metadata) throws -> Message {
+        let document = PXDocument(element: stanza)!
+        return try insert(document, metadata: metadata)
+    }
 }
 
 extension Notification.Name {

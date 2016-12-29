@@ -23,7 +23,7 @@ class InboundMesageHandler: NSObject, MessageHandler {
     weak var delegate: InboundMesageHandlerDelegate?
     
     private struct PendingMessageDispatch {
-        let document: PXDocument
+        let message: MessageStanza
         let metadata: Metadata
         let userInfo: [AnyHashable:Any]
         let account: JID
@@ -65,12 +65,12 @@ class InboundMesageHandler: NSObject, MessageHandler {
             do {
                 let now = Date()
                 let metadata = Metadata(created: now, transmitted: now, read: nil, error: nil, isCarbonCopy: false)
-                let initial: MessageFilter.Result? = (document: document, metadata: metadata, userInfo: [:])
+                let initial: MessageFilter.Result? = (message: message, metadata: metadata, userInfo: [:])
                 let filtered = try self.inboundFilter.reduce(initial) { input, filter in
                     guard
                         let result = input
                         else { return nil }
-                    return try filter.apply(to: result.document, with: result.metadata, userInfo: result.userInfo)
+                    return try filter.apply(to: result.message, with: result.metadata, userInfo: result.userInfo)
                 }
                 
                 guard
@@ -81,10 +81,10 @@ class InboundMesageHandler: NSObject, MessageHandler {
                     }
                 
                 if let archive = self.archiveByAccount[account] {
-                    try self.insert(result.document, with: result.metadata, userInfo: result.userInfo, in: archive)
+                    try self.insert(result.message, with: result.metadata, userInfo: result.userInfo, in: archive)
                     completion?(nil)
                 } else {
-                    let pending = PendingMessageDispatch(document: result.document, metadata: result.metadata, userInfo: result.userInfo, account: account, completion: completion)
+                    let pending = PendingMessageDispatch(message: result.message, metadata: result.metadata, userInfo: result.userInfo, account: account, completion: completion)
                     self.pendingMessageDispatch.append(pending)
                     self.openArchive(for: account)
                 }
@@ -97,8 +97,8 @@ class InboundMesageHandler: NSObject, MessageHandler {
     
     // MARK: -
     
-    private func insert(_ document: PXDocument, with metadata: Metadata, userInfo: [AnyHashable:Any], in archive: Archive) throws {
-        let message = try archive.insert(document, metadata: metadata)
+    private func insert(_ stanza: MessageStanza, with metadata: Metadata, userInfo: [AnyHashable:Any], in archive: Archive) throws {
+        let message = try archive.insert(stanza, metadata: metadata)
         delegate?.inboundMessageHandler(self, didReceive: message, userInfo: userInfo)
     }
     
@@ -117,7 +117,7 @@ class InboundMesageHandler: NSObject, MessageHandler {
                 }
                 
                 do {
-                    try self.insert(pending.document, with: pending.metadata, userInfo: pending.userInfo, in: archive)
+                    try self.insert(pending.message, with: pending.metadata, userInfo: pending.userInfo, in: archive)
                     pending.completion?(nil)
                 } catch {
                     pending.completion?(error)
