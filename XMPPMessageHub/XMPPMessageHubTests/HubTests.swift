@@ -14,13 +14,16 @@ import XMPPFoundation
 
 class HubTests: TestCase {
     
+    var dispatcher: TestDispatcher?
     var hub: Hub?
     
     override func setUp() {
         super.setUp()
         guard let directory = self.directory else { return }
         let archiveManager = FileArchvieManager(directory: directory)
-        self.hub = Hub(archvieManager: archiveManager)
+        let dispatcher = TestDispatcher()
+        self.dispatcher = dispatcher
+        self.hub = Hub(dispatcher: dispatcher, archvieManager: archiveManager)
     }
     
     override func tearDown() {
@@ -87,9 +90,6 @@ class HubTests: TestCase {
         stanza.type = .chat
         stanza.identifier = "456"
         
-        let dispatcher = Dispatcher()
-        hub.messageHandler = dispatcher
-        
         var requestedArchive: Archive? = nil
         
         let getArchiveExp = expectation(description: "Get Archive")
@@ -132,8 +132,28 @@ class HubTests: TestCase {
         }
     }
     
-    class Dispatcher: NSObject, MessageHandler {
-        func handleMessage(_ stanza: MessageStanza, completion: ((Error?) -> Void)? = nil) {
+    class TestDispatcher: Dispatcher {
+        
+        let handlers: NSHashTable = NSHashTable<Handler>.weakObjects()
+        
+        func add(_ handler: Handler) {
+            add(handler, withIQQueryQNames: nil)
+        }
+        
+        func add(_ handler: Handler, withIQQueryQNames queryQNames: [PXQName]?) {
+            handlers.add(handler)
+        }
+        
+        func remove(_ handler: Handler) {
+            handlers.remove(handler)
+        }
+        
+        public func didConnect(_ JID: JID, resumed: Bool) {}
+        public func didDisconnect(_ JID: JID) {}
+        public func handlePresence(_ stanza: PresenceStanza, completion: ((Error?) -> Swift.Void)? = nil) {}
+        public func handleIQRequest(_ stanza: IQStanza, timeout: TimeInterval, completion: ((IQStanza?, Error?) -> Swift.Void)? = nil) {}
+        
+        public func handleMessage(_ stanza: MessageStanza, completion: ((Error?) -> Void)? = nil) {
             completion?(nil)
         }
     }

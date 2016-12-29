@@ -17,14 +17,14 @@ protocol OutboundMessageHandlerDelegate: class {
 
 class OutboundMessageHandler {
     
-    public weak var messageHandler: MessageHandler?
     public weak var delegate: OutboundMessageHandlerDelegate?
     
     private var messagesBeeingTransmitted: [MessageID] = []
-    
     private let queue: DispatchQueue
+    private let dispatcher: Dispatcher
     
-    required init() {
+    required init(dispatcher: Dispatcher) {
+        self.dispatcher = dispatcher
         queue = DispatchQueue(
             label: "OutboundMessageHandler",
             attributes: [])
@@ -34,12 +34,11 @@ class OutboundMessageHandler {
         queue.async {
             guard
                 let stanza = document.root as? MessageStanza,
-                self.messagesBeeingTransmitted.contains(message.messageID) == false,
-                let handler = self.messageHandler
+                self.messagesBeeingTransmitted.contains(message.messageID) == false
                 else { return }
             
             self.messagesBeeingTransmitted.append(message.messageID)
-            handler.handleMessage(stanza) { error in
+            self.dispatcher.handleMessage(stanza) { error in
                 self.queue.async(flags: [.barrier]) {
                     if let idx = self.messagesBeeingTransmitted.index(of: message.messageID) {
                         self.messagesBeeingTransmitted.remove(at: idx)

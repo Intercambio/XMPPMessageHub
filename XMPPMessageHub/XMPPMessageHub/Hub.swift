@@ -10,13 +10,7 @@ import Foundation
 import XMPPFoundation
 import PureXML
 
-public class Hub: NSObject, ArchvieManager, MessageHandler, ConnectionHandler {
-    
-    public weak var messageHandler: MessageHandler? {
-        didSet {
-            outboundMessageHandler.messageHandler = messageHandler
-        }
-    }
+public class Hub: NSObject, ArchvieManager {
     
     public weak var iqHandler: IQHandler? {
         didSet {
@@ -30,19 +24,26 @@ public class Hub: NSObject, ArchvieManager, MessageHandler, ConnectionHandler {
     
     fileprivate let queue: DispatchQueue
     
+    private let dispatcher: Dispatcher
     private let archvieManager: ArchvieManager
     private var archiveByAccount: [JID:Archive] = [:]
     
-    required public init(archvieManager: ArchvieManager) {
+    required public init(dispatcher: Dispatcher, archvieManager: ArchvieManager) {
         inboundMessageHandler = InboundMesageHandler(archvieManager: archvieManager)
-        outboundMessageHandler = OutboundMessageHandler()
+        outboundMessageHandler = OutboundMessageHandler(dispatcher: dispatcher)
         messageCarbonsDispatchHandler = MessageCarbonsDispatchHandler()
         queue = DispatchQueue(label: "Hub", attributes: [.concurrent])
+        self.dispatcher = dispatcher
         self.archvieManager = archvieManager
         super.init()
         inboundMessageHandler.delegate = self
         outboundMessageHandler.delegate = self
         messageCarbonsDispatchHandler.delegate = self
+        dispatcher.add(self)
+    }
+    
+    deinit {
+        dispatcher.remove(self)
     }
     
     // MARK: - ArchvieManager
@@ -67,7 +68,9 @@ public class Hub: NSObject, ArchvieManager, MessageHandler, ConnectionHandler {
             self.archvieManager.deleteArchive(for: account, completion: completion)
         }
     }
-    
+}
+
+extension Hub: ConnectionHandler, MessageHandler {
     // MARK: - MessageHandler
     
     public func handleMessage(_ stanza: MessageStanza, completion: ((Error?) -> Void)?) {
@@ -80,8 +83,7 @@ public class Hub: NSObject, ArchvieManager, MessageHandler, ConnectionHandler {
         self.messageCarbonsDispatchHandler.didConnect(jid, resumed: resumed)
     }
     
-    public func didDisconnect(_ jid: JID) {
-    }
+    public func didDisconnect(_ jid: JID) {}
 }
 
 extension Hub: ArchiveProxyDelegate, InboundMesageHandlerDelegate, OutboundMessageHandlerDelegate, MessageCarbonsDispatchHandlerDelegate {
