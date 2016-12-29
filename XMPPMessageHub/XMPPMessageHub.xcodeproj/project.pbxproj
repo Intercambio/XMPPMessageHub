@@ -46,8 +46,8 @@
 		F664253C1DF6A429001F8F6E /* InboundMesageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F664253A1DF6A429001F8F6E /* InboundMesageHandler.swift */; };
 		F664253E1DF6A93B001F8F6E /* OutboundMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F664253D1DF6A93B001F8F6E /* OutboundMessageHandler.swift */; };
 		F664253F1DF6A93B001F8F6E /* OutboundMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F664253D1DF6A93B001F8F6E /* OutboundMessageHandler.swift */; };
-		F66425421DF94E15001F8F6E /* MessageCarbonsDispatchHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66425411DF94E15001F8F6E /* MessageCarbonsDispatchHandler.swift */; };
-		F66425431DF94E15001F8F6E /* MessageCarbonsDispatchHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66425411DF94E15001F8F6E /* MessageCarbonsDispatchHandler.swift */; };
+		F66425421DF94E15001F8F6E /* MessageCarbonsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66425411DF94E15001F8F6E /* MessageCarbonsHandler.swift */; };
+		F66425431DF94E15001F8F6E /* MessageCarbonsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66425411DF94E15001F8F6E /* MessageCarbonsHandler.swift */; };
 		F673D1DD1DE1BB55009B3C99 /* XMPPMessageHub.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D1D31DE1BB55009B3C99 /* XMPPMessageHub.framework */; };
 		F673D1E41DE1BB55009B3C99 /* XMPPMessageHub.h in Headers */ = {isa = PBXBuildFile; fileRef = F673D1D61DE1BB55009B3C99 /* XMPPMessageHub.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F673D1FB1DE1C02D009B3C99 /* XMPPMessageHub.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F673D1F21DE1C02C009B3C99 /* XMPPMessageHub.framework */; };
@@ -75,8 +75,8 @@
 		F6FAE86A1DFCB8BC0039EE7A /* XMPPFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6FAE8691DFCB8BC0039EE7A /* XMPPFoundation.framework */; };
 		F6FAE86B1DFCB8C50039EE7A /* XMPPFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6FAE8691DFCB8BC0039EE7A /* XMPPFoundation.framework */; };
 		F6FAE86C1DFCB8C70039EE7A /* XMPPFoundation.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F6FAE8691DFCB8BC0039EE7A /* XMPPFoundation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F6FAE8701DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FAE86F1DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift */; };
-		F6FAE8711DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FAE86F1DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift */; };
+		F6FAE8701DFDF0890039EE7A /* MessageCarbonsHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FAE86F1DFDF0890039EE7A /* MessageCarbonsHandlerTests.swift */; };
+		F6FAE8711DFDF0890039EE7A /* MessageCarbonsHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FAE86F1DFDF0890039EE7A /* MessageCarbonsHandlerTests.swift */; };
 		F6FCE96C1DE1C87F0088A662 /* TestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE96B1DE1C87F0088A662 /* TestCase.swift */; };
 		F6FCE96D1DE1C87F0088A662 /* TestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE96B1DE1C87F0088A662 /* TestCase.swift */; };
 		F6FCE9721DE3B1AA0088A662 /* FileArchiveSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6FCE9711DE3B1AA0088A662 /* FileArchiveSetup.swift */; };
@@ -151,7 +151,7 @@
 		F66425371DF645BC001F8F6E /* xep_0280_sent.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = xep_0280_sent.xml; sourceTree = "<group>"; };
 		F664253A1DF6A429001F8F6E /* InboundMesageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InboundMesageHandler.swift; sourceTree = "<group>"; };
 		F664253D1DF6A93B001F8F6E /* OutboundMessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutboundMessageHandler.swift; sourceTree = "<group>"; };
-		F66425411DF94E15001F8F6E /* MessageCarbonsDispatchHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCarbonsDispatchHandler.swift; sourceTree = "<group>"; };
+		F66425411DF94E15001F8F6E /* MessageCarbonsHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCarbonsHandler.swift; sourceTree = "<group>"; };
 		F673D1D31DE1BB55009B3C99 /* XMPPMessageHub.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = XMPPMessageHub.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F673D1D61DE1BB55009B3C99 /* XMPPMessageHub.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMPPMessageHub.h; sourceTree = "<group>"; };
 		F673D1D71DE1BB55009B3C99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -170,7 +170,7 @@
 		F69A257F1DF441A9007D5C35 /* FileArchvieManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileArchvieManagerTests.swift; sourceTree = "<group>"; };
 		F6FAE8661DFCB8A40039EE7A /* XMPPFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XMPPFoundation.framework; path = ../Carthage/Build/iOS/XMPPFoundation.framework; sourceTree = "<group>"; };
 		F6FAE8691DFCB8BC0039EE7A /* XMPPFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XMPPFoundation.framework; path = ../Carthage/Build/Mac/XMPPFoundation.framework; sourceTree = "<group>"; };
-		F6FAE86F1DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCarbonsDispatchHandlerTests.swift; sourceTree = "<group>"; };
+		F6FAE86F1DFDF0890039EE7A /* MessageCarbonsHandlerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCarbonsHandlerTests.swift; sourceTree = "<group>"; };
 		F6FCE96B1DE1C87F0088A662 /* TestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCase.swift; sourceTree = "<group>"; };
 		F6FCE9711DE3B1AA0088A662 /* FileArchiveSetup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileArchiveSetup.swift; sourceTree = "<group>"; };
 		F6FCE9741DE3B1F20088A662 /* ArchiveSetupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveSetupTests.swift; sourceTree = "<group>"; };
@@ -263,7 +263,7 @@
 		F6134F9A1E113B93007EC90B /* Handler */ = {
 			isa = PBXGroup;
 			children = (
-				F6FAE86F1DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift */,
+				F6FAE86F1DFDF0890039EE7A /* MessageCarbonsHandlerTests.swift */,
 				F6134F9C1E113BD2007EC90B /* MAM */,
 			);
 			name = Handler;
@@ -308,7 +308,7 @@
 			children = (
 				F664253A1DF6A429001F8F6E /* InboundMesageHandler.swift */,
 				F664253D1DF6A93B001F8F6E /* OutboundMessageHandler.swift */,
-				F66425411DF94E15001F8F6E /* MessageCarbonsDispatchHandler.swift */,
+				F66425411DF94E15001F8F6E /* MessageCarbonsHandler.swift */,
 				F6134F9B1E113BBE007EC90B /* MAM */,
 			);
 			name = Handler;
@@ -674,7 +674,7 @@
 				F664253E1DF6A93B001F8F6E /* OutboundMessageHandler.swift in Sources */,
 				F673D21C1DE1C245009B3C99 /* FileArchive.swift in Sources */,
 				F646382E1E105A0D002C04E7 /* Constants.swift in Sources */,
-				F66425421DF94E15001F8F6E /* MessageCarbonsDispatchHandler.swift in Sources */,
+				F66425421DF94E15001F8F6E /* MessageCarbonsHandler.swift in Sources */,
 				F688F46F1DF304E400B4D3B4 /* Archive.swift in Sources */,
 				F6FCE9831DEB6AEE0088A662 /* FileArchiveDocumentStore.swift in Sources */,
 				F646382B1E1059AC002C04E7 /* Error.swift in Sources */,
@@ -687,7 +687,7 @@
 			files = (
 				F64638311E105A6A002C04E7 /* MessageArchiveManagementFilterTests.swift in Sources */,
 				F673D23B1DE1C352009B3C99 /* ArchiveTests.swift in Sources */,
-				F6FAE8701DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift in Sources */,
+				F6FAE8701DFDF0890039EE7A /* MessageCarbonsHandlerTests.swift in Sources */,
 				F625A54A1DF44F2B0005AFD3 /* HubTests.swift in Sources */,
 				F6FCE9751DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */,
 				F6FCE96C1DE1C87F0088A662 /* TestCase.swift in Sources */,
@@ -718,7 +718,7 @@
 				F664253F1DF6A93B001F8F6E /* OutboundMessageHandler.swift in Sources */,
 				F673D21D1DE1C245009B3C99 /* FileArchive.swift in Sources */,
 				F646382F1E105A0D002C04E7 /* Constants.swift in Sources */,
-				F66425431DF94E15001F8F6E /* MessageCarbonsDispatchHandler.swift in Sources */,
+				F66425431DF94E15001F8F6E /* MessageCarbonsHandler.swift in Sources */,
 				F688F4701DF304E400B4D3B4 /* Archive.swift in Sources */,
 				F6FCE9841DEB6AEE0088A662 /* FileArchiveDocumentStore.swift in Sources */,
 				F646382C1E1059AC002C04E7 /* Error.swift in Sources */,
@@ -731,7 +731,7 @@
 			files = (
 				F64638321E105A6A002C04E7 /* MessageArchiveManagementFilterTests.swift in Sources */,
 				F673D23C1DE1C352009B3C99 /* ArchiveTests.swift in Sources */,
-				F6FAE8711DFDF0890039EE7A /* MessageCarbonsDispatchHandlerTests.swift in Sources */,
+				F6FAE8711DFDF0890039EE7A /* MessageCarbonsHandlerTests.swift in Sources */,
 				F625A54B1DF44F2B0005AFD3 /* HubTests.swift in Sources */,
 				F6FCE9761DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */,
 				F6FCE96D1DE1C87F0088A662 /* TestCase.swift in Sources */,

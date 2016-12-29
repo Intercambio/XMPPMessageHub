@@ -12,15 +12,9 @@ import PureXML
 
 public class Hub: NSObject, ArchvieManager {
     
-    public weak var iqHandler: IQHandler? {
-        didSet {
-            messageCarbonsDispatchHandler.iqHandler = iqHandler
-        }
-    }
-    
     fileprivate let inboundMessageHandler: InboundMesageHandler
     fileprivate let outboundMessageHandler: OutboundMessageHandler
-    fileprivate let messageCarbonsDispatchHandler: MessageCarbonsDispatchHandler
+    fileprivate let messageCarbonsHandler: MessageCarbonsHandler
     
     fileprivate let queue: DispatchQueue
     
@@ -31,21 +25,16 @@ public class Hub: NSObject, ArchvieManager {
     required public init(dispatcher: Dispatcher, archvieManager: ArchvieManager) {
         inboundMessageHandler = InboundMesageHandler(dispatcher: dispatcher, archvieManager: archvieManager)
         outboundMessageHandler = OutboundMessageHandler(dispatcher: dispatcher)
-        messageCarbonsDispatchHandler = MessageCarbonsDispatchHandler()
+        messageCarbonsHandler = MessageCarbonsHandler(dispatcher: dispatcher)
         queue = DispatchQueue(label: "Hub", attributes: [.concurrent])
         self.dispatcher = dispatcher
         self.archvieManager = archvieManager
         super.init()
         inboundMessageHandler.delegate = self
         outboundMessageHandler.delegate = self
-        messageCarbonsDispatchHandler.delegate = self
-        dispatcher.add(self)
+        messageCarbonsHandler.delegate = self
     }
-    
-    deinit {
-        dispatcher.remove(self)
-    }
-    
+
     // MARK: - ArchvieManager
     
     public func archive(for account: JID, create: Bool, completion: @escaping (Archive?, Error?) -> Void) -> Void {
@@ -70,18 +59,7 @@ public class Hub: NSObject, ArchvieManager {
     }
 }
 
-extension Hub: ConnectionHandler {
-    
-    // MARK: - DispatcherHandler
-    
-    public func didConnect(_ jid: JID, resumed: Bool) {
-        self.messageCarbonsDispatchHandler.didConnect(jid, resumed: resumed)
-    }
-    
-    public func didDisconnect(_ jid: JID) {}
-}
-
-extension Hub: ArchiveProxyDelegate, InboundMesageHandlerDelegate, OutboundMessageHandlerDelegate, MessageCarbonsDispatchHandlerDelegate {
+extension Hub: ArchiveProxyDelegate, InboundMesageHandlerDelegate, OutboundMessageHandlerDelegate, MessageCarbonsHandlerDelegate {
     
     // MARK: - ArchiveProxyDelegate
     
@@ -107,13 +85,13 @@ extension Hub: ArchiveProxyDelegate, InboundMesageHandlerDelegate, OutboundMessa
         NSLog("Failed to send message: \(message.messageID) with error: \(error.localizedDescription)")
     }
     
-    // MARK: - MessageCarbonsDispatchHandlerDelegate
+    // MARK: - MessageCarbonsDispatchDelegate
     
-    func messageCarbonsDispatchHandler(_ handler: MessageCarbonsDispatchHandler, didEnableFor account: JID) {
+    func messageCarbonsHandler(_ handler: MessageCarbonsHandler, didEnableFor account: JID) {
         NSLog("Did enable message carbons for: \(account.stringValue)")
     }
     
-    func messageCarbonsDispatchHandler(_ handler: MessageCarbonsDispatchHandler, failedToEnableFor account: JID, wirth error: Error) {
+    func messageCarbonsHandler(_ handler: MessageCarbonsHandler, failedToEnableFor account: JID, wirth error: Error) {
         NSLog("Failed to enable message carbons for: \(account.stringValue) with error: \(error)")
     }
 }
