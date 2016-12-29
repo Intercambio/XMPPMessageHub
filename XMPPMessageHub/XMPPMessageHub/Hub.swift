@@ -10,7 +10,7 @@ import Foundation
 import XMPPFoundation
 import PureXML
 
-public class Hub: NSObject, ArchvieManager {
+public class Hub: NSObject, ArchiveManager {
     
     fileprivate let inboundMessageHandler: InboundMesageHandler
     fileprivate let outboundMessageHandler: OutboundMessageHandler
@@ -19,10 +19,10 @@ public class Hub: NSObject, ArchvieManager {
     fileprivate let queue: DispatchQueue
     
     private let dispatcher: Dispatcher
-    private let archvieManager: ArchvieManager
+    private let archvieManager: ArchiveManager
     private var archiveByAccount: [JID:Archive] = [:]
     
-    required public init(dispatcher: Dispatcher, archvieManager: ArchvieManager) {
+    required public init(dispatcher: Dispatcher, archvieManager: ArchiveManager) {
         inboundMessageHandler = InboundMesageHandler(dispatcher: dispatcher, archvieManager: archvieManager)
         outboundMessageHandler = OutboundMessageHandler(dispatcher: dispatcher)
         messageCarbonsHandler = MessageCarbonsHandler(dispatcher: dispatcher)

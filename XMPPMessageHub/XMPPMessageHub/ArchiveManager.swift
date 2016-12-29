@@ -9,12 +9,12 @@
 import Foundation
 import XMPPFoundation
 
-public enum ArchvieManagerError: Error {
+public enum ArchiveManagerError: Error {
     case doesNotExist
     case deleted
 }
 
-public protocol ArchvieManager {
+public protocol ArchiveManager {
     func archive(for account: JID, create: Bool, completion: @escaping (Archive?, Error?) -> Void) -> Void
     func deleteArchive(for account: JID, completion: @escaping ((Error?) -> Void)) -> Void
 }

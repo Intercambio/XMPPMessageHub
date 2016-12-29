@@ -286,13 +286,6 @@
 			name = MAM;
 			sourceTree = "<group>";
 		};
-		F62CF7441E0AD0A500E77159 /* Message Archive Management */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Message Archive Management";
-			sourceTree = "<group>";
-		};
 		F664252A1DF63708001F8F6E /* Filter */ = {
 			isa = PBXGroup;
 			children = (
@@ -345,7 +338,6 @@
 				F66425401DF94DF9001F8F6E /* Handler */,
 				F664252A1DF63708001F8F6E /* Filter */,
 				F6FCE97A1DEB416D0088A662 /* Archive */,
-				F62CF7441E0AD0A500E77159 /* Message Archive Management */,
 				F673D23E1DE1C460009B3C99 /* Supporting Files */,
 			);
 			path = XMPPMessageHub;

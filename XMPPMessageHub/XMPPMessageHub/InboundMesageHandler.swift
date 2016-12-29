@@ -34,10 +34,10 @@ class InboundMesageHandler: NSObject, MessageHandler {
     private var pendingMessageDispatch: [PendingMessageDispatch] = []
     private let queue: DispatchQueue
     private let dispatcher: Dispatcher
-    private let archvieManager: ArchvieManager
+    private let archvieManager: ArchiveManager
     private let inboundFilter: [MessageFilter]
     
-    required init(dispatcher: Dispatcher, archvieManager: ArchvieManager) {
+    required init(dispatcher: Dispatcher, archvieManager: ArchiveManager) {
         self.dispatcher = dispatcher
         self.archvieManager = archvieManager
         self.inboundFilter = [

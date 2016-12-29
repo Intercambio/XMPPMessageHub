@@ -37,4 +37,6 @@ protocol MessageArchiveRequest {
 }
 
 protocol MessageArchiveManagement {
+    init(dispatcher: Dispatcher, archiveManager: ArchiveManager)
+    func fetchRecentMessages(for account: JID, completion:((Error?)->Void)?) -> Void
 }
