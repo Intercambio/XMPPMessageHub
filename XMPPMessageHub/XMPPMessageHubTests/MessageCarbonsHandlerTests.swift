@@ -29,7 +29,7 @@ class MessageCarbonsHandlerTests: TestCase {
         }
     
         expectation(forNotification: "MessageCarbonsHandlerTests.didEnable", object: delegate, handler: nil)
-        handler.didConnect(JID("romeo@examle.com")!, resumed: false)
+        handler.didConnect(JID("romeo@examle.com")!, resumed: false, features: [])
         waitForExpectations(timeout: 1.0, handler: nil)
     }
 
@@ -52,10 +52,10 @@ class MessageCarbonsHandlerTests: TestCase {
         let handlers: NSHashTable = NSHashTable<Handler>.weakObjects()
         
         func add(_ handler: Handler) {
-            add(handler, withIQQueryQNames: nil)
+            add(handler, withIQQueryQNames: nil, features: nil)
         }
         
-        func add(_ handler: Handler, withIQQueryQNames queryQNames: [PXQName]?) {
+        func add(_ handler: Handler, withIQQueryQNames queryQNames: [PXQName]?, features: [Feature]?) {
             handlers.add(handler)
         }
         
@@ -63,7 +63,7 @@ class MessageCarbonsHandlerTests: TestCase {
             handlers.remove(handler)
         }
         
-        public func didConnect(_ JID: JID, resumed: Bool) {}
+        public func didConnect(_ JID: JID, resumed: Bool, features: [Feature]?) {}
         public func didDisconnect(_ JID: JID) {}
         public func handleMessage(_ stanza: MessageStanza, completion: ((Error?) -> Void)? = nil) {}
         public func handlePresence(_ stanza: PresenceStanza, completion: ((Error?) -> Swift.Void)? = nil) {}

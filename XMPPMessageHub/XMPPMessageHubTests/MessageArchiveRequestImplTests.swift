@@ -127,10 +127,10 @@ class MessageArchiveRequestImplTests: TestCase {
         let handlers: NSHashTable = NSHashTable<Handler>.weakObjects()
         
         func add(_ handler: Handler) {
-            add(handler, withIQQueryQNames: nil)
+            add(handler, withIQQueryQNames: nil, features: nil)
         }
         
-        func add(_ handler: Handler, withIQQueryQNames queryQNames: [PXQName]?) {
+        func add(_ handler: Handler, withIQQueryQNames queryQNames: [PXQName]?, features: [Feature]?) {
             handlers.add(handler)
         }
         
@@ -138,7 +138,7 @@ class MessageArchiveRequestImplTests: TestCase {
             handlers.remove(handler)
         }
         
-        public func didConnect(_ JID: JID, resumed: Bool) {}
+        public func didConnect(_ JID: JID, resumed: Bool, features: [Feature]?) {}
         public func didDisconnect(_ JID: JID) {}
         public func handleMessage(_ stanza: MessageStanza, completion: ((Error?) -> Void)? = nil) {}
         public func handlePresence(_ stanza: PresenceStanza, completion: ((Error?) -> Swift.Void)? = nil) {}

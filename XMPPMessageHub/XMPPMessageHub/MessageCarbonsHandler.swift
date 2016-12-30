@@ -36,7 +36,7 @@ class MessageCarbonsHandler: NSObject, ConnectionHandler {
     
     // MARK: - DispatcherHandler
     
-    func didConnect(_ jid: JID, resumed: Bool) {
+    func didConnect(_ jid: JID, resumed: Bool, features: [Feature]?) {
         queue.async(flags: [.barrier]) {
             
             let shouldEnableMessageCarbons = true

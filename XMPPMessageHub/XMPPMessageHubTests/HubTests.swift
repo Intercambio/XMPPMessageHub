@@ -139,10 +139,10 @@ class HubTests: TestCase {
         let handlers: NSHashTable = NSHashTable<Handler>.weakObjects()
         
         func add(_ handler: Handler) {
-            add(handler, withIQQueryQNames: nil)
+            add(handler, withIQQueryQNames: nil, features: nil)
         }
         
-        func add(_ handler: Handler, withIQQueryQNames queryQNames: [PXQName]?) {
+        func add(_ handler: Handler, withIQQueryQNames queryQNames: [PXQName]?, features: [Feature]?) {
             handlers.add(handler)
         }
         
@@ -150,7 +150,7 @@ class HubTests: TestCase {
             handlers.remove(handler)
         }
         
-        public func didConnect(_ JID: JID, resumed: Bool) {}
+        public func didConnect(_ JID: JID, resumed: Bool, features: [Feature]?) {}
         public func didDisconnect(_ JID: JID) {}
         public func handlePresence(_ stanza: PresenceStanza, completion: ((Error?) -> Swift.Void)? = nil) {}
         public func handleIQRequest(_ stanza: IQStanza, timeout: TimeInterval, completion: ((IQStanza?, Error?) -> Swift.Void)? = nil) {}
