@@ -93,7 +93,7 @@ class MessageArchiveRequestImplTests: HandlerTestCase {
         func messageArchiveRequest(_ request: MessageArchiveRequest, didFailWith error: Error) {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "MessageArchiveRequestTests.didFailWith"), object: self)
         }
-        func messageArchiveRequest(_ request: MessageArchiveRequest, didFinishWith result: MessageArchiveRequestResult) {
+        func messageArchiveRequest(_ request: MessageArchiveRequest, didFinishWith result: MessageArchivePartition) {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "MessageArchiveRequestTests.didFinishWith"), object: self)
         }
     }

@@ -18,6 +18,10 @@
 		F60046B11E0BEE32005B5175 /* ISO8601.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F60046AE1E0BEE26005B5175 /* ISO8601.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F61361651E16B956007E7E86 /* HandlerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61361641E16B956007E7E86 /* HandlerTestCase.swift */; };
 		F61361661E16B956007E7E86 /* HandlerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61361641E16B956007E7E86 /* HandlerTestCase.swift */; };
+		F6159E331E2173BA0001B28F /* MessageArchivePartitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6159E321E2173BA0001B28F /* MessageArchivePartitionTests.swift */; };
+		F6159E341E2173BA0001B28F /* MessageArchivePartitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6159E321E2173BA0001B28F /* MessageArchivePartitionTests.swift */; };
+		F6159E361E2174740001B28F /* MessageArchivePartition.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6159E351E2174740001B28F /* MessageArchivePartition.swift */; };
+		F6159E371E2174740001B28F /* MessageArchivePartition.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6159E351E2174740001B28F /* MessageArchivePartition.swift */; };
 		F625A54A1DF44F2B0005AFD3 /* HubTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F625A5491DF44F2B0005AFD3 /* HubTests.swift */; };
 		F625A54B1DF44F2B0005AFD3 /* HubTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F625A5491DF44F2B0005AFD3 /* HubTests.swift */; };
 		F625A54D1DF4624E0005AFD3 /* ArchiveProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F625A54C1DF4624E0005AFD3 /* ArchiveProxy.swift */; };
@@ -139,6 +143,8 @@
 		F60046AB1E0BEDFC005B5175 /* ISO8601.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ISO8601.framework; path = ../Carthage/Build/iOS/ISO8601.framework; sourceTree = "<group>"; };
 		F60046AE1E0BEE26005B5175 /* ISO8601.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ISO8601.framework; path = ../Carthage/Build/Mac/ISO8601.framework; sourceTree = "<group>"; };
 		F61361641E16B956007E7E86 /* HandlerTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandlerTestCase.swift; sourceTree = "<group>"; };
+		F6159E321E2173BA0001B28F /* MessageArchivePartitionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageArchivePartitionTests.swift; sourceTree = "<group>"; };
+		F6159E351E2174740001B28F /* MessageArchivePartition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageArchivePartition.swift; sourceTree = "<group>"; };
 		F625A5491DF44F2B0005AFD3 /* HubTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HubTests.swift; sourceTree = "<group>"; };
 		F625A54C1DF4624E0005AFD3 /* ArchiveProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveProxy.swift; sourceTree = "<group>"; };
 		F62CF7451E0AD0C000E77159 /* MessageArchiveManagement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MessageArchiveManagement.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -277,6 +283,7 @@
 			children = (
 				F62CF7451E0AD0C000E77159 /* MessageArchiveManagement.swift */,
 				F646381E1E0FD3A0002C04E7 /* MessageArchiveRequestImpl.swift */,
+				F6159E351E2174740001B28F /* MessageArchivePartition.swift */,
 			);
 			name = MAM;
 			sourceTree = "<group>";
@@ -285,6 +292,7 @@
 			isa = PBXGroup;
 			children = (
 				F60046A41E0BC32A005B5175 /* MessageArchiveRequestImplTests.swift */,
+				F6159E321E2173BA0001B28F /* MessageArchivePartitionTests.swift */,
 			);
 			name = MAM;
 			sourceTree = "<group>";
@@ -665,6 +673,7 @@
 				F646381F1E0FD3A0002C04E7 /* MessageArchiveRequestImpl.swift in Sources */,
 				F6FCE9901DF0D68F0088A662 /* SQLite.swift in Sources */,
 				F69A257A1DF436AD007D5C35 /* ArchiveManager.swift in Sources */,
+				F6159E361E2174740001B28F /* MessageArchivePartition.swift in Sources */,
 				F664253B1DF6A429001F8F6E /* InboundMesageHandler.swift in Sources */,
 				F69A257D1DF440F2007D5C35 /* FileArchvieManager.swift in Sources */,
 				F664253E1DF6A93B001F8F6E /* OutboundMessageHandler.swift in Sources */,
@@ -686,6 +695,7 @@
 				F6FAE8701DFDF0890039EE7A /* MessageCarbonsHandlerTests.swift in Sources */,
 				F625A54A1DF44F2B0005AFD3 /* HubTests.swift in Sources */,
 				F6FCE9751DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */,
+				F6159E331E2173BA0001B28F /* MessageArchivePartitionTests.swift in Sources */,
 				F6FCE96C1DE1C87F0088A662 /* TestCase.swift in Sources */,
 				F69A25801DF441A9007D5C35 /* FileArchvieManagerTests.swift in Sources */,
 				F60046A51E0BC32A005B5175 /* MessageArchiveRequestImplTests.swift in Sources */,
@@ -710,6 +720,7 @@
 				F64638201E0FD3A0002C04E7 /* MessageArchiveRequestImpl.swift in Sources */,
 				F6FCE9911DF0D68F0088A662 /* SQLite.swift in Sources */,
 				F69A257B1DF436AD007D5C35 /* ArchiveManager.swift in Sources */,
+				F6159E371E2174740001B28F /* MessageArchivePartition.swift in Sources */,
 				F664253C1DF6A429001F8F6E /* InboundMesageHandler.swift in Sources */,
 				F69A257E1DF440F2007D5C35 /* FileArchvieManager.swift in Sources */,
 				F664253F1DF6A93B001F8F6E /* OutboundMessageHandler.swift in Sources */,
@@ -731,6 +742,7 @@
 				F6FAE8711DFDF0890039EE7A /* MessageCarbonsHandlerTests.swift in Sources */,
 				F625A54B1DF44F2B0005AFD3 /* HubTests.swift in Sources */,
 				F6FCE9761DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */,
+				F6159E341E2173BA0001B28F /* MessageArchivePartitionTests.swift in Sources */,
 				F6FCE96D1DE1C87F0088A662 /* TestCase.swift in Sources */,
 				F69A25811DF441A9007D5C35 /* FileArchvieManagerTests.swift in Sources */,
 				F60046A61E0BC32A005B5175 /* MessageArchiveRequestImplTests.swift in Sources */,

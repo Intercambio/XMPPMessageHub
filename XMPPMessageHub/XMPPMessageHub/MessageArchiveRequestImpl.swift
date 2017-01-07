@@ -13,8 +13,8 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
     
     enum State {
         case intitalized
-        case fetching(messages: [MessageArchvieID:MessageID])
-        case finished(result: MessageArchiveRequestResult)
+        case fetching(before: MessageArchvieID?, archvieIDs: Set<MessageArchvieID>, timestamp: Date?)
+        case finished(response: MessageArchivePartition)
         case failed(error: Error)
     }
     
@@ -69,7 +69,7 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
                     }
                 }
             }
-            self.state = .fetching(messages: [:])
+            self.state = .fetching(before: before, archvieIDs: Set<MessageArchvieID>(), timestamp: nil)
         }
     }
     
@@ -86,20 +86,22 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
         }
         
         guard
-            case .fetching(let messages) = self.state
+            case .fetching(let before, let archvieIDs, let timestamp) = self.state
             else { return }
         
         let stable = Bool(fin.value(forAttribute: "stable") as? String ?? "") ?? true
         let complete = Bool(fin.value(forAttribute: "complete") as? String ?? "") ?? false
         
-        let result = MessageArchiveRequestResult(
+        let response = MessageArchivePartition(
             first: first,
             last: last,
+            timestamp: timestamp ?? Date(),
             stable: stable,
             complete: complete,
-            messages: messages)
+            archvieIDs: archvieIDs,
+            before: before)
         
-        self.state = .finished(result: result)
+        self.state = .finished(response: response)
     }
     
     // MARK: - MessageHandler
@@ -115,7 +117,7 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
                 }
             
             do {
-                if case .fetching(var messages) = self.state {
+                if case .fetching(let before, var archvieIDs, var timestamp) = self.state {
                     let now = Date()
                     let metadata = Metadata(created: now, transmitted: now, read: nil, error: nil, isCarbonCopy: false)
                     
@@ -129,13 +131,17 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
                     }
                     
                     do {
-                        let message = try self.archive.insert(result.message, metadata: result.metadata)
-                        messages[archiveID] = message.messageID
-                    } catch let error as MessageAlreadyExist {
-                        messages[archiveID] = error.existingMessageID
+                        let _ = try self.archive.insert(result.message, metadata: result.metadata)
+                        archvieIDs.insert(archiveID)
+                    } catch is MessageAlreadyExist {
+                        archvieIDs.insert(archiveID)
                     }
                     
-                    self.state = .fetching(messages: messages)
+                    if timestamp == nil {
+                        timestamp = metadata.transmitted
+                    }
+                    
+                    self.state = .fetching(before: before, archvieIDs: archvieIDs, timestamp: timestamp)
                 }
                 completion?(nil)
             } catch {
