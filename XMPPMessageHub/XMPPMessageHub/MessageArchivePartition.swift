@@ -61,3 +61,43 @@ extension MessageArchivePartition {
             before: rhs.before)
     }
 }
+
+extension MessageArchivePartition: Dictionariable {
+    
+    init?(dictionaryRepresentation: NSDictionary?) {
+        guard
+            let values = dictionaryRepresentation,
+            let first = values["first"] as? MessageArchiveID,
+            let last = values["last"] as? MessageArchiveID,
+            let timestamp = values["timestamp"] as? Date,
+            let stable = values["stable"] as? NSNumber,
+            let complete = values["complete"] as? NSNumber,
+            let archvieIDs = values["archvieIDs"] as? Set<MessageArchiveID>
+            else {
+                return nil
+        }
+        
+        self.first = first
+        self.last = last
+        self.timestamp = timestamp
+        self.stable = stable.boolValue
+        self.complete = complete.boolValue
+        self.archvieIDs = archvieIDs
+        self.before = values["before"] as? MessageArchiveID
+    }
+    
+    func dictionaryRepresentation() -> NSDictionary {
+        var values: [String: Any] = [
+            "first": first,
+            "last": last,
+            "timestamp": timestamp,
+            "stable": NSNumber(value: stable),
+            "complete": NSNumber(value: complete),
+            "archvieIDs": archvieIDs
+        ]
+        if let before = self.before {
+            values["before"] = before
+        }
+        return NSDictionary(dictionary: values)
+    }
+}

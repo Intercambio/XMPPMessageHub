@@ -47,3 +47,29 @@ struct MessageArchiveIndex {
         return MessageArchiveIndex(partitions: mergedPartitions)
     }
 }
+
+extension MessageArchiveIndex: Dictionariable {
+    init?(dictionaryRepresentation: NSDictionary?) {
+        guard
+            let values = dictionaryRepresentation,
+            let partitionValues = values["partitions"] as? [NSDictionary]
+            else { return nil }
+        
+        var partitions: [MessageArchivePartition] = []
+        for v in partitionValues {
+            guard
+                let partition = MessageArchivePartition(dictionaryRepresentation: v)
+                else { return nil }
+            partitions.append(partition)
+        }
+        self.partitions = partitions
+    }
+    
+    func dictionaryRepresentation() -> NSDictionary {
+        var partitionValues: [NSDictionary] = []
+        for partition in partitions {
+            partitionValues.append(partition.dictionaryRepresentation())
+        }
+        return NSDictionary(dictionary: ["partitions": partitionValues])
+    }
+}

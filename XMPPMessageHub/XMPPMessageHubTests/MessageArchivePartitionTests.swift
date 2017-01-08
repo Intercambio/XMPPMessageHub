@@ -105,4 +105,19 @@ class MessageArchivePartitionTests: TestCase {
         XCTAssertEqual(recentY, recentX)
     }
     
+    func testArchiving() {
+        
+        let partition = MessageArchivePartition(
+            first: "a",
+            last: "f",
+            timestamp: Date(timeIntervalSince1970: 100),
+            stable: true,
+            complete: false,
+            archvieIDs: ["a", "b", "c", "d", "e", "f"],
+            before: nil)
+        
+        let data = NSKeyedArchiver.archivedData(withStructure: partition) 
+        
+        XCTAssertEqual(NSKeyedUnarchiver.unarchiveStructure(with: data), partition)
+    }
 }

@@ -80,6 +80,8 @@
 		F6CF3E031E227DB800292E44 /* MessageArchiveIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CF3E011E227DB800292E44 /* MessageArchiveIndex.swift */; };
 		F6CF3E051E227FF500292E44 /* MessageArchiveIndexTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CF3E041E227FF500292E44 /* MessageArchiveIndexTests.swift */; };
 		F6CF3E061E227FF500292E44 /* MessageArchiveIndexTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CF3E041E227FF500292E44 /* MessageArchiveIndexTests.swift */; };
+		F6CF3E091E22870A00292E44 /* KeyedArchiving.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CF3E081E22870A00292E44 /* KeyedArchiving.swift */; };
+		F6CF3E0A1E22870A00292E44 /* KeyedArchiving.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CF3E081E22870A00292E44 /* KeyedArchiving.swift */; };
 		F6FAE8671DFCB8A40039EE7A /* XMPPFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6FAE8661DFCB8A40039EE7A /* XMPPFoundation.framework */; };
 		F6FAE8681DFCB8AB0039EE7A /* XMPPFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6FAE8661DFCB8A40039EE7A /* XMPPFoundation.framework */; };
 		F6FAE86A1DFCB8BC0039EE7A /* XMPPFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6FAE8691DFCB8BC0039EE7A /* XMPPFoundation.framework */; };
@@ -183,6 +185,7 @@
 		F69A257F1DF441A9007D5C35 /* FileArchvieManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileArchvieManagerTests.swift; sourceTree = "<group>"; };
 		F6CF3E011E227DB800292E44 /* MessageArchiveIndex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageArchiveIndex.swift; sourceTree = "<group>"; };
 		F6CF3E041E227FF500292E44 /* MessageArchiveIndexTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageArchiveIndexTests.swift; sourceTree = "<group>"; };
+		F6CF3E081E22870A00292E44 /* KeyedArchiving.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyedArchiving.swift; sourceTree = "<group>"; };
 		F6FAE8661DFCB8A40039EE7A /* XMPPFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XMPPFoundation.framework; path = ../Carthage/Build/iOS/XMPPFoundation.framework; sourceTree = "<group>"; };
 		F6FAE8691DFCB8BC0039EE7A /* XMPPFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XMPPFoundation.framework; path = ../Carthage/Build/Mac/XMPPFoundation.framework; sourceTree = "<group>"; };
 		F6FAE86F1DFDF0890039EE7A /* MessageCarbonsHandlerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCarbonsHandlerTests.swift; sourceTree = "<group>"; };
@@ -357,6 +360,7 @@
 				F66425401DF94DF9001F8F6E /* Handler */,
 				F664252A1DF63708001F8F6E /* Filter */,
 				F6FCE97A1DEB416D0088A662 /* Archive */,
+				F6CF3E071E2286DD00292E44 /* Extensions */,
 				F673D23E1DE1C460009B3C99 /* Supporting Files */,
 			);
 			path = XMPPMessageHub;
@@ -445,6 +449,14 @@
 				F69A25761DF43470007D5C35 /* Hub.swift */,
 			);
 			name = Hub;
+			sourceTree = "<group>";
+		};
+		F6CF3E071E2286DD00292E44 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F6CF3E081E22870A00292E44 /* KeyedArchiving.swift */,
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 		F6FCE97A1DEB416D0088A662 /* Archive */ = {
@@ -686,6 +698,7 @@
 				F664253B1DF6A429001F8F6E /* InboundMesageHandler.swift in Sources */,
 				F69A257D1DF440F2007D5C35 /* FileArchvieManager.swift in Sources */,
 				F664253E1DF6A93B001F8F6E /* OutboundMessageHandler.swift in Sources */,
+				F6CF3E091E22870A00292E44 /* KeyedArchiving.swift in Sources */,
 				F673D21C1DE1C245009B3C99 /* FileArchive.swift in Sources */,
 				F646382E1E105A0D002C04E7 /* Constants.swift in Sources */,
 				F66425421DF94E15001F8F6E /* MessageCarbonsHandler.swift in Sources */,
@@ -735,6 +748,7 @@
 				F664253C1DF6A429001F8F6E /* InboundMesageHandler.swift in Sources */,
 				F69A257E1DF440F2007D5C35 /* FileArchvieManager.swift in Sources */,
 				F664253F1DF6A93B001F8F6E /* OutboundMessageHandler.swift in Sources */,
+				F6CF3E0A1E22870A00292E44 /* KeyedArchiving.swift in Sources */,
 				F673D21D1DE1C245009B3C99 /* FileArchive.swift in Sources */,
 				F646382F1E105A0D002C04E7 /* Constants.swift in Sources */,
 				F66425431DF94E15001F8F6E /* MessageCarbonsHandler.swift in Sources */,

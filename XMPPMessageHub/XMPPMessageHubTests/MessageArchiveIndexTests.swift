@@ -45,5 +45,4 @@ class MessageArchiveIndexTests: TestCase {
         index = index.add(partition)
         XCTAssertEqual(index.partitions.count, 1)
     }
-    
 }
