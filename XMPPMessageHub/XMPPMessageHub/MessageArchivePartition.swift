@@ -9,13 +9,13 @@
 import Foundation
 
 struct MessageArchivePartition: Equatable {
-    let first: MessageArchvieID
-    let last: MessageArchvieID
+    let first: MessageArchiveID
+    let last: MessageArchiveID
     let timestamp: Date
     let stable: Bool
     let complete: Bool
-    let archvieIDs: Set<MessageArchvieID>
-    let before: MessageArchvieID?
+    let archvieIDs: Set<MessageArchiveID>
+    let before: MessageArchiveID?
     
     static func ==(lhs: MessageArchivePartition, rhs: MessageArchivePartition) -> Bool {
         return

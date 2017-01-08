@@ -13,7 +13,7 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
     
     enum State {
         case intitalized
-        case fetching(before: MessageArchvieID?, archvieIDs: Set<MessageArchvieID>, timestamp: Date?)
+        case fetching(before: MessageArchiveID?, archvieIDs: Set<MessageArchiveID>, timestamp: Date?)
         case finished(response: MessageArchivePartition)
         case failed(error: Error)
     }
@@ -51,7 +51,7 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
         dispatcher.remove(self)
     }
     
-    func performFetch(before: MessageArchvieID? = nil, limit: Int = 20, timeout: TimeInterval = 120.0) throws {
+    func performFetch(before: MessageArchiveID? = nil, limit: Int = 20, timeout: TimeInterval = 120.0) throws {
         try queue.sync {
             guard
                 case .intitalized = self.state
@@ -69,7 +69,7 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
                     }
                 }
             }
-            self.state = .fetching(before: before, archvieIDs: Set<MessageArchvieID>(), timestamp: nil)
+            self.state = .fetching(before: before, archvieIDs: Set<MessageArchiveID>(), timestamp: nil)
         }
     }
     
@@ -152,7 +152,7 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
     
     // MARK: - Helper
     
-    private func makeRequest(before: MessageArchvieID?, limit: Int) -> IQStanza {
+    private func makeRequest(before: MessageArchiveID?, limit: Int) -> IQStanza {
         let document = IQStanza.makeDocumentWithIQStanza(from: nil, to: archive.account.bare())
         let iq = document.root as! IQStanza
         iq.type = .set

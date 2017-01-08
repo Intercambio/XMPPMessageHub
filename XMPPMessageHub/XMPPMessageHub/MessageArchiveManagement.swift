@@ -9,7 +9,7 @@
 import Foundation
 import XMPPFoundation
 
-typealias MessageArchvieID = String
+typealias MessageArchiveID = String
 
 enum MessageArchiveRequestError: Error {
     case alreadyRunning
@@ -25,7 +25,7 @@ protocol MessageArchiveRequestDelegate: class {
 protocol MessageArchiveRequest {
     init(dispatcher: Dispatcher, archive: Archive)
     weak var delegate: MessageArchiveRequestDelegate? { get set }
-    func performFetch(before: MessageArchvieID?, limit: Int, timeout: TimeInterval) throws -> Void
+    func performFetch(before: MessageArchiveID?, limit: Int, timeout: TimeInterval) throws -> Void
 }
 
 protocol MessageArchiveManagement {
