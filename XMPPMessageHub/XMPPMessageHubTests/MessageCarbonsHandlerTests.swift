@@ -16,7 +16,7 @@ class MessageCarbonsHandlerTests: HandlerTestCase {
     func testEnable() {
         guard
             let dispatcher = self.dispatcher
-            else { return }
+            else { XCTFail(); return }
         
         let handler = MessageCarbonsHandler(dispatcher: dispatcher)
         
@@ -45,5 +45,4 @@ class MessageCarbonsHandlerTests: HandlerTestCase {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "MessageCarbonsHandlerTests.failed"), object: self)
         }
     }
-
 }

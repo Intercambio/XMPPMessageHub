@@ -14,15 +14,16 @@ import XMPPFoundation
 
 class HubTests: TestCase {
     
-    var dispatcher: TestDispatcher?
     var hub: Hub?
     
     override func setUp() {
         super.setUp()
-        guard let directory = self.directory else { return }
+        guard
+            let directory = self.directory,
+            let dispatcher = self.dispatcher
+            else { return }
+        
         let archiveManager = FileArchvieManager(directory: directory)
-        let dispatcher = TestDispatcher()
-        self.dispatcher = dispatcher
         self.hub = Hub(dispatcher: dispatcher, archvieManager: archiveManager)
     }
     
@@ -85,8 +86,14 @@ class HubTests: TestCase {
     
     func testSendMessage() {
         guard
+            let dispatcher = self.dispatcher,
             let hub = self.hub
             else { XCTFail(); return }
+        
+        dispatcher.messageHandler = {
+            stanza, completion in
+            completion?(nil)
+        }
         
         let stanza = MessageStanza.makeDocumentWithMessageStanza(from: JID("juliet@example.com")!, to: JID("romeo@example.com")!).root as! MessageStanza
         stanza.type = .chat
@@ -134,44 +141,7 @@ class HubTests: TestCase {
         }
     }
     
-    class TestDispatcher: Dispatcher {
+    func testLoadRecentMessages() {
         
-        let handlers: NSHashTable = NSHashTable<Handler>.weakObjects()
-        
-        func add(_ handler: Handler) {
-            add(handler, withIQQueryQNames: nil, features: nil)
-        }
-        
-        func add(_ handler: Handler, withIQQueryQNames queryQNames: [PXQName]?, features: [Feature]?) {
-            handlers.add(handler)
-        }
-        
-        func remove(_ handler: Handler) {
-            handlers.remove(handler)
-        }
-        
-        public func didConnect(_ JID: JID, resumed: Bool, features: [Feature]?) {}
-        public func didDisconnect(_ JID: JID) {}
-        public func handlePresence(_ stanza: PresenceStanza, completion: ((Error?) -> Swift.Void)? = nil) {}
-        public func handleIQRequest(_ stanza: IQStanza, timeout: TimeInterval, completion: ((IQStanza?, Error?) -> Swift.Void)? = nil) {}
-        
-        public func handleMessage(_ stanza: MessageStanza, completion: ((Error?) -> Void)? = nil) {
-            completion?(nil)
-        }
-        
-        func send(_ message: MessageStanza, completion: ((Error?)->Void)?) {
-            let group = DispatchGroup()
-            for handler in handlers.allObjects {
-                if let messaheHandler = handler as? MessageHandler {
-                    group.enter()
-                    messaheHandler.handleMessage(message, completion: { (error) in
-                        group.leave()
-                    })
-                }
-            }
-            group.notify(queue: DispatchQueue.main) { 
-                completion?(nil)
-            }
-        }
     }
 }

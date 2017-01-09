@@ -12,6 +12,7 @@ import Foundation
 class TestCase: XCTestCase {
     
     var directory: URL?
+    var dispatcher: TestDispatcher?
     
     override func setUp() {
         super.setUp()
@@ -28,9 +29,13 @@ class TestCase: XCTestCase {
         } catch {
             XCTFail("Could not create temporary directory '\(directory)': \(error)")
         }
+    
+        dispatcher = TestDispatcher()
     }
     
     override func tearDown() {
+        
+        dispatcher = nil
         
         if let directory = self.directory {
             let fileManager = FileManager.default
