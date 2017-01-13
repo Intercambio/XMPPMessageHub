@@ -20,9 +20,10 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
     
     weak var delegate: MessageArchiveRequestDelegate?
     
+    let queryID: String
+    
     private let dispatcher: Dispatcher
     private let archive: Archive
-    private let queryID: String
     
     private(set) var state: State = .intitalized {
         didSet {

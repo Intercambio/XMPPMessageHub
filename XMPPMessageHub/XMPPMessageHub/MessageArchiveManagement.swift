@@ -25,10 +25,12 @@ protocol MessageArchiveRequestDelegate: class {
 protocol MessageArchiveRequest {
     init(dispatcher: Dispatcher, archive: Archive)
     weak var delegate: MessageArchiveRequestDelegate? { get set }
+    var queryID: String { get }
     func performFetch(before: MessageArchiveID?, limit: Int, timeout: TimeInterval) throws -> Void
 }
 
 protocol MessageArchiveManagement {
-    init(dispatcher: Dispatcher, archiveManager: ArchiveManager)
-    func fetchRecentMessages(for account: JID, completion:((Error?)->Void)?) -> Void
+    func loadRecentMessages(for account: JID, completion:((Error?)->Void)?) -> Void
+    func canLoadMoreMessages(for account: JID) -> Bool
+    func loadMoreMessages(for account: JID, completion:((Error?)->Void)?) -> Void
 }

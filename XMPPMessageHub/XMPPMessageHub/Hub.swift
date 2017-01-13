@@ -15,6 +15,7 @@ public class Hub: NSObject, ArchiveManager {
     fileprivate let inboundMessageHandler: InboundMesageHandler
     fileprivate let outboundMessageHandler: OutboundMessageHandler
     fileprivate let messageCarbonsHandler: MessageCarbonsHandler
+    fileprivate let messageArchiveHandler: MessageArchiveHandler
     
     fileprivate let queue: DispatchQueue
     
@@ -26,6 +27,7 @@ public class Hub: NSObject, ArchiveManager {
         inboundMessageHandler = InboundMesageHandler(dispatcher: dispatcher, archvieManager: archvieManager)
         outboundMessageHandler = OutboundMessageHandler(dispatcher: dispatcher)
         messageCarbonsHandler = MessageCarbonsHandler(dispatcher: dispatcher)
+        messageArchiveHandler = MessageArchiveHandler(dispatcher: dispatcher, archvieManager: archvieManager)
         queue = DispatchQueue(label: "Hub", attributes: [.concurrent])
         self.dispatcher = dispatcher
         self.archvieManager = archvieManager
@@ -40,12 +42,21 @@ public class Hub: NSObject, ArchiveManager {
     public func archive(for account: JID, create: Bool, completion: @escaping (Archive?, Error?) -> Void) -> Void {
         queue.async(flags: [.barrier]) {
             if let archive = self.archiveByAccount[account] {
-                completion(ArchiveProxy(archive: archive, delegate: self), nil)
+                let proxy = ArchiveProxy(archive: archive, mam: self.messageArchiveHandler)
+                proxy.delegate = self
+                completion(proxy, nil)
             } else {
                 self.archvieManager.archive(for: account, create: create) {
                     archive, error in
                     self.archiveByAccount[account] = archive
-                    completion(archive != nil ? ArchiveProxy(archive: archive!, delegate: self) : nil, error)
+                    
+                    if let archive = archive {
+                        let proxy = ArchiveProxy(archive: archive, mam: self.messageArchiveHandler)
+                        proxy.delegate = self
+                        completion(proxy, error)
+                    } else {
+                        completion(nil, error)
+                    }
                 }
             }
         }

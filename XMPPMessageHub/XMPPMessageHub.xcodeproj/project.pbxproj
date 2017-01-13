@@ -455,6 +455,7 @@
 			isa = PBXGroup;
 			children = (
 				F69A25761DF43470007D5C35 /* Hub.swift */,
+				F625A54C1DF4624E0005AFD3 /* ArchiveProxy.swift */,
 			);
 			name = Hub;
 			sourceTree = "<group>";
@@ -470,7 +471,6 @@
 		F6FCE97A1DEB416D0088A662 /* Archive */ = {
 			isa = PBXGroup;
 			children = (
-				F625A54C1DF4624E0005AFD3 /* ArchiveProxy.swift */,
 				F688F46E1DF304E400B4D3B4 /* Archive.swift */,
 				F69A25791DF436AD007D5C35 /* ArchiveManager.swift */,
 				F688F46D1DF304BC00B4D3B4 /* File Archive */,

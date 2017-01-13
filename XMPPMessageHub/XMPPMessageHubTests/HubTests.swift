@@ -142,6 +142,48 @@ class HubTests: TestCase {
     }
     
     func testLoadRecentMessages() {
+        guard
+            let dispatcher = self.dispatcher,
+            let hub = self.hub
+            else { XCTFail(); return }
         
+        dispatcher.IQHandler = {
+            request, timeout, completion in
+            
+            let response = IQStanza.makeDocumentWithIQStanza(from: request.to, to: request.from)
+            let iq = response.root as! IQStanza
+            iq.type = .result
+            
+            let query = iq.add(withName: "fin", namespace: "urn:xmpp:mam:1", content: nil)!
+            let rsm = query.add(withName: "set", namespace: "http://jabber.org/protocol/rsm", content: nil) as! XMPPResultSet
+            rsm.first = "a"
+            rsm.last = "b"
+            rsm.count = 2
+            
+            completion?(iq, nil)
+        }
+        
+        var requestedArchive: IncrementalArchive? = nil
+        let getArchiveExp = expectation(description: "Get Archive")
+        hub.archive(for: JID("romeo@example.com")!, create: true) {
+            archive, error in
+            XCTAssertNil(error)
+            requestedArchive = archive as? IncrementalArchive
+            getArchiveExp.fulfill()
+        }
+        waitForExpectations(timeout: 1.0, handler: nil)
+        
+        guard
+            let archive = requestedArchive
+            else {
+                XCTFail();
+                return }
+        
+        let loadRecentExp = expectation(description: "Load Recent")
+        archive.loadRecentMessages { (error) in
+            XCTAssertNil(error)
+            loadRecentExp.fulfill()
+        }
+        waitForExpectations(timeout: 1.0, handler: nil)
     }
 }

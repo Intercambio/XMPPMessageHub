@@ -43,6 +43,12 @@ public protocol Archive {
     func counterparts() throws -> [JID]
 }
 
+public protocol IncrementalArchive: Archive {
+    var canLoadMore: Bool { get }
+    func loadRecentMessages(completion: ((Error?) -> Void)?) -> Void
+    func loadMoreMessages(completion: ((Error?) -> Void)?) -> Void
+}
+
 extension Archive {
     public func insert(_ stanza: MessageStanza, metadata: Metadata) throws -> Message {
         let document = PXDocument(element: stanza)!
