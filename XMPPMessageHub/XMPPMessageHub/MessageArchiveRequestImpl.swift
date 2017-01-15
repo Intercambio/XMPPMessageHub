@@ -55,6 +55,15 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
     
     func performFetch(before: MessageArchiveID? = nil, limit: Int = 20, timeout: TimeInterval = 120.0) throws {
         try queue.sync {
+            
+            // WORKAROUND: The argument timeout needs to be "used" before the guard statement to
+            // work around a swift compiler bug. If the argument is used directly in
+            //
+            //    self.dispatcher.handleIQRequest(request, timeout: timeout)
+            //
+            // below, the compiler will fail with "Segmentation fault: 11" if archiving.
+            _ = timeout
+            
             guard
                 case .intitalized = self.state
             else { throw MessageArchiveRequestError.alreadyRunning }
