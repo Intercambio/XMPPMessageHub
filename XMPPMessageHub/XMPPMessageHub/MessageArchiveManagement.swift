@@ -18,7 +18,7 @@ enum MessageArchiveRequestError: Error {
 }
 
 protocol MessageArchiveRequestDelegate: class {
-    func messageArchiveRequest(_ request: MessageArchiveRequest, didFinishWith response: MessageArchivePartition) -> Void
+    func messageArchiveRequest(_ request: MessageArchiveRequest, didFinishWith response: MAMIndexPartition) -> Void
     func messageArchiveRequest(_ request: MessageArchiveRequest, didFailWith error: Error) -> Void
 }
 

@@ -21,7 +21,7 @@ class MessageArchiveHandler: NSObject, Handler, MessageArchiveRequestDelegate, M
     private let dispatcher: Dispatcher
     private let archvieManager: ArchiveManager
     
-    private var archiveIndexes: [JID:MessageArchiveIndex] = [:]
+    private var archiveIndexes: [JID:MAMIndex] = [:]
     private var pendingRequests: [String:PendingRequest] = [:]
     
     required init(dispatcher: Dispatcher, archvieManager: ArchiveManager) {
@@ -97,7 +97,7 @@ class MessageArchiveHandler: NSObject, Handler, MessageArchiveRequestDelegate, M
     
     // MARK: - MessageArchiveRequestDelegate
     
-    func messageArchiveRequest(_ request: MessageArchiveRequest, didFinishWith response: MessageArchivePartition) -> Void {
+    func messageArchiveRequest(_ request: MessageArchiveRequest, didFinishWith response: MAMIndexPartition) -> Void {
         queue.sync {
             guard
                 let pendingRequest = self.pendingRequests[request.queryID]
@@ -109,7 +109,7 @@ class MessageArchiveHandler: NSObject, Handler, MessageArchiveRequestDelegate, M
                 index = index.add(response)
                 self.archiveIndexes[pendingRequest.account] = index
             } else {
-                self.archiveIndexes[pendingRequest.account] = MessageArchiveIndex(partitions: [response])
+                self.archiveIndexes[pendingRequest.account] = MAMIndex(partitions: [response])
             }
             
             pendingRequest.completion?(nil)

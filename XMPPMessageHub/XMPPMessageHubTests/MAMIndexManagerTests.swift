@@ -26,7 +26,7 @@ class MAMIndexManagerTests: TestCase {
             let account = JID("romeo@example.com")!
             XCTAssertNil(try manager.nextArchvieID(for: account))
             
-            let partition = MessageArchivePartition(
+            let partition = MAMIndexPartition(
                 first: "a",
                 last: "f",
                 timestamp: Date(timeIntervalSince1970: 100),

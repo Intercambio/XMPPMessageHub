@@ -13,7 +13,7 @@ class MessageArchiveIndexTests: TestCase {
 
     func testAddPartition() {
         
-        let partitionA = MessageArchivePartition(
+        let partitionA = MAMIndexPartition(
             first: "a",
             last: "f",
             timestamp: Date(timeIntervalSince1970: 100),
@@ -22,7 +22,7 @@ class MessageArchiveIndexTests: TestCase {
             archvieIDs: ["a", "b", "c", "d", "e", "f"],
             before: nil)
         
-        let partitionB = MessageArchivePartition(
+        let partitionB = MAMIndexPartition(
             first: "h",
             last: "l",
             timestamp: Date(timeIntervalSince1970: 120),
@@ -31,9 +31,9 @@ class MessageArchiveIndexTests: TestCase {
             archvieIDs: ["h", "i", "j", "k", "l"],
             before: nil)
 
-        var index = MessageArchiveIndex(partitions: [partitionB, partitionA])
+        var index = MAMIndex(partitions: [partitionB, partitionA])
 
-        let partition = MessageArchivePartition(
+        let partition = MAMIndexPartition(
             first: "d",
             last: "j",
             timestamp: Date(timeIntervalSince1970: 110),

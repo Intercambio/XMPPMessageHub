@@ -14,7 +14,7 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
     enum State {
         case intitalized
         case fetching(before: MessageArchiveID?, archvieIDs: Set<MessageArchiveID>, timestamp: Date?)
-        case finished(response: MessageArchivePartition)
+        case finished(response: MAMIndexPartition)
         case failed(error: Error)
     }
     
@@ -93,7 +93,7 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
         let stable = Bool(fin.value(forAttribute: "stable") as? String ?? "") ?? true
         let complete = Bool(fin.value(forAttribute: "complete") as? String ?? "") ?? false
         
-        let response = MessageArchivePartition(
+        let response = MAMIndexPartition(
             first: first,
             last: last,
             timestamp: timestamp ?? Date(),

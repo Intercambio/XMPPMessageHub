@@ -16,7 +16,7 @@ class MAMIndexManager {
         self.directory = directory
     }
     
-    func add(_ partition: MessageArchivePartition, for account: JID) throws {
+    func add(_ partition: MAMIndexPartition, for account: JID) throws {
         guard
             partition.stable == true
             else { return }
@@ -36,24 +36,24 @@ class MAMIndexManager {
         return index.canLoadMore
     }
     
-    private func getIndex(for account: JID) throws -> MessageArchiveIndex {
+    private func getIndex(for account: JID) throws -> MAMIndex {
         do {
             let url = indexFileURL(for: account)
             let data = try Data(contentsOf: url)
             
             guard
-                let index: MessageArchiveIndex = NSKeyedUnarchiver.unarchiveStructure(with: data)
+                let index: MAMIndex = NSKeyedUnarchiver.unarchiveStructure(with: data)
                 else {
-                    return MessageArchiveIndex(partitions: [])
+                    return MAMIndex(partitions: [])
             }
             
             return index
         } catch {
-            return MessageArchiveIndex(partitions: [])
+            return MAMIndex(partitions: [])
         }
     }
     
-    private func setIndex(_ index: MessageArchiveIndex, for account: JID) throws {
+    private func setIndex(_ index: MAMIndex, for account: JID) throws {
         let url = indexFileURL(for: account)
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(),
                                                 withIntermediateDirectories: true,

@@ -1,5 +1,5 @@
 //
-//  MessageArchivePartition.swift
+//  MAMIndexPartition.swift
 //  XMPPMessageHub
 //
 //  Created by Tobias Kräntzer on 07.01.17.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct MessageArchivePartition: Equatable {
+struct MAMIndexPartition: Equatable {
     let first: MessageArchiveID
     let last: MessageArchiveID
     let timestamp: Date
@@ -17,7 +17,7 @@ struct MessageArchivePartition: Equatable {
     let archvieIDs: Set<MessageArchiveID>
     let before: MessageArchiveID?
     
-    static func ==(lhs: MessageArchivePartition, rhs: MessageArchivePartition) -> Bool {
+    static func ==(lhs: MAMIndexPartition, rhs: MAMIndexPartition) -> Bool {
         return
             lhs.first == rhs.first &&
             lhs.last == rhs.last &&
@@ -29,8 +29,8 @@ struct MessageArchivePartition: Equatable {
     }
 }
 
-extension MessageArchivePartition {
-    func merge(_ other: MessageArchivePartition) -> (recent: MessageArchivePartition, other: MessageArchivePartition?) {
+extension MAMIndexPartition {
+    func merge(_ other: MAMIndexPartition) -> (recent: MAMIndexPartition, other: MAMIndexPartition?) {
         if self.archvieIDs.isDisjoint(with: other.archvieIDs) {
             if let before = self.before, other.first == before {
                 return (self + other, nil)
@@ -50,8 +50,8 @@ extension MessageArchivePartition {
         }
     }
     
-    static func +(lhs: MessageArchivePartition, rhs: MessageArchivePartition) -> MessageArchivePartition {
-        return MessageArchivePartition(
+    static func +(lhs: MAMIndexPartition, rhs: MAMIndexPartition) -> MAMIndexPartition {
+        return MAMIndexPartition(
             first: lhs.first,
             last: rhs.last,
             timestamp: lhs.timestamp,
@@ -62,7 +62,7 @@ extension MessageArchivePartition {
     }
 }
 
-extension MessageArchivePartition: Dictionariable {
+extension MAMIndexPartition: Dictionariable {
     
     init?(dictionaryRepresentation: NSDictionary?) {
         guard

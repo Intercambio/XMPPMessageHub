@@ -13,7 +13,7 @@ class MessageArchivePartitionTests: TestCase {
     
     func testMergeNonIntersecting() {
         
-        let partitionA = MessageArchivePartition(
+        let partitionA = MAMIndexPartition(
             first: "a",
             last: "f",
             timestamp: Date(timeIntervalSince1970: 100),
@@ -22,7 +22,7 @@ class MessageArchivePartitionTests: TestCase {
             archvieIDs: ["a", "b", "c", "d", "e", "f"],
             before: nil)
         
-        let partitionB = MessageArchivePartition(
+        let partitionB = MAMIndexPartition(
             first: "h",
             last: "l",
             timestamp: Date(timeIntervalSince1970: 120),
@@ -42,7 +42,7 @@ class MessageArchivePartitionTests: TestCase {
     
     func testMergeConsecutive() {
         
-        let partitionA = MessageArchivePartition(
+        let partitionA = MAMIndexPartition(
             first: "a",
             last: "f",
             timestamp: Date(timeIntervalSince1970: 100),
@@ -51,7 +51,7 @@ class MessageArchivePartitionTests: TestCase {
             archvieIDs: ["a", "b", "c", "d", "e", "f"],
             before: "g")
         
-        let partitionB = MessageArchivePartition(
+        let partitionB = MAMIndexPartition(
             first: "g",
             last: "l",
             timestamp: Date(timeIntervalSince1970: 120),
@@ -75,7 +75,7 @@ class MessageArchivePartitionTests: TestCase {
     
     func testMergeIntersecting() {
         
-        let partitionA = MessageArchivePartition(
+        let partitionA = MAMIndexPartition(
             first: "a",
             last: "f",
             timestamp: Date(timeIntervalSince1970: 100),
@@ -84,7 +84,7 @@ class MessageArchivePartitionTests: TestCase {
             archvieIDs: ["a", "b", "c", "d", "e", "f"],
             before: "g")
         
-        let partitionB = MessageArchivePartition(
+        let partitionB = MAMIndexPartition(
             first: "d",
             last: "i",
             timestamp: Date(timeIntervalSince1970: 120),
@@ -107,7 +107,7 @@ class MessageArchivePartitionTests: TestCase {
     
     func testArchiving() {
         
-        let partition = MessageArchivePartition(
+        let partition = MAMIndexPartition(
             first: "a",
             last: "f",
             timestamp: Date(timeIntervalSince1970: 100),
