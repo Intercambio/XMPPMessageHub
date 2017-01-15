@@ -8,26 +8,28 @@
 
 import XCTest
 import PureXML
+import XMPPFoundation
 @testable import XMPPMessageHub
 
 class MessageCarbonsFilterTests: TestCase {
     
     func testReceivedFilter() {
         guard
-            let document = PXDocument(named: "xep_0280_received.xml", in: Bundle(for: MessageCarbonsFilterTests.self))
+            let document = PXDocument(named: "xep_0280_received.xml", in: Bundle(for: MessageCarbonsFilterTests.self)),
+            let stanza = document.root as? MessageStanza
             else { XCTFail(); return }
         
         do {
             let filter = MessageCarbonsFilter(direction: .received)
-            let result = try filter.apply(to: document, with: Metadata())
+            let result = try filter.apply(to: stanza, with: Metadata(), userInfo: [:])
             
-            let document = result.document
-            XCTAssertEqual(document.root.value(forAttribute: "id") as? String, "456")
-            XCTAssertEqual(document.root.value(forAttribute: "from") as? String, "juliet@capulet.example/balcony")
-            XCTAssertEqual(document.root.value(forAttribute: "to") as? String, "romeo@montague.example/garden")
+            let message = result?.message
+            XCTAssertEqual(message?.value(forAttribute: "id") as? String, "456")
+            XCTAssertEqual(message?.value(forAttribute: "from") as? String, "juliet@capulet.example/balcony")
+            XCTAssertEqual(message?.value(forAttribute: "to") as? String, "romeo@montague.example/garden")
             
-            let metadata = result.metadata
-            XCTAssertTrue(metadata.isCarbonCopy)
+            let metadata = result?.metadata
+            XCTAssertTrue(metadata?.isCarbonCopy ?? false)
 
         } catch {
             XCTFail("\(error)")
@@ -36,20 +38,21 @@ class MessageCarbonsFilterTests: TestCase {
     
     func testSentFilter() {
         guard
-            let document = PXDocument(named: "xep_0280_sent.xml", in: Bundle(for: MessageCarbonsFilterTests.self))
+            let document = PXDocument(named: "xep_0280_sent.xml", in: Bundle(for: MessageCarbonsFilterTests.self)),
+            let stanza = document.root as? MessageStanza
             else { XCTFail(); return }
         
         do {
             let filter = MessageCarbonsFilter(direction: .sent)
-            let result = try filter.apply(to: document, with: Metadata())
+            let result = try filter.apply(to: stanza, with: Metadata(), userInfo: [:])
             
-            let document = result.document
-            XCTAssertEqual(document.root.value(forAttribute: "id") as? String, "456")
-            XCTAssertEqual(document.root.value(forAttribute: "from") as? String, "romeo@montague.example/home")
-            XCTAssertEqual(document.root.value(forAttribute: "to") as? String, "juliet@capulet.example/balcony")
+            let message = result?.message
+            XCTAssertEqual(message?.value(forAttribute: "id") as? String, "456")
+            XCTAssertEqual(message?.value(forAttribute: "from") as? String, "romeo@montague.example/home")
+            XCTAssertEqual(message?.value(forAttribute: "to") as? String, "juliet@capulet.example/balcony")
             
-            let metadata = result.metadata
-            XCTAssertTrue(metadata.isCarbonCopy)
+            let metadata = result?.metadata
+            XCTAssertTrue(metadata?.isCarbonCopy ?? false)
             
         } catch {
             XCTFail("\(error)")

@@ -1,3 +1,4 @@
-github "Internetslum/PureXML" "1.1"
-github "stephencelis/SQLite.swift" "0.11.1"
-github "Internetslum/XMPPFoundation" "d92276f6f4ca3b48e296b519e9b782f9b9152235"
+github "Internetslum/PureXML" "1.1.1"
+github "stephencelis/SQLite.swift" "0.11.2"
+github "anagromataf/iso-8601-date-formatter" "e3cd1805147c2b869eb1b2a659c221556ee6f01b"
+github "Internetslum/XMPPFoundation" "723e117817b04167054276bad3ded99701d9d351"

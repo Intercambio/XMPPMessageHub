@@ -12,7 +12,7 @@ import XMPPFoundation
 
 class FileArchvieManagerTests: TestCase {
     
-    var archiveManager: ArchvieManager?
+    var archiveManager: ArchiveManager?
     
     override func setUp() {
         super.setUp()
@@ -34,7 +34,7 @@ class FileArchvieManagerTests: TestCase {
         archiveManager.archive(for: JID("romeo@example.com")!, create: false) {
             archive, error in
             XCTAssertNil(archive)
-            XCTAssertEqual(error as? ArchvieManagerError, ArchvieManagerError.doesNotExist)
+            XCTAssertEqual(error as? ArchiveManagerError, ArchiveManagerError.doesNotExist)
             expectation.fulfill()
         }
         waitForExpectations(timeout: 1.0, handler: nil)
@@ -69,7 +69,7 @@ class FileArchvieManagerTests: TestCase {
         archiveManager.archive(for: JID("romeo@example.com")!, create: false) {
             archive, error in
             XCTAssertNil(archive)
-            XCTAssertEqual(error as? ArchvieManagerError, ArchvieManagerError.doesNotExist)
+            XCTAssertEqual(error as? ArchiveManagerError, ArchiveManagerError.doesNotExist)
             expectation.fulfill()
         }
         waitForExpectations(timeout: 1.0, handler: nil)

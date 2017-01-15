@@ -9,7 +9,7 @@
 import Foundation
 import XMPPFoundation
 
-public class FileArchvieManager: ArchvieManager {
+public class FileArchvieManager: ArchiveManager {
     
     public let directory: URL
     
@@ -59,7 +59,7 @@ public class FileArchvieManager: ArchvieManager {
                 } else if let pendingArchvie = self.pendingArchivesByAccount[account] {
                     self.pendingArchivesByAccount[account] = nil
                     for completion in pendingArchvie.handler {
-                        completion(nil, ArchvieManagerError.deleted)
+                        completion(nil, ArchiveManagerError.deleted)
                     }
                 }
                 try self.deleteArchvie(for: account)
@@ -89,7 +89,7 @@ public class FileArchvieManager: ArchvieManager {
     private func openArchive(for account: JID, create: Bool) throws -> FileArchive {
         let location = archiveLocation(for: account)
         if create == false && FileManager.default.fileExists(atPath: location.path, isDirectory: nil) == false {
-            throw ArchvieManagerError.doesNotExist
+            throw ArchiveManagerError.doesNotExist
         }
         try FileManager.default.createDirectory(
             at: location,

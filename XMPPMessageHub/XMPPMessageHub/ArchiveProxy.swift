@@ -14,14 +14,17 @@ protocol ArchiveProxyDelegate: class {
     func archiveProxy(_ proxy: ArchiveProxy, didInsert message: Message, with document: PXDocument) -> Void
 }
 
-class ArchiveProxy: Archive {
+class ArchiveProxy: IncrementalArchive {
     
     weak var delegate: ArchiveProxyDelegate?
-    
+
+    let mam: MessageArchiveManagement
     let archive: Archive
-    init(archive: Archive, delegate: ArchiveProxyDelegate? = nil) {
-        self.delegate = delegate
+    
+    init(archive: Archive, mam: MessageArchiveManagement) {
         self.archive = archive
+        self.mam = mam
+        
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(archiveDidChange(notification:)),
@@ -66,5 +69,18 @@ class ArchiveProxy: Archive {
     func pending() throws -> [Message] { return try archive.pending() }
     func conversation(with counterpart: JID) throws -> [Message] { return try archive.conversation(with: counterpart) }
     func counterparts() throws -> [JID] { return try counterparts() }
+    
+    // MARK: - IncrementalArchive
+    
+    var canLoadMore: Bool {
+        return mam.canLoadMoreMessages(for: account)
+    }
+    
+    func loadRecentMessages(completion: ((Error?) -> Void)?) -> Void {
+        mam.loadRecentMessages(for: account, completion: completion)
+    }
+    
+    func loadMoreMessages(completion: ((Error?) -> Void)?) -> Void {
+        mam.loadMoreMessages(for: account, completion: completion)
+    }
 }
-
