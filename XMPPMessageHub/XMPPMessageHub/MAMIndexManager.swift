@@ -28,7 +28,7 @@ class MAMIndexManager {
     
     func nextArchvieID(for account: JID) throws -> MessageArchiveID? {
         let index = try getIndex(for: account)
-        return index.nextArchiveID
+        return index.canLoadMore == true ? index.nextArchiveID : nil
     }
     
     func canLoadMoreMessages(for account: JID) throws -> Bool {

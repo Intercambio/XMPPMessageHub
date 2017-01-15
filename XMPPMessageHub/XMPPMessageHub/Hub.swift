@@ -21,22 +21,33 @@ public class Hub: NSObject, ArchiveManager {
     
     private let dispatcher: Dispatcher
     private let archvieManager: ArchiveManager
+    private let indexManager: MAMIndexManager
     private var archiveByAccount: [JID:Archive] = [:]
     
-    required public init(dispatcher: Dispatcher, archvieManager: ArchiveManager) {
+    required public init(dispatcher: Dispatcher, directory: URL) {
+        
+        let archiveDirectory = directory.appendingPathComponent("archive", isDirectory: true)
+        archvieManager = FileArchvieManager(directory: archiveDirectory)
+        
+        let mamDirectory = directory.appendingPathComponent("mam", isDirectory: true)
+        indexManager = MAMIndexManager(directory: mamDirectory)
+        
         inboundMessageHandler = InboundMesageHandler(dispatcher: dispatcher, archvieManager: archvieManager)
         outboundMessageHandler = OutboundMessageHandler(dispatcher: dispatcher)
         messageCarbonsHandler = MessageCarbonsHandler(dispatcher: dispatcher)
-        messageArchiveHandler = MessageArchiveHandler(dispatcher: dispatcher, archvieManager: archvieManager)
+        messageArchiveHandler = MessageArchiveHandler(dispatcher: dispatcher, archvieManager: archvieManager, indexManager: indexManager)
+        
         queue = DispatchQueue(label: "Hub", attributes: [.concurrent])
+        
         self.dispatcher = dispatcher
-        self.archvieManager = archvieManager
+        
         super.init()
+        
         inboundMessageHandler.delegate = self
         outboundMessageHandler.delegate = self
         messageCarbonsHandler.delegate = self
     }
-
+    
     // MARK: - ArchvieManager
     
     public func archive(for account: JID, create: Bool, completion: @escaping (Archive?, Error?) -> Void) -> Void {

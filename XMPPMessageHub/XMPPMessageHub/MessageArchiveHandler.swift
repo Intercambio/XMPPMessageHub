@@ -20,13 +20,14 @@ class MessageArchiveHandler: NSObject, Handler, MessageArchiveRequestDelegate, M
     private let queue: DispatchQueue
     private let dispatcher: Dispatcher
     private let archvieManager: ArchiveManager
+    private let indexManager: MAMIndexManager
     
-    private var archiveIndexes: [JID:MAMIndex] = [:]
     private var pendingRequests: [String:PendingRequest] = [:]
     
-    required init(dispatcher: Dispatcher, archvieManager: ArchiveManager) {
+    required init(dispatcher: Dispatcher, archvieManager: ArchiveManager, indexManager: MAMIndexManager) {
         self.dispatcher = dispatcher
         self.archvieManager = archvieManager
+        self.indexManager = indexManager
         queue = DispatchQueue(
             label: "MessageArchiveHandler",
             attributes: [.concurrent])
@@ -42,13 +43,11 @@ class MessageArchiveHandler: NSObject, Handler, MessageArchiveRequestDelegate, M
     
     func canLoadMoreMessages(for account: JID) -> Bool {
         return queue.sync {
-            guard
-                let index = self.archiveIndexes[account]
-                else {
-                    return false
+            do {
+                return try self.indexManager.canLoadMoreMessages(for: account)
+            } catch {
+                return false
             }
-            
-            return index.canLoadMore
         }
     }
     
@@ -60,16 +59,17 @@ class MessageArchiveHandler: NSObject, Handler, MessageArchiveRequestDelegate, M
     
     func loadMoreMessages(for account: JID, completion:((Error?)->Void)?) {
         queue.async {
-            guard
-                let index = self.archiveIndexes[account],
-                index.canLoadMore == true,
-                let nextArchiveID = index.nextArchiveID
-                else {
-                    completion?(nil)
-                    return
+            do {
+                guard
+                    let nextArchvieID = try self.indexManager.nextArchvieID(for: account)
+                    else {
+                        completion?(nil)
+                        return
+                }
+                self.fetchMessages(for: account, before: nextArchvieID, completion: completion)
+            } catch {
+                completion?(error)
             }
-
-            self.fetchMessages(for: account, before: nextArchiveID, completion: completion)
         }
     }
     
@@ -105,14 +105,12 @@ class MessageArchiveHandler: NSObject, Handler, MessageArchiveRequestDelegate, M
             
             self.pendingRequests[request.queryID] = nil
             
-            if var index = self.archiveIndexes[pendingRequest.account] {
-                index = index.add(response)
-                self.archiveIndexes[pendingRequest.account] = index
-            } else {
-                self.archiveIndexes[pendingRequest.account] = MAMIndex(partitions: [response])
+            do {
+                try self.indexManager.add(response, for: pendingRequest.account)
+                pendingRequest.completion?(nil)
+            } catch {
+                pendingRequest.completion?(error)
             }
-            
-            pendingRequest.completion?(nil)
         }
     }
     

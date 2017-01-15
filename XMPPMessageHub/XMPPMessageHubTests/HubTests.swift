@@ -23,8 +23,7 @@ class HubTests: TestCase {
             let dispatcher = self.dispatcher
             else { return }
         
-        let archiveManager = FileArchvieManager(directory: directory)
-        self.hub = Hub(dispatcher: dispatcher, archvieManager: archiveManager)
+        self.hub = Hub(dispatcher: dispatcher, directory: directory)
     }
     
     override func tearDown() {
@@ -177,7 +176,8 @@ class HubTests: TestCase {
             let archive = requestedArchive
             else {
                 XCTFail();
-                return }
+                return
+        }
         
         let loadRecentExp = expectation(description: "Load Recent")
         archive.loadRecentMessages { (error) in
