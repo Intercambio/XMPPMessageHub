@@ -13,7 +13,7 @@ struct MessageArchiveIndex {
     let partitions: [MessageArchivePartition]
     
     var nextArchiveID: MessageArchiveID? {
-        return partitions.first?.last
+        return partitions.first?.first
     }
     
     var canLoadMore: Bool {

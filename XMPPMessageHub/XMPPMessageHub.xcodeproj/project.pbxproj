@@ -86,6 +86,10 @@
 		F6CF3E0A1E22870A00292E44 /* KeyedArchiving.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CF3E081E22870A00292E44 /* KeyedArchiving.swift */; };
 		F6CF3E0C1E22A36800292E44 /* MessageArchiveHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CF3E0B1E22A36800292E44 /* MessageArchiveHandler.swift */; };
 		F6CF3E0D1E22A36800292E44 /* MessageArchiveHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CF3E0B1E22A36800292E44 /* MessageArchiveHandler.swift */; };
+		F6ED67F21E2BB2A2003E50D5 /* MAMIndexManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6ED67F11E2BB2A2003E50D5 /* MAMIndexManagerTests.swift */; };
+		F6ED67F31E2BB2A2003E50D5 /* MAMIndexManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6ED67F11E2BB2A2003E50D5 /* MAMIndexManagerTests.swift */; };
+		F6EDBF5D1E2BAB3600B2F390 /* MAMIndexManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6EDBF5C1E2BAB3600B2F390 /* MAMIndexManager.swift */; };
+		F6EDBF5E1E2BAB3600B2F390 /* MAMIndexManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6EDBF5C1E2BAB3600B2F390 /* MAMIndexManager.swift */; };
 		F6FAE8671DFCB8A40039EE7A /* XMPPFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6FAE8661DFCB8A40039EE7A /* XMPPFoundation.framework */; };
 		F6FAE8681DFCB8AB0039EE7A /* XMPPFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6FAE8661DFCB8A40039EE7A /* XMPPFoundation.framework */; };
 		F6FAE86A1DFCB8BC0039EE7A /* XMPPFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6FAE8691DFCB8BC0039EE7A /* XMPPFoundation.framework */; };
@@ -192,6 +196,8 @@
 		F6CF3E041E227FF500292E44 /* MessageArchiveIndexTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageArchiveIndexTests.swift; sourceTree = "<group>"; };
 		F6CF3E081E22870A00292E44 /* KeyedArchiving.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyedArchiving.swift; sourceTree = "<group>"; };
 		F6CF3E0B1E22A36800292E44 /* MessageArchiveHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageArchiveHandler.swift; sourceTree = "<group>"; };
+		F6ED67F11E2BB2A2003E50D5 /* MAMIndexManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MAMIndexManagerTests.swift; sourceTree = "<group>"; };
+		F6EDBF5C1E2BAB3600B2F390 /* MAMIndexManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MAMIndexManager.swift; sourceTree = "<group>"; };
 		F6FAE8661DFCB8A40039EE7A /* XMPPFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XMPPFoundation.framework; path = ../Carthage/Build/iOS/XMPPFoundation.framework; sourceTree = "<group>"; };
 		F6FAE8691DFCB8BC0039EE7A /* XMPPFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XMPPFoundation.framework; path = ../Carthage/Build/Mac/XMPPFoundation.framework; sourceTree = "<group>"; };
 		F6FAE86F1DFDF0890039EE7A /* MessageCarbonsHandlerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCarbonsHandlerTests.swift; sourceTree = "<group>"; };
@@ -299,8 +305,7 @@
 				F6CF3E0B1E22A36800292E44 /* MessageArchiveHandler.swift */,
 				F62CF7451E0AD0C000E77159 /* MessageArchiveManagement.swift */,
 				F646381E1E0FD3A0002C04E7 /* MessageArchiveRequestImpl.swift */,
-				F6159E351E2174740001B28F /* MessageArchivePartition.swift */,
-				F6CF3E011E227DB800292E44 /* MessageArchiveIndex.swift */,
+				F6EDBF5B1E2BAB1E00B2F390 /* MAM Index */,
 			);
 			name = MAM;
 			sourceTree = "<group>";
@@ -311,6 +316,7 @@
 				F60046A41E0BC32A005B5175 /* MessageArchiveRequestImplTests.swift */,
 				F6159E321E2173BA0001B28F /* MessageArchivePartitionTests.swift */,
 				F6CF3E041E227FF500292E44 /* MessageArchiveIndexTests.swift */,
+				F6ED67F11E2BB2A2003E50D5 /* MAMIndexManagerTests.swift */,
 			);
 			name = MAM;
 			sourceTree = "<group>";
@@ -466,6 +472,16 @@
 				F6CF3E081E22870A00292E44 /* KeyedArchiving.swift */,
 			);
 			name = Extensions;
+			sourceTree = "<group>";
+		};
+		F6EDBF5B1E2BAB1E00B2F390 /* MAM Index */ = {
+			isa = PBXGroup;
+			children = (
+				F6EDBF5C1E2BAB3600B2F390 /* MAMIndexManager.swift */,
+				F6CF3E011E227DB800292E44 /* MessageArchiveIndex.swift */,
+				F6159E351E2174740001B28F /* MessageArchivePartition.swift */,
+			);
+			name = "MAM Index";
 			sourceTree = "<group>";
 		};
 		F6FCE97A1DEB416D0088A662 /* Archive */ = {
@@ -704,6 +720,7 @@
 				F6CF3E0C1E22A36800292E44 /* MessageArchiveHandler.swift in Sources */,
 				F69A257A1DF436AD007D5C35 /* ArchiveManager.swift in Sources */,
 				F6159E361E2174740001B28F /* MessageArchivePartition.swift in Sources */,
+				F6EDBF5D1E2BAB3600B2F390 /* MAMIndexManager.swift in Sources */,
 				F664253B1DF6A429001F8F6E /* InboundMesageHandler.swift in Sources */,
 				F69A257D1DF440F2007D5C35 /* FileArchvieManager.swift in Sources */,
 				F664253E1DF6A93B001F8F6E /* OutboundMessageHandler.swift in Sources */,
@@ -731,6 +748,7 @@
 				F6FCE96C1DE1C87F0088A662 /* TestCase.swift in Sources */,
 				F69A25801DF441A9007D5C35 /* FileArchvieManagerTests.swift in Sources */,
 				F60046A51E0BC32A005B5175 /* MessageArchiveRequestImplTests.swift in Sources */,
+				F6ED67F21E2BB2A2003E50D5 /* MAMIndexManagerTests.swift in Sources */,
 				F66425321DF63A12001F8F6E /* MessageCarbonsFilterTests.swift in Sources */,
 				F61361651E16B956007E7E86 /* HandlerTestCase.swift in Sources */,
 				F6CF3E051E227FF500292E44 /* MessageArchiveIndexTests.swift in Sources */,
@@ -756,6 +774,7 @@
 				F6CF3E0D1E22A36800292E44 /* MessageArchiveHandler.swift in Sources */,
 				F69A257B1DF436AD007D5C35 /* ArchiveManager.swift in Sources */,
 				F6159E371E2174740001B28F /* MessageArchivePartition.swift in Sources */,
+				F6EDBF5E1E2BAB3600B2F390 /* MAMIndexManager.swift in Sources */,
 				F664253C1DF6A429001F8F6E /* InboundMesageHandler.swift in Sources */,
 				F69A257E1DF440F2007D5C35 /* FileArchvieManager.swift in Sources */,
 				F664253F1DF6A93B001F8F6E /* OutboundMessageHandler.swift in Sources */,
@@ -783,6 +802,7 @@
 				F6FCE96D1DE1C87F0088A662 /* TestCase.swift in Sources */,
 				F69A25811DF441A9007D5C35 /* FileArchvieManagerTests.swift in Sources */,
 				F60046A61E0BC32A005B5175 /* MessageArchiveRequestImplTests.swift in Sources */,
+				F6ED67F31E2BB2A2003E50D5 /* MAMIndexManagerTests.swift in Sources */,
 				F66425331DF63A12001F8F6E /* MessageCarbonsFilterTests.swift in Sources */,
 				F61361661E16B956007E7E86 /* HandlerTestCase.swift in Sources */,
 				F6CF3E061E227FF500292E44 /* MessageArchiveIndexTests.swift in Sources */,
