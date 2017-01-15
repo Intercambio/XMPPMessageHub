@@ -17,7 +17,7 @@ class MessageCarbonsFilterTests: TestCase {
         guard
             let document = PXDocument(named: "xep_0280_received.xml", in: Bundle(for: MessageCarbonsFilterTests.self)),
             let stanza = document.root as? MessageStanza
-            else { XCTFail(); return }
+        else { XCTFail(); return }
         
         do {
             let filter = MessageCarbonsFilter(direction: .received)
@@ -30,7 +30,7 @@ class MessageCarbonsFilterTests: TestCase {
             
             let metadata = result?.metadata
             XCTAssertTrue(metadata?.isCarbonCopy ?? false)
-
+            
         } catch {
             XCTFail("\(error)")
         }
@@ -40,7 +40,7 @@ class MessageCarbonsFilterTests: TestCase {
         guard
             let document = PXDocument(named: "xep_0280_sent.xml", in: Bundle(for: MessageCarbonsFilterTests.self)),
             let stanza = document.root as? MessageStanza
-            else { XCTFail(); return }
+        else { XCTFail(); return }
         
         do {
             let filter = MessageCarbonsFilter(direction: .sent)

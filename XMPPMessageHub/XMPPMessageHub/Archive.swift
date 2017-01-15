@@ -10,7 +10,7 @@ import Foundation
 import PureXML
 import XMPPFoundation
 
-public enum ArchiveError:  Error {
+public enum ArchiveError: Error {
     case notSetup
     case invalidDocument
     case internalError
@@ -39,7 +39,7 @@ public protocol Archive {
     func recent() throws -> [Message]
     func pending() throws -> [Message]
     func conversation(with counterpart: JID) throws -> [Message]
-
+    
     func counterparts() throws -> [JID]
 }
 

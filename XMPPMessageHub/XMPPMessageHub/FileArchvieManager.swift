@@ -21,14 +21,15 @@ public class FileArchvieManager: ArchiveManager {
     }
     
     private let queue: DispatchQueue
-    private var archiveByAccount: [JID:FileArchive] = [:]
-    private var pendingArchivesByAccount: [JID:PendingArchive] = [:]
+    private var archiveByAccount: [JID: FileArchive] = [:]
+    private var pendingArchivesByAccount: [JID: PendingArchive] = [:]
     
-    required public init(directory: URL) {
+    public required init(directory: URL) {
         self.directory = directory
         queue = DispatchQueue(
             label: "ArchvieManager",
-            attributes: [])
+            attributes: []
+        )
     }
     
     public func archive(for account: JID, create: Bool = false, completion: @escaping (Archive?, Error?) -> Void) {
@@ -50,7 +51,7 @@ public class FileArchvieManager: ArchiveManager {
         }
     }
     
-    public func deleteArchive(for account: JID, completion: @escaping ((Error?) -> Void) = {_ in}) {
+    public func deleteArchive(for account: JID, completion: @escaping ((Error?) -> Void) = { _ in }) {
         queue.async {
             do {
                 if let archive = self.archiveByAccount[account] {
@@ -71,7 +72,7 @@ public class FileArchvieManager: ArchiveManager {
     }
     
     private func open(_ archive: FileArchive) {
-        archive.open { (error) in
+        archive.open { error in
             self.queue.async {
                 if let pendingArchvie = self.pendingArchivesByAccount[archive.account] {
                     self.pendingArchivesByAccount[archive.account] = nil
@@ -94,7 +95,8 @@ public class FileArchvieManager: ArchiveManager {
         try FileManager.default.createDirectory(
             at: location,
             withIntermediateDirectories: true,
-            attributes: nil)
+            attributes: nil
+        )
         return FileArchive(directory: location, account: account)
     }
     

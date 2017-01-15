@@ -30,7 +30,7 @@ protocol MessageArchiveRequest {
 }
 
 protocol MessageArchiveManagement {
-    func loadRecentMessages(for account: JID, completion:((Error?)->Void)?) -> Void
+    func loadRecentMessages(for account: JID, completion: ((Error?) -> Void)?) -> Void
     func canLoadMoreMessages(for account: JID) -> Bool
-    func loadMoreMessages(for account: JID, completion:((Error?)->Void)?) -> Void
+    func loadMoreMessages(for account: JID, completion: ((Error?) -> Void)?) -> Void
 }

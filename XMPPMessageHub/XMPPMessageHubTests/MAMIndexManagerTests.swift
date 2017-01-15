@@ -15,9 +15,9 @@ class MAMIndexManagerTests: TestCase {
     func testStoreIndex() {
         guard
             let directory = self.directory
-            else {
-                XCTFail()
-                return
+        else {
+            XCTFail()
+            return
         }
         
         let manager = MAMIndexManager(directory: directory)
@@ -33,7 +33,8 @@ class MAMIndexManagerTests: TestCase {
                 stable: true,
                 complete: false,
                 archvieIDs: ["a", "b", "c", "d", "e", "f"],
-                before: nil)
+                before: nil
+            )
             
             try manager.add(partition, for: account)
             

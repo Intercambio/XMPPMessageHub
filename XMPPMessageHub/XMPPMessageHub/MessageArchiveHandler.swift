@@ -22,7 +22,7 @@ class MessageArchiveHandler: NSObject, Handler, MessageArchiveRequestDelegate, M
     private let archvieManager: ArchiveManager
     private let indexManager: MAMIndexManager
     
-    private var pendingRequests: [String:PendingRequest] = [:]
+    private var pendingRequests: [String: PendingRequest] = [:]
     
     required init(dispatcher: Dispatcher, archvieManager: ArchiveManager, indexManager: MAMIndexManager) {
         self.dispatcher = dispatcher
@@ -30,7 +30,8 @@ class MessageArchiveHandler: NSObject, Handler, MessageArchiveRequestDelegate, M
         self.indexManager = indexManager
         queue = DispatchQueue(
             label: "MessageArchiveHandler",
-            attributes: [.concurrent])
+            attributes: [.concurrent]
+        )
         super.init()
         dispatcher.add(self)
     }
@@ -51,20 +52,20 @@ class MessageArchiveHandler: NSObject, Handler, MessageArchiveRequestDelegate, M
         }
     }
     
-    func loadRecentMessages(for account: JID, completion:((Error?)->Void)?) {
+    func loadRecentMessages(for account: JID, completion: ((Error?) -> Void)?) {
         queue.async {
             self.fetchMessages(for: account, before: nil, completion: completion)
         }
     }
     
-    func loadMoreMessages(for account: JID, completion:((Error?)->Void)?) {
+    func loadMoreMessages(for account: JID, completion: ((Error?) -> Void)?) {
         queue.async {
             do {
                 guard
                     let nextArchvieID = try self.indexManager.nextArchvieID(for: account)
-                    else {
-                        completion?(nil)
-                        return
+                else {
+                    completion?(nil)
+                    return
                 }
                 self.fetchMessages(for: account, before: nextArchvieID, completion: completion)
             } catch {
@@ -73,13 +74,13 @@ class MessageArchiveHandler: NSObject, Handler, MessageArchiveRequestDelegate, M
         }
     }
     
-    private func fetchMessages(for account: JID, before archvieID: MessageArchiveID?, completion:((Error?)->Void)?) {
-        self.archvieManager.archive(for: account, create: true) { (archive, error) in
+    private func fetchMessages(for account: JID, before archvieID: MessageArchiveID?, completion: ((Error?) -> Void)?) {
+        self.archvieManager.archive(for: account, create: true) { archive, error in
             guard
                 let archive = archive
-                else {
-                    completion?(error)
-                    return
+            else {
+                completion?(error)
+                return
             }
             
             self.queue.async {
@@ -97,11 +98,11 @@ class MessageArchiveHandler: NSObject, Handler, MessageArchiveRequestDelegate, M
     
     // MARK: - MessageArchiveRequestDelegate
     
-    func messageArchiveRequest(_ request: MessageArchiveRequest, didFinishWith response: MAMIndexPartition) -> Void {
+    func messageArchiveRequest(_ request: MessageArchiveRequest, didFinishWith response: MAMIndexPartition) {
         queue.sync {
             guard
                 let pendingRequest = self.pendingRequests[request.queryID]
-                else { return }
+            else { return }
             
             self.pendingRequests[request.queryID] = nil
             
@@ -114,11 +115,11 @@ class MessageArchiveHandler: NSObject, Handler, MessageArchiveRequestDelegate, M
         }
     }
     
-    func messageArchiveRequest(_ request: MessageArchiveRequest, didFailWith error: Error) -> Void{
+    func messageArchiveRequest(_ request: MessageArchiveRequest, didFailWith error: Error) {
         queue.sync {
             guard
                 let pendingRequest = self.pendingRequests[request.queryID]
-                else { return }
+            else { return }
             self.pendingRequests[request.queryID] = nil
             pendingRequest.completion?(error)
         }

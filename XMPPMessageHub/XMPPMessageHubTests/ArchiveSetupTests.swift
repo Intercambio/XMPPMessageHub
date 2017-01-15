@@ -24,8 +24,10 @@ class ArchiveSetupTests: TestCase {
         let fileManager = FileManager.default
         
         var isDirectory: ObjCBool = false
-        let exists = fileManager.fileExists(atPath: messageDirectory.path,
-                                            isDirectory: &isDirectory)
+        let exists = fileManager.fileExists(
+            atPath: messageDirectory.path,
+            isDirectory: &isDirectory
+        )
         XCTAssertTrue(exists)
     }
 }

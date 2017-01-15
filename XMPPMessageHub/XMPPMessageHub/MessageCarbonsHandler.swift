@@ -25,7 +25,8 @@ class MessageCarbonsHandler: NSObject, ConnectionHandler {
         self.dispatcher = dispatcher
         queue = DispatchQueue(
             label: "MessageCarbonsDispatchHandler",
-            attributes: [.concurrent])
+            attributes: [.concurrent]
+        )
         super.init()
         dispatcher.add(self)
     }
@@ -36,7 +37,7 @@ class MessageCarbonsHandler: NSObject, ConnectionHandler {
     
     // MARK: - DispatcherHandler
     
-    func didConnect(_ jid: JID, resumed: Bool, features: [Feature]?) {
+    func didConnect(_ jid: JID, resumed: Bool, features _: [Feature]?) {
         queue.async(flags: [.barrier]) {
             
             let shouldEnableMessageCarbons = true
@@ -44,13 +45,13 @@ class MessageCarbonsHandler: NSObject, ConnectionHandler {
             guard
                 shouldEnableMessageCarbons == true,
                 resumed == false
-                else { return }
+            else { return }
             
             let account = jid.bare()
             let request = self.makeRequest(for: account)
             let timeout = 120.0
             
-            self.dispatcher.handleIQRequest(request, timeout: timeout, completion: { [weak self] (response, error) in
+            self.dispatcher.handleIQRequest(request, timeout: timeout, completion: { [weak self] _, error in
                 guard let this = self else { return }
                 this.queue.async {
                     if let err = error {
@@ -63,7 +64,7 @@ class MessageCarbonsHandler: NSObject, ConnectionHandler {
         }
     }
     
-    func didDisconnect(_ JID: JID) { }
+    func didDisconnect(_: JID) {}
     
     private func makeRequest(for account: JID) -> IQStanza {
         let request = IQStanza.makeDocumentWithIQStanza(from: account, to: account)

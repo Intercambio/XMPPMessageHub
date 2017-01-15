@@ -22,14 +22,16 @@ class TestCase: XCTestCase {
         
         let fileManager = FileManager.default
         do {
-            try fileManager.createDirectory(at: directory,
-                                            withIntermediateDirectories: true,
-                                            attributes: [:])
+            try fileManager.createDirectory(
+                at: directory,
+                withIntermediateDirectories: true,
+                attributes: [:]
+            )
             self.directory = directory
         } catch {
             XCTFail("Could not create temporary directory '\(directory)': \(error)")
         }
-    
+        
         dispatcher = TestDispatcher()
     }
     

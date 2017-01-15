@@ -19,13 +19,13 @@ class MessageArchiveManagementResultFilterTests: TestCase {
         guard
             let document = PXDocument(named: "xep_0313_message.xml", in: Bundle(for: MessageCarbonsFilterTests.self)),
             let message = document.root as? MessageStanza
-            else { XCTFail(); return }
+        else { XCTFail(); return }
         
         let dateFormatter = ISO8601.ISO8601DateFormatter()
         let timestamp = dateFormatter.date(from: "2010-07-10T23:08:25Z")
         
         do {
-        
+            
             let filter = MessageArchiveManagementFilter()
             let result = try filter.apply(to: message, with: Metadata(), userInfo: [:])
             
@@ -40,7 +40,7 @@ class MessageArchiveManagementResultFilterTests: TestCase {
             let userInfo = result?.userInfo
             XCTAssertEqual(userInfo?[MessageArchvieIDKey] as? String, "28482-98726-73623")
             XCTAssertEqual(userInfo?[MessageArchvieQueryIDKey] as? String, "f27")
-        
+            
         } catch {
             XCTFail("\(error)")
         }

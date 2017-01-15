@@ -27,7 +27,8 @@ class OutboundMessageHandler {
         self.dispatcher = dispatcher
         queue = DispatchQueue(
             label: "OutboundMessageHandler",
-            attributes: [])
+            attributes: []
+        )
     }
     
     func send(_ message: Message, with document: PXDocument, in archive: Archive) {
@@ -35,7 +36,7 @@ class OutboundMessageHandler {
             guard
                 let stanza = document.root as? MessageStanza,
                 self.messagesBeeingTransmitted.contains(message.messageID) == false
-                else { return }
+            else { return }
             
             self.messagesBeeingTransmitted.append(message.messageID)
             self.dispatcher.handleMessage(stanza) { error in
@@ -46,9 +47,10 @@ class OutboundMessageHandler {
                     do {
                         let now = Date()
                         let message = try archive.update(
-                            transmitted: error == nil ? now :  nil,
+                            transmitted: error == nil ? now : nil,
                             error: error as? TransmissionError,
-                            for: message.messageID)
+                            for: message.messageID
+                        )
                         
                         if let error = error {
                             self.delegate?.outboundMessageHandler(self, failedToSend: message, with: error)

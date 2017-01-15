@@ -21,7 +21,7 @@ class HubTests: TestCase {
         guard
             let directory = self.directory,
             let dispatcher = self.dispatcher
-            else { return }
+        else { return }
         
         self.hub = Hub(dispatcher: dispatcher, directory: directory)
     }
@@ -37,7 +37,7 @@ class HubTests: TestCase {
         guard
             let dispatcher = self.dispatcher,
             let hub = self.hub
-            else { XCTFail(); return }
+        else { XCTFail(); return }
         
         // Dispatch the message
         
@@ -45,26 +45,26 @@ class HubTests: TestCase {
         stanza.type = .chat
         stanza.identifier = "456"
         
-        var requestedArchive: Archive? = nil
+        var requestedArchive: Archive?
         
         let getArchiveExp = expectation(description: "Get Archive")
         hub.archive(for: JID("romeo@example.com")!, create: true) {
             archive, error in
             XCTAssertNil(error)
             XCTAssertNotNil(archive)
-                requestedArchive = archive
-                getArchiveExp.fulfill()
+            requestedArchive = archive
+            getArchiveExp.fulfill()
         }
         waitForExpectations(timeout: 1.0, handler: nil)
-    
+        
         guard
             let archive = requestedArchive
-            else { return }
+        else { return }
         
         expectation(forNotification: Notification.Name.ArchiveDidChange.rawValue, object: archive, handler: nil)
         
         let dispatchExp = self.expectation(description: "Message Handled")
-        dispatcher.send(stanza, completion: { (error) in
+        dispatcher.send(stanza, completion: { error in
             XCTAssertNil(error)
             dispatchExp.fulfill()
         })
@@ -87,10 +87,10 @@ class HubTests: TestCase {
         guard
             let dispatcher = self.dispatcher,
             let hub = self.hub
-            else { XCTFail(); return }
+        else { XCTFail(); return }
         
         dispatcher.messageHandler = {
-            stanza, completion in
+            _, completion in
             completion?(nil)
         }
         
@@ -98,7 +98,7 @@ class HubTests: TestCase {
         stanza.type = .chat
         stanza.identifier = "456"
         
-        var requestedArchive: Archive? = nil
+        var requestedArchive: Archive?
         
         let getArchiveExp = expectation(description: "Get Archive")
         hub.archive(for: JID("romeo@example.com")!, create: true) {
@@ -112,20 +112,22 @@ class HubTests: TestCase {
         
         guard
             let archive = requestedArchive
-            else { return }
+        else { return }
         
         do {
-            expectation(forNotification: Notification.Name.ArchiveDidChange.rawValue,
-                        object: archive) {
-                            notification in
-                            guard
-                                let updated = notification.userInfo?[UpdatedMessagesKey] as? [Message],
-                                let message = updated.first
-                                else { return false }
-                            return message.messageID.account == JID("romeo@example.com")!
+            expectation(
+                forNotification: Notification.Name.ArchiveDidChange.rawValue,
+                object: archive
+            ) {
+                notification in
+                guard
+                    let updated = notification.userInfo?[UpdatedMessagesKey] as? [Message],
+                    let message = updated.first
+                else { return false }
+                return message.messageID.account == JID("romeo@example.com")!
             }
             
-            let _ = try archive.insert(stanza, metadata: Metadata())
+            _ = try archive.insert(stanza, metadata: Metadata())
             waitForExpectations(timeout: 1.0, handler: nil)
             
             let messages = try archive.all()
@@ -144,10 +146,10 @@ class HubTests: TestCase {
         guard
             let dispatcher = self.dispatcher,
             let hub = self.hub
-            else { XCTFail(); return }
+        else { XCTFail(); return }
         
         dispatcher.IQHandler = {
-            request, timeout, completion in
+            request, _, completion in
             
             let response = IQStanza.makeDocumentWithIQStanza(from: request.to, to: request.from)
             let iq = response.root as! IQStanza
@@ -162,7 +164,7 @@ class HubTests: TestCase {
             completion?(iq, nil)
         }
         
-        var requestedArchive: IncrementalArchive? = nil
+        var requestedArchive: IncrementalArchive?
         let getArchiveExp = expectation(description: "Get Archive")
         hub.archive(for: JID("romeo@example.com")!, create: true) {
             archive, error in
@@ -174,13 +176,13 @@ class HubTests: TestCase {
         
         guard
             let archive = requestedArchive
-            else {
-                XCTFail();
-                return
+        else {
+            XCTFail()
+            return
         }
         
         let loadRecentExp = expectation(description: "Load Recent")
-        archive.loadRecentMessages { (error) in
+        archive.loadRecentMessages { error in
             XCTAssertNil(error)
             loadRecentExp.fulfill()
         }

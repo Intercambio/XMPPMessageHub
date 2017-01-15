@@ -19,7 +19,7 @@ class HandlerTestCase: TestCase {
         
         guard
             let directory = self.directory
-            else { return }
+        else { return }
         
         archiveManager = FileArchvieManager(directory: directory)
     }
@@ -32,12 +32,12 @@ class HandlerTestCase: TestCase {
     func archive(for account: JID) -> Archive? {
         guard
             let archiveManager = self.archiveManager
-            else { return nil }
+        else { return nil }
         
-        var result: Archive? = nil
+        var result: Archive?
         let exp = expectation(description: "Get Archive for '\(account.stringValue)'")
         archiveManager.archive(for: account, create: true) {
-            archive, error in
+            archive, _ in
             result = archive
             exp.fulfill()
         }

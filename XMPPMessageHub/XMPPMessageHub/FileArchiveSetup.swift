@@ -38,9 +38,7 @@ extension FileArchive {
         static let version: Int = 1
         
         var version: Int {
-            get {
-                return readCurrentVersion()
-            }
+            return readCurrentVersion()
         }
         
         let directory: URL
@@ -72,7 +70,8 @@ extension FileArchive {
             try fileManager.createDirectory(
                 at: messagesLocation,
                 withIntermediateDirectories: false,
-                attributes: [:])
+                attributes: [:]
+            )
         }
         
         private func createDatabase() throws -> SQLite.Connection {
@@ -134,5 +133,3 @@ extension FileArchive {
         }
     }
 }
-
-

@@ -9,7 +9,7 @@
 import Foundation
 
 struct MAMIndex {
-
+    
     let partitions: [MAMIndexPartition]
     
     var nextArchiveID: MessageArchiveID? {
@@ -19,7 +19,7 @@ struct MAMIndex {
     var canLoadMore: Bool {
         guard
             let partition = partitions.last, partitions.count == 1
-            else { return true }
+        else { return true }
         return partition.complete == false
     }
     
@@ -29,9 +29,9 @@ struct MAMIndex {
         for partition in partitions {
             guard
                 let current = currentPartition
-                else {
-                    mergedPartitions.append(partition)
-                    continue
+            else {
+                mergedPartitions.append(partition)
+                continue
             }
             switch current.merge(partition) {
             case (let recent, let other) where other == nil:
@@ -53,13 +53,13 @@ extension MAMIndex: Dictionariable {
         guard
             let values = dictionaryRepresentation,
             let partitionValues = values["partitions"] as? [NSDictionary]
-            else { return nil }
+        else { return nil }
         
         var partitions: [MAMIndexPartition] = []
         for v in partitionValues {
             guard
                 let partition = MAMIndexPartition(dictionaryRepresentation: v)
-                else { return nil }
+            else { return nil }
             partitions.append(partition)
         }
         self.partitions = partitions

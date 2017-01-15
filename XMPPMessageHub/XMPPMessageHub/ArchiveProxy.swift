@@ -17,7 +17,7 @@ protocol ArchiveProxyDelegate: class {
 class ArchiveProxy: IncrementalArchive {
     
     weak var delegate: ArchiveProxyDelegate?
-
+    
     let mam: MessageArchiveManagement
     let archive: Archive
     
@@ -29,7 +29,8 @@ class ArchiveProxy: IncrementalArchive {
             self,
             selector: #selector(archiveDidChange(notification:)),
             name: nil,
-            object: archive)
+            object: archive
+        )
     }
     
     deinit {
@@ -37,9 +38,11 @@ class ArchiveProxy: IncrementalArchive {
     }
     
     @objc private func archiveDidChange(notification: Notification) {
-        NotificationCenter.default.post(name: notification.name,
-                                        object: self,
-                                        userInfo: notification.userInfo)
+        NotificationCenter.default.post(
+            name: notification.name,
+            object: self,
+            userInfo: notification.userInfo
+        )
     }
     
     // MARK: - Archive
@@ -76,11 +79,11 @@ class ArchiveProxy: IncrementalArchive {
         return mam.canLoadMoreMessages(for: account)
     }
     
-    func loadRecentMessages(completion: ((Error?) -> Void)?) -> Void {
+    func loadRecentMessages(completion: ((Error?) -> Void)?) {
         mam.loadRecentMessages(for: account, completion: completion)
     }
     
-    func loadMoreMessages(completion: ((Error?) -> Void)?) -> Void {
+    func loadMoreMessages(completion: ((Error?) -> Void)?) {
         mam.loadMoreMessages(for: account, completion: completion)
     }
 }

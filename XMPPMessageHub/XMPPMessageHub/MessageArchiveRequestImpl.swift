@@ -44,7 +44,8 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
         self.queryID = UUID().uuidString.lowercased()
         queue = DispatchQueue(
             label: "MessageArchiveRequestImpl",
-            attributes: [])
+            attributes: []
+        )
         dispatcher.add(self)
     }
     
@@ -56,12 +57,12 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
         try queue.sync {
             guard
                 case .intitalized = self.state
-                else { throw MessageArchiveRequestError.alreadyRunning }
+            else { throw MessageArchiveRequestError.alreadyRunning }
             let request = self.makeRequest(before: before, limit: limit)
             self.dispatcher.handleIQRequest(request, timeout: timeout) { [weak self] response, error in
                 guard
                     let this = self
-                    else { return }
+                else { return }
                 this.queue.async {
                     if let response = response {
                         this.handleResponse(response)
@@ -81,14 +82,14 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
             let rsm = fin.resultSet,
             let first = rsm.first,
             let last = rsm.last
-            else {
-                self.state = .failed(error: MessageArchiveRequestError.unexpectedResponse)
-                return
+        else {
+            self.state = .failed(error: MessageArchiveRequestError.unexpectedResponse)
+            return
         }
         
         guard
             case .fetching(let before, let archvieIDs, let timestamp) = self.state
-            else { return }
+        else { return }
         
         let stable = Bool(fin.value(forAttribute: "stable") as? String ?? "") ?? true
         let complete = Bool(fin.value(forAttribute: "complete") as? String ?? "") ?? false
@@ -100,7 +101,8 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
             stable: stable,
             complete: complete,
             archvieIDs: archvieIDs,
-            before: before)
+            before: before
+        )
         
         self.state = .finished(response: response)
     }
@@ -112,10 +114,10 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
             guard
                 let from = message.from,
                 self.archive.account == from.bare()
-                else {
-                    completion?(nil)
-                    return
-                }
+            else {
+                completion?(nil)
+                return
+            }
             
             do {
                 if case .fetching(let before, var archvieIDs, var timestamp) = self.state {
@@ -126,13 +128,13 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
                         let result = try self.filter.apply(to: message, with: metadata, userInfo: [:]),
                         let archiveID = result.userInfo[MessageArchvieIDKey] as? String,
                         result.userInfo[MessageArchvieQueryIDKey] as? String == self.queryID
-                        else {
-                            completion?(nil)
-                            return
+                    else {
+                        completion?(nil)
+                        return
                     }
                     
                     do {
-                        let _ = try self.archive.insert(result.message, metadata: result.metadata)
+                        _ = try self.archive.insert(result.message, metadata: result.metadata)
                         archvieIDs.insert(archiveID)
                     } catch is MessageAlreadyExist {
                         archvieIDs.insert(archiveID)

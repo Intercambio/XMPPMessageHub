@@ -20,7 +20,8 @@ class MessageArchivePartitionTests: TestCase {
             stable: true,
             complete: false,
             archvieIDs: ["a", "b", "c", "d", "e", "f"],
-            before: nil)
+            before: nil
+        )
         
         let partitionB = MAMIndexPartition(
             first: "h",
@@ -29,7 +30,8 @@ class MessageArchivePartitionTests: TestCase {
             stable: true,
             complete: false,
             archvieIDs: ["h", "i", "j", "k", "l"],
-            before: nil)
+            before: nil
+        )
         
         var (recent, other) = partitionA.merge(partitionB)
         XCTAssertEqual(recent, partitionB)
@@ -49,7 +51,8 @@ class MessageArchivePartitionTests: TestCase {
             stable: true,
             complete: false,
             archvieIDs: ["a", "b", "c", "d", "e", "f"],
-            before: "g")
+            before: "g"
+        )
         
         let partitionB = MAMIndexPartition(
             first: "g",
@@ -58,8 +61,8 @@ class MessageArchivePartitionTests: TestCase {
             stable: true,
             complete: false,
             archvieIDs: ["g", "h", "i", "j", "k", "l"],
-            before: "x")
-        
+            before: "x"
+        )
         
         let (recentX, otherX) = partitionA.merge(partitionB)
         XCTAssertNil(otherX)
@@ -82,7 +85,8 @@ class MessageArchivePartitionTests: TestCase {
             stable: true,
             complete: false,
             archvieIDs: ["a", "b", "c", "d", "e", "f"],
-            before: "g")
+            before: "g"
+        )
         
         let partitionB = MAMIndexPartition(
             first: "d",
@@ -91,7 +95,8 @@ class MessageArchivePartitionTests: TestCase {
             stable: true,
             complete: false,
             archvieIDs: ["d", "e", "f", "g", "h", "i"],
-            before: "x")
+            before: "x"
+        )
         
         let (recentX, otherX) = partitionA.merge(partitionB)
         XCTAssertNil(otherX)
@@ -114,9 +119,10 @@ class MessageArchivePartitionTests: TestCase {
             stable: true,
             complete: false,
             archvieIDs: ["a", "b", "c", "d", "e", "f"],
-            before: nil)
+            before: nil
+        )
         
-        let data = NSKeyedArchiver.archivedData(withStructure: partition) 
+        let data = NSKeyedArchiver.archivedData(withStructure: partition)
         
         XCTAssertEqual(NSKeyedUnarchiver.unarchiveStructure(with: data), partition)
     }

@@ -58,7 +58,8 @@ extension MAMIndexPartition {
             stable: lhs.stable && rhs.stable,
             complete: lhs.complete || rhs.complete,
             archvieIDs: lhs.archvieIDs.union(rhs.archvieIDs),
-            before: rhs.before)
+            before: rhs.before
+        )
     }
 }
 
@@ -73,8 +74,8 @@ extension MAMIndexPartition: Dictionariable {
             let stable = values["stable"] as? NSNumber,
             let complete = values["complete"] as? NSNumber,
             let archvieIDs = values["archvieIDs"] as? Set<MessageArchiveID>
-            else {
-                return nil
+        else {
+            return nil
         }
         
         self.first = first

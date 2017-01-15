@@ -18,4 +18,3 @@ public protocol ArchiveManager {
     func archive(for account: JID, create: Bool, completion: @escaping (Archive?, Error?) -> Void) -> Void
     func deleteArchive(for account: JID, completion: @escaping ((Error?) -> Void)) -> Void
 }
-

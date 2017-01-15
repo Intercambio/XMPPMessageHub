@@ -13,16 +13,17 @@ import SQLite
 import Dispatch
 
 public class FileArchive: Archive {
-
+    
     public let directory: URL
     public let account: JID
     
     private let queue: DispatchQueue
     
-    required public init(directory: URL, account: JID) {
+    public required init(directory: URL, account: JID) {
         queue = DispatchQueue(
             label: "Archive (\(account.stringValue))",
-            attributes: [.concurrent])
+            attributes: [.concurrent]
+        )
         
         self.directory = directory
         self.account = account.bare()
@@ -66,7 +67,7 @@ public class FileArchive: Archive {
             guard
                 let store = self.store,
                 let db = self.db
-                else { throw ArchiveError.notSetup }
+            else { throw ArchiveError.notSetup }
             
             let uuid = UUID()
             let messageID = try self.makeMessageID(for: document, with: uuid)
@@ -78,7 +79,7 @@ public class FileArchive: Archive {
                     throw MessageAlreadyExist(existingMessageID: existingMessageID)
                 }
                 
-                let _ = try db.run(
+                _ = try db.run(
                     Schema.message.insert(
                         Schema.message_uuid <- messageID.uuid,
                         Schema.message_account <- messageID.account,
@@ -89,7 +90,7 @@ public class FileArchive: Archive {
                         Schema.message_stanza_id <- messageID.stanzaID
                     )
                 )
-                let _ = try db.run(
+                _ = try db.run(
                     Schema.metadata.insert(
                         Schema.metadata_uuid <- messageID.uuid,
                         Schema.metadata_created <- metadata.created,
@@ -110,7 +111,7 @@ public class FileArchive: Archive {
     private func existingMessageID(matching messageID: MessageID) throws -> MessageID? {
         guard
             let db = self.db
-            else { throw ArchiveError.notSetup }
+        else { throw ArchiveError.notSetup }
         
         let account = messageID.account.bare()
         let counterpart = messageID.counterpart.bare()
@@ -122,7 +123,8 @@ public class FileArchive: Archive {
                 Schema.message_origin_id == originID
                     && Schema.message_account == account
                     && Schema.message_counterpart == counterpart
-                    && Schema.message_direction == direction)
+                    && Schema.message_direction == direction
+            )
             
             if let row = try db.pluck(query) {
                 return try makeMessageID(from: row)
@@ -134,7 +136,8 @@ public class FileArchive: Archive {
                 Schema.message_stanza_id == stanzaID
                     && Schema.message_account == account
                     && Schema.message_counterpart == counterpart
-                    && Schema.message_direction == direction)
+                    && Schema.message_direction == direction
+            )
             
             if let row = try db.pluck(query) {
                 return try makeMessageID(from: row)
@@ -143,14 +146,14 @@ public class FileArchive: Archive {
         
         return nil
     }
-
+    
     public func update(_ metadata: Metadata, for messageID: MessageID) throws -> Message {
         return try queue.sync {
             guard
                 let db = self.db
-                else { throw ArchiveError.notSetup }
+            else { throw ArchiveError.notSetup }
             
-            var message: Message? = nil
+            var message: Message?
             
             try db.transaction {
                 let metadataQuery = Schema.metadata.filter(Schema.metadata_uuid == messageID.uuid)
@@ -173,7 +176,7 @@ public class FileArchive: Archive {
             
             guard
                 let result = message
-                else { throw ArchiveError.doesNotExist }
+            else { throw ArchiveError.doesNotExist }
             
             self.postChangeNotificationFor(updated: [result])
             return result
@@ -184,9 +187,9 @@ public class FileArchive: Archive {
         return try queue.sync {
             guard
                 let db = self.db
-                else { throw ArchiveError.notSetup }
+            else { throw ArchiveError.notSetup }
             
-            var message: Message? = nil
+            var message: Message?
             
             try db.transaction {
                 let metadataQuery = Schema.metadata.filter(Schema.metadata_uuid == messageID.uuid)
@@ -206,7 +209,7 @@ public class FileArchive: Archive {
             
             guard
                 let result = message
-                else { throw ArchiveError.doesNotExist }
+            else { throw ArchiveError.doesNotExist }
             
             self.postChangeNotificationFor(updated: [result])
             return result
@@ -218,9 +221,9 @@ public class FileArchive: Archive {
             guard
                 let store = self.store,
                 let db = self.db
-                else { throw ArchiveError.notSetup }
+            else { throw ArchiveError.notSetup }
             
-            var message: Message? = nil
+            var message: Message?
             
             try db.transaction {
                 
@@ -228,31 +231,33 @@ public class FileArchive: Archive {
                 let messageQuery = self.makeMessageQuery(with: [Expression<Bool?>(filter)])
                 guard
                     let row = try db.pluck(messageQuery)
-                    else { throw ArchiveError.doesNotExist  }
+                else { throw ArchiveError.doesNotExist }
                 
                 message = try self.makeMessage(from: row)
-
-                let _ = try db.run(Schema.message.filter(Schema.message_uuid == messageID.uuid).delete())
-                let _ = try db.run(Schema.metadata.filter(Schema.metadata_uuid == messageID.uuid).delete())
+                
+                _ = try db.run(Schema.message.filter(Schema.message_uuid == messageID.uuid).delete())
+                _ = try db.run(Schema.metadata.filter(Schema.metadata_uuid == messageID.uuid).delete())
                 try store.delete(documentWith: messageID.uuid)
             }
             
             guard
                 let result = message
-                else { throw ArchiveError.doesNotExist }
+            else { throw ArchiveError.doesNotExist }
             
             self.postChangeNotificationFor(deleted: [result])
         }
     }
     
     private func postChangeNotificationFor(inserted: [Message]? = nil, updated: [Message]? = nil, deleted: [Message]? = nil) {
-        var userInfo: [AnyHashable : Any] = [:]
+        var userInfo: [AnyHashable: Any] = [:]
         userInfo[InsertedMessagesKey] = inserted
         userInfo[UpdatedMessagesKey] = updated
         userInfo[DeletedMessagesKey] = deleted
-        let notification = Notification(name: Notification.Name.ArchiveDidChange,
-                                        object: self,
-                                        userInfo: userInfo)
+        let notification = Notification(
+            name: Notification.Name.ArchiveDidChange,
+            object: self,
+            userInfo: userInfo
+        )
         let notificationCenter = NotificationCenter.default
         DispatchQueue.global().async {
             notificationCenter.post(notification)
@@ -272,7 +277,7 @@ public class FileArchive: Archive {
         return try queue.sync {
             guard
                 let store = self.store
-                else { throw ArchiveError.notSetup }
+            else { throw ArchiveError.notSetup }
             
             return try store.read(documentWith: messageID.uuid)
         }
@@ -290,7 +295,7 @@ public class FileArchive: Archive {
         return try queue.sync {
             guard
                 let db = self.db
-                else { throw ArchiveError.notSetup }
+            else { throw ArchiveError.notSetup }
             
             var messages: [Message] = []
             try db.transaction {
@@ -313,8 +318,10 @@ public class FileArchive: Archive {
     
     public func pending() throws -> [Message] {
         return try queue.sync {
-            let filters = [Schema.metadata[Schema.metadata_transmitted] == nil,
-                           Schema.metadata[Schema.metadata_error] == nil]
+            let filters = [
+                Schema.metadata[Schema.metadata_transmitted] == nil,
+                Schema.metadata[Schema.metadata_error] == nil
+            ]
             return try messages(filter: filters)
         }
     }
@@ -332,7 +339,7 @@ public class FileArchive: Archive {
         return try queue.sync {
             guard
                 let db = self.db
-                else { throw ArchiveError.notSetup }
+            else { throw ArchiveError.notSetup }
             
             var jids: [JID] = []
             try db.transaction {
@@ -348,11 +355,13 @@ public class FileArchive: Archive {
     
     // MARK: -
     
-    private func enumerateMessages(filter: [SQLite.Expression<Bool?>] = [],
-                                   block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void) throws -> Void {
+    private func enumerateMessages(
+        filter: [SQLite.Expression<Bool?>] = [],
+        block: @escaping (Message, Int, UnsafeMutablePointer<ObjCBool>) -> Void
+    ) throws {
         guard
             let db = self.db
-            else { throw ArchiveError.notSetup }
+        else { throw ArchiveError.notSetup }
         
         let query = makeMessageQuery(with: filter)
         
@@ -374,7 +383,7 @@ public class FileArchive: Archive {
     private func messages(filter: [SQLite.Expression<Bool?>] = []) throws -> [Message] {
         guard
             let db = self.db
-            else { throw ArchiveError.notSetup }
+        else { throw ArchiveError.notSetup }
         
         let query = makeMessageQuery(with: filter)
         
@@ -387,15 +396,15 @@ public class FileArchive: Archive {
         }
         return result
     }
-
+    
     private func firstMessage(filter: [SQLite.Expression<Bool?>] = []) throws -> Message {
         guard
             let db = self.db
-            else { throw ArchiveError.notSetup }
+        else { throw ArchiveError.notSetup }
         
         let query = makeMessageQuery(with: filter)
         
-        var message: Message? = nil
+        var message: Message?
         
         try db.transaction {
             if let row = try db.pluck(query) {
@@ -425,8 +434,8 @@ public class FileArchive: Archive {
             transmitted.desc,
             created.desc,
             Schema.message[rowid].desc
-            ])
-
+        ])
+        
         query = query.select(
             Schema.message[Schema.message_uuid],
             Schema.message[Schema.message_account],
@@ -462,7 +471,8 @@ public class FileArchive: Archive {
             direction: direction,
             type: type,
             originID: originID,
-            stanzaID: stanzaID)
+            stanzaID: stanzaID
+        )
         
         var metadata = Metadata()
         metadata.created = row.get(Schema.metadata[Schema.metadata_created])
@@ -473,7 +483,8 @@ public class FileArchive: Archive {
         
         return Message(
             messageID: messageID,
-            metadata: metadata)
+            metadata: metadata
+        )
     }
     
     private func makeMessageID(from row: SQLite.Row) throws -> MessageID {
@@ -492,7 +503,8 @@ public class FileArchive: Archive {
             direction: direction,
             type: type,
             originID: originID,
-            stanzaID: stanzaID)
+            stanzaID: stanzaID
+        )
         
         return messageID
     }
@@ -502,11 +514,11 @@ public class FileArchive: Archive {
             let message = document.root as? MessageStanza,
             let from = message.from,
             let to = message.to
-            else { throw ArchiveError.invalidDocument }
+        else { throw ArchiveError.invalidDocument }
         
         guard
             account == from.bare() || account == to.bare()
-            else { throw ArchiveError.accountMismatch }
+        else { throw ArchiveError.accountMismatch }
         
         let direction: MessageDirection = account.isEqual(from.bare()) ? .outbound : .inbound
         let counterpart = direction == .outbound ? to.bare() : from.bare()
@@ -521,7 +533,8 @@ public class FileArchive: Archive {
             direction: direction,
             type: type,
             originID: originID,
-            stanzaID: stanzaID)
+            stanzaID: stanzaID
+        )
     }
 }
 

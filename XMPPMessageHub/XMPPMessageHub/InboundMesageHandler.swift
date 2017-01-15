@@ -15,7 +15,7 @@ enum InboundMesageHandlerError: Error {
 }
 
 protocol InboundMesageHandlerDelegate: class {
-    func inboundMessageHandler(_ handler: InboundMesageHandler, didReceive message: Message, userInfo: [AnyHashable:Any]) -> Void
+    func inboundMessageHandler(_ handler: InboundMesageHandler, didReceive message: Message, userInfo: [AnyHashable: Any]) -> Void
 }
 
 class InboundMesageHandler: NSObject, MessageHandler {
@@ -25,12 +25,12 @@ class InboundMesageHandler: NSObject, MessageHandler {
     private struct PendingMessageDispatch {
         let message: MessageStanza
         let metadata: Metadata
-        let userInfo: [AnyHashable:Any]
+        let userInfo: [AnyHashable: Any]
         let account: JID
         var completion: ((Error?) -> Void)?
     }
     
-    private var archiveByAccount: [JID:Archive] = [:]
+    private var archiveByAccount: [JID: Archive] = [:]
     private var pendingMessageDispatch: [PendingMessageDispatch] = []
     private let queue: DispatchQueue
     private let dispatcher: Dispatcher
@@ -47,7 +47,8 @@ class InboundMesageHandler: NSObject, MessageHandler {
         ]
         queue = DispatchQueue(
             label: "InboundMesageHandler",
-            attributes: [.concurrent])
+            attributes: [.concurrent]
+        )
         super.init()
         dispatcher.add(self)
     }
@@ -58,13 +59,15 @@ class InboundMesageHandler: NSObject, MessageHandler {
     
     // MARK: - CoreXMPP.MessageHandler
     
-    func handleMessage(_ message: MessageStanza,
-                       completion: ((Error?) -> Void)?) {
+    func handleMessage(
+        _ message: MessageStanza,
+        completion: ((Error?) -> Void)?
+    ) {
         guard
             let to = message.to
-            else {
-                completion?(InboundMesageHandlerError.invalidDocument)
-                return
+        else {
+            completion?(InboundMesageHandlerError.invalidDocument)
+            return
         }
         
         queue.async(flags: [.barrier]) {
@@ -76,16 +79,16 @@ class InboundMesageHandler: NSObject, MessageHandler {
                 let filtered = try self.inboundFilter.reduce(initial) { input, filter in
                     guard
                         let result = input
-                        else { return nil }
+                    else { return nil }
                     return try filter.apply(to: result.message, with: result.metadata, userInfo: result.userInfo)
                 }
                 
                 guard
                     let result = filtered
-                    else {
-                        completion?(nil)
-                        return
-                    }
+                else {
+                    completion?(nil)
+                    return
+                }
                 
                 if let archive = self.archiveByAccount[account] {
                     try self.insert(result.message, with: result.metadata, userInfo: result.userInfo, in: archive)
@@ -104,7 +107,7 @@ class InboundMesageHandler: NSObject, MessageHandler {
     
     // MARK: -
     
-    private func insert(_ stanza: MessageStanza, with metadata: Metadata, userInfo: [AnyHashable:Any], in archive: Archive) throws {
+    private func insert(_ stanza: MessageStanza, with metadata: Metadata, userInfo: [AnyHashable: Any], in archive: Archive) throws {
         let message = try archive.insert(stanza, metadata: metadata)
         delegate?.inboundMessageHandler(self, didReceive: message, userInfo: userInfo)
     }
@@ -115,12 +118,12 @@ class InboundMesageHandler: NSObject, MessageHandler {
             self.pendingMessageDispatch = self.pendingMessageDispatch.filter({ (pending) -> Bool in
                 guard
                     pending.account == account
-                    else { return false }
+                else { return false }
                 guard
                     let archive = archive
-                    else {
-                        pending.completion?(error)
-                        return false
+                else {
+                    pending.completion?(error)
+                    return false
                 }
                 
                 do {

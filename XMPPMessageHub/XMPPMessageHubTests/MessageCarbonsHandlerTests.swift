@@ -16,14 +16,14 @@ class MessageCarbonsHandlerTests: HandlerTestCase {
     func testEnable() {
         guard
             let dispatcher = self.dispatcher
-            else { XCTFail(); return }
+        else { XCTFail(); return }
         
         let handler = MessageCarbonsHandler(dispatcher: dispatcher)
         
         let delegate = Delegate()
         handler.delegate = delegate
         
-        dispatcher.IQHandler = { request, timeout, complition in
+        dispatcher.IQHandler = { request, _, complition in
             let response = IQStanza.makeDocumentWithIQStanza(from: request.to, to: request.from)
             let iq = response.root as! IQStanza
             iq.type = .result
@@ -34,14 +34,14 @@ class MessageCarbonsHandlerTests: HandlerTestCase {
         dispatcher.connect(JID("romeo@examle.com")!, resumed: false, features: [])
         waitForExpectations(timeout: 1.0, handler: nil)
     }
-
+    
     // MARK: - Helper
     
     class Delegate: MessageCarbonsHandlerDelegate {
-        func messageCarbonsHandler(_ handler: MessageCarbonsHandler, didEnableFor account: JID) {
+        func messageCarbonsHandler(_: MessageCarbonsHandler, didEnableFor _: JID) {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "MessageCarbonsHandlerTests.didEnable"), object: self)
         }
-        func messageCarbonsHandler(_ handler: MessageCarbonsHandler, failedToEnableFor account: JID, wirth error: Error) {
+        func messageCarbonsHandler(_: MessageCarbonsHandler, failedToEnableFor _: JID, wirth _: Error) {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "MessageCarbonsHandlerTests.failed"), object: self)
         }
     }

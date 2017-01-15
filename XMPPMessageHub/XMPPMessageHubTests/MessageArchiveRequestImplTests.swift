@@ -13,14 +13,14 @@ import ISO8601
 @testable import XMPPMessageHub
 
 class MessageArchiveRequestImplTests: HandlerTestCase {
-
+    
     func testPerformFetchWithError() {
         guard
             let archive = self.archive(for: JID("romeo@example.com")!),
             let dispatcher = self.dispatcher
-            else { return }
+        else { return }
         
-        dispatcher.IQHandler = { document, timeout, complition in
+        dispatcher.IQHandler = { _, _, complition in
             let error = NSError(domain: "MessageArchiveRequestTests", code: 1, userInfo: nil)
             complition?(nil, error)
         }
@@ -31,12 +31,12 @@ class MessageArchiveRequestImplTests: HandlerTestCase {
         
         do {
             expectation(forNotification: "MessageArchiveRequestTests.didFailWith", object: delegate, handler: nil)
-            let _ = try request.performFetch(before: nil, limit: 30)
+            _ = try request.performFetch(before: nil, limit: 30)
             waitForExpectations(timeout: 1.0, handler: nil)
             
             guard
-                case MessageArchiveRequestImpl.State.failed(_) = request.state
-                else { XCTFail(); return }
+                case MessageArchiveRequestImpl.State.failed = request.state
+            else { XCTFail(); return }
             
         } catch {
             XCTFail("\(error)")
@@ -47,9 +47,9 @@ class MessageArchiveRequestImplTests: HandlerTestCase {
         guard
             let archive = self.archive(for: JID("romeo@example.com")!),
             let dispatcher = self.dispatcher
-            else { return }
-
-        dispatcher.IQHandler = { request, timeout, complition in
+        else { return }
+        
+        dispatcher.IQHandler = { request, _, complition in
             let response = IQStanza.makeDocumentWithIQStanza(from: request.to, to: request.from)
             let iq = response.root as! IQStanza
             iq.type = .result
@@ -69,7 +69,7 @@ class MessageArchiveRequestImplTests: HandlerTestCase {
         
         do {
             expectation(forNotification: "MessageArchiveRequestTests.didFinishWith", object: delegate, handler: nil)
-            let _ = try request.performFetch(before: nil, limit: 30)
+            _ = try request.performFetch(before: nil, limit: 30)
             waitForExpectations(timeout: 1.0, handler: nil)
             
             switch request.state {
@@ -90,10 +90,10 @@ class MessageArchiveRequestImplTests: HandlerTestCase {
     // MARK: - Helper
     
     class Delegate: MessageArchiveRequestDelegate {
-        func messageArchiveRequest(_ request: MessageArchiveRequest, didFailWith error: Error) {
+        func messageArchiveRequest(_: MessageArchiveRequest, didFailWith _: Error) {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "MessageArchiveRequestTests.didFailWith"), object: self)
         }
-        func messageArchiveRequest(_ request: MessageArchiveRequest, didFinishWith result: MAMIndexPartition) {
+        func messageArchiveRequest(_: MessageArchiveRequest, didFinishWith _: MAMIndexPartition) {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "MessageArchiveRequestTests.didFinishWith"), object: self)
         }
     }

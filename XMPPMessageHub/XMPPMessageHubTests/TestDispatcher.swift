@@ -11,12 +11,12 @@ import XMPPFoundation
 
 class TestDispatcher: Dispatcher {
     
-    func send(_ message: MessageStanza, completion: ((Error?)->Void)?) {
+    func send(_ message: MessageStanza, completion: ((Error?) -> Void)?) {
         let group = DispatchGroup()
         for handler in handlers.allObjects {
             if let messageHandler = handler as? MessageHandler {
                 group.enter()
-                messageHandler.handleMessage(message, completion: { (error) in
+                messageHandler.handleMessage(message, completion: { _ in
                     group.leave()
                 })
             }
@@ -40,7 +40,7 @@ class TestDispatcher: Dispatcher {
         add(handler, withIQQueryQNames: nil, features: nil)
     }
     
-    func add(_ handler: Handler, withIQQueryQNames queryQNames: [PXQName]?, features: [Feature]?) {
+    func add(_ handler: Handler, withIQQueryQNames _: [PXQName]?, features _: [Feature]?) {
         handlers.add(handler)
     }
     
@@ -59,9 +59,11 @@ class TestDispatcher: Dispatcher {
     }
     
     var IQHandler: ((IQStanza, TimeInterval, ((IQStanza?, Error?) -> Void)?) -> Void)?
-    public func handleIQRequest(_ request: IQStanza,
-                                timeout: TimeInterval,
-                                completion: ((IQStanza?, Error?) -> Swift.Void)? = nil) {
+    public func handleIQRequest(
+        _ request: IQStanza,
+        timeout: TimeInterval,
+        completion: ((IQStanza?, Error?) -> Swift.Void)? = nil
+    ) {
         IQHandler?(request, timeout, completion)
     }
 }

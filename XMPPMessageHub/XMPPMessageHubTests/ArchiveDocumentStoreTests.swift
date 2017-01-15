@@ -16,7 +16,7 @@ class ArchiveDocumentStoreTests: TestCase {
         guard let directory = self.directory else { return }
         guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
         document.root.setValue("123", forAttribute: "id")
-
+        
         do {
             let uuid = UUID()
             let store = FileArchiveFileDocumentStore(directory: directory)

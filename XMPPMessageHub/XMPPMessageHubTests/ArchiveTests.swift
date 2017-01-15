@@ -12,7 +12,7 @@ import XMPPFoundation
 @testable import XMPPMessageHub
 
 class ArchiveTests: TestCase {
-
+    
     var archive: FileArchive?
     
     override func setUp() {
@@ -75,11 +75,13 @@ class ArchiveTests: TestCase {
         stanzaId?.setValue("from@example.com", forAttribute: "by")
         
         do {
-            expectation(forNotification: Notification.Name.ArchiveDidChange.rawValue,
-                        object: archive) { notification in
-                            let inserted = notification.userInfo?[InsertedMessagesKey] as? [Message]
-                            XCTAssertEqual(inserted?.count, 1)
-                            return true
+            expectation(
+                forNotification: Notification.Name.ArchiveDidChange.rawValue,
+                object: archive
+            ) { notification in
+                let inserted = notification.userInfo?[InsertedMessagesKey] as? [Message]
+                XCTAssertEqual(inserted?.count, 1)
+                return true
             }
             
             var metadata = Metadata()
@@ -117,12 +119,12 @@ class ArchiveTests: TestCase {
         originId?.setValue(id, forAttribute: "id")
         
         do {
-    
+            
             let metadata = Metadata()
             let message = try archive.insert(document, metadata: metadata)
             XCTAssertNotNil(message)
-
-            XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) {error in
+            
+            XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) { error in
                 if let error = error as? MessageAlreadyExist {
                     XCTAssertEqual(error.existingMessageID, message.messageID)
                 } else {
@@ -154,7 +156,7 @@ class ArchiveTests: TestCase {
             let message = try archive.insert(document, metadata: metadata)
             XCTAssertNotNil(message)
             
-            XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) {error in
+            XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) { error in
                 if let error = error as? MessageAlreadyExist {
                     XCTAssertEqual(error.existingMessageID, message.messageID)
                 } else {
@@ -172,7 +174,7 @@ class ArchiveTests: TestCase {
         guard let document = PXDocument(elementName: "foo", namespace: "bar", prefix: nil) else { return }
         
         let metadata = Metadata()
-        XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) {error in
+        XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) { error in
             XCTAssertEqual(error as? ArchiveError, .invalidDocument)
         }
     }
@@ -184,7 +186,7 @@ class ArchiveTests: TestCase {
         document.root.setValue("b@example.com", forAttribute: "to")
         
         let metadata = Metadata()
-        XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) {error in
+        XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) { error in
             XCTAssertEqual(error as? ArchiveError, .invalidDocument)
         }
     }
@@ -196,7 +198,7 @@ class ArchiveTests: TestCase {
         document.root.setValue("b@example.com", forAttribute: "from")
         
         let metadata = Metadata()
-        XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) {error in
+        XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) { error in
             XCTAssertEqual(error as? ArchiveError, .invalidDocument)
         }
     }
@@ -211,7 +213,7 @@ class ArchiveTests: TestCase {
         document.root.setValue("123", forAttribute: "id")
         
         let metadata = Metadata()
-        XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) {error in
+        XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) { error in
             XCTAssertEqual(error as? ArchiveError, .accountMismatch)
         }
     }
@@ -243,7 +245,7 @@ class ArchiveTests: TestCase {
             
             XCTAssertNotNil(message.metadata.error)
             XCTAssertEqual(message.metadata.error as? NSError, error)
-
+            
             XCTAssertTrue(message.metadata.isCarbonCopy)
             
         } catch {
@@ -254,15 +256,17 @@ class ArchiveTests: TestCase {
     func testUpdateDoesNotExsit() {
         guard let archive = self.archive else { return }
         
-        let messageID = MessageID(uuid: UUID(),
-                                  account:JID("a@example.com")!,
-                                  counterpart: JID("b@example.com")!,
-                                  direction: .outbound,
-                                  type: .normal,
-                                  originID: nil,
-                                  stanzaID: nil)
+        let messageID = MessageID(
+            uuid: UUID(),
+            account: JID("a@example.com")!,
+            counterpart: JID("b@example.com")!,
+            direction: .outbound,
+            type: .normal,
+            originID: nil,
+            stanzaID: nil
+        )
         let metadata = Metadata()
-        XCTAssertThrowsError(try archive.update(metadata, for: messageID)) {error in
+        XCTAssertThrowsError(try archive.update(metadata, for: messageID)) { error in
             XCTAssertEqual(error as? ArchiveError, .doesNotExist)
         }
     }
@@ -281,7 +285,7 @@ class ArchiveTests: TestCase {
             metadata.created = Date()
             let message = try archive.insert(document, metadata: metadata)
             XCTAssertNotNil(message)
-
+            
             let storedMessage = try archive.message(with: message.messageID)
             XCTAssertEqual(message.messageID.uuid, storedMessage.messageID.uuid)
             
@@ -293,15 +297,17 @@ class ArchiveTests: TestCase {
     func testGetDoesNotExsit() {
         guard let archive = self.archive else { return }
         
-        let messageID = MessageID(uuid: UUID(),
-                                  account:JID("a@example.com")!,
-                                  counterpart: JID("b@example.com")!,
-                                  direction: .outbound,
-                                  type: .normal,
-                                  originID: nil,
-                                  stanzaID: nil)
+        let messageID = MessageID(
+            uuid: UUID(),
+            account: JID("a@example.com")!,
+            counterpart: JID("b@example.com")!,
+            direction: .outbound,
+            type: .normal,
+            originID: nil,
+            stanzaID: nil
+        )
         
-        XCTAssertThrowsError(try archive.message(with: messageID)) {error in
+        XCTAssertThrowsError(try archive.message(with: messageID)) { error in
             XCTAssertEqual(error as? ArchiveError, .doesNotExist)
         }
     }
@@ -342,7 +348,7 @@ class ArchiveTests: TestCase {
                 let message = try archive.insert(document, metadata: metadata)
                 XCTAssertNotNil(message)
             }
-
+            
             let messages = try archive.all()
             for (idx, message) in messages.enumerated() {
                 let document = try? archive.document(for: message.messageID)
@@ -361,7 +367,7 @@ class ArchiveTests: TestCase {
         guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
         
         document.root.setValue("from@example.com", forAttribute: "from")
-
+        
         do {
             for _ in 0..<10 {
                 document.root.setValue("a@example.com", forAttribute: "to")
@@ -442,7 +448,7 @@ class ArchiveTests: TestCase {
                 let message = try archive.insert(document, metadata: Metadata())
                 XCTAssertNotNil(message)
             }
-
+            
             self.measure {
                 do {
                     let messages = try archive.conversation(with: JID("b@example.com")!)
@@ -474,7 +480,7 @@ class ArchiveTests: TestCase {
             
             try archive.delete(message.messageID)
             
-            XCTAssertThrowsError(try archive.message(with: message.messageID)) {error in
+            XCTAssertThrowsError(try archive.message(with: message.messageID)) { error in
                 XCTAssertEqual(error as? ArchiveError, .doesNotExist)
             }
             

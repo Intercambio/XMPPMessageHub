@@ -22,9 +22,9 @@ public class Hub: NSObject, ArchiveManager {
     private let dispatcher: Dispatcher
     private let archvieManager: ArchiveManager
     private let indexManager: MAMIndexManager
-    private var archiveByAccount: [JID:Archive] = [:]
+    private var archiveByAccount: [JID: Archive] = [:]
     
-    required public init(dispatcher: Dispatcher, directory: URL) {
+    public required init(dispatcher: Dispatcher, directory: URL) {
         
         let archiveDirectory = directory.appendingPathComponent("archive", isDirectory: true)
         archvieManager = FileArchvieManager(directory: archiveDirectory)
@@ -50,7 +50,7 @@ public class Hub: NSObject, ArchiveManager {
     
     // MARK: - ArchvieManager
     
-    public func archive(for account: JID, create: Bool, completion: @escaping (Archive?, Error?) -> Void) -> Void {
+    public func archive(for account: JID, create: Bool, completion: @escaping (Archive?, Error?) -> Void) {
         queue.async(flags: [.barrier]) {
             if let archive = self.archiveByAccount[account] {
                 let proxy = ArchiveProxy(archive: archive, mam: self.messageArchiveHandler)
@@ -73,7 +73,7 @@ public class Hub: NSObject, ArchiveManager {
         }
     }
     
-    public func deleteArchive(for account: JID, completion: @escaping ((Error?) -> Void)) -> Void {
+    public func deleteArchive(for account: JID, completion: @escaping ((Error?) -> Void)) {
         queue.async(flags: [.barrier]) {
             self.archiveByAccount[account] = nil
             self.archvieManager.deleteArchive(for: account, completion: completion)
@@ -93,27 +93,27 @@ extension Hub: ArchiveProxyDelegate, InboundMesageHandlerDelegate, OutboundMessa
     
     // MARK: - InboundMesageHandlerDelegate
     
-    func inboundMessageHandler(_ handler: InboundMesageHandler, didReceive message: Message, userInfo: [AnyHashable : Any]) {
+    func inboundMessageHandler(_: InboundMesageHandler, didReceive message: Message, userInfo _: [AnyHashable: Any]) {
         NSLog("Did receive message: \(message.messageID)")
     }
     
     // MARK: - OutboundMessageHandlerDelegate
     
-    func outboundMessageHandler(_ handler: OutboundMessageHandler, didSent message: Message) {
+    func outboundMessageHandler(_: OutboundMessageHandler, didSent message: Message) {
         NSLog("Did send message: \(message.messageID)")
     }
     
-    func outboundMessageHandler(_ handler: OutboundMessageHandler, failedToSend message: Message, with error: Error) {
+    func outboundMessageHandler(_: OutboundMessageHandler, failedToSend message: Message, with error: Error) {
         NSLog("Failed to send message: \(message.messageID) with error: \(error.localizedDescription)")
     }
     
     // MARK: - MessageCarbonsDispatchDelegate
     
-    func messageCarbonsHandler(_ handler: MessageCarbonsHandler, didEnableFor account: JID) {
+    func messageCarbonsHandler(_: MessageCarbonsHandler, didEnableFor account: JID) {
         NSLog("Did enable message carbons for: \(account.stringValue)")
     }
     
-    func messageCarbonsHandler(_ handler: MessageCarbonsHandler, failedToEnableFor account: JID, wirth error: Error) {
+    func messageCarbonsHandler(_: MessageCarbonsHandler, failedToEnableFor account: JID, wirth error: Error) {
         NSLog("Failed to enable message carbons for: \(account.stringValue) with error: \(error)")
     }
 }

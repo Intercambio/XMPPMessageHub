@@ -10,7 +10,7 @@ import XCTest
 @testable import XMPPMessageHub
 
 class MessageArchiveIndexTests: TestCase {
-
+    
     func testAddPartition() {
         
         let partitionA = MAMIndexPartition(
@@ -20,7 +20,8 @@ class MessageArchiveIndexTests: TestCase {
             stable: true,
             complete: false,
             archvieIDs: ["a", "b", "c", "d", "e", "f"],
-            before: nil)
+            before: nil
+        )
         
         let partitionB = MAMIndexPartition(
             first: "h",
@@ -29,10 +30,11 @@ class MessageArchiveIndexTests: TestCase {
             stable: true,
             complete: false,
             archvieIDs: ["h", "i", "j", "k", "l"],
-            before: nil)
-
+            before: nil
+        )
+        
         var index = MAMIndex(partitions: [partitionB, partitionA])
-
+        
         let partition = MAMIndexPartition(
             first: "d",
             last: "j",
@@ -40,7 +42,8 @@ class MessageArchiveIndexTests: TestCase {
             stable: true,
             complete: false,
             archvieIDs: ["d", "e", "f", "g", "h", "i", "j"],
-            before: nil)
+            before: nil
+        )
         
         index = index.add(partition)
         XCTAssertEqual(index.partitions.count, 1)

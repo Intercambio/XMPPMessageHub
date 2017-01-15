@@ -10,7 +10,7 @@ import Foundation
 import XMPPFoundation
 
 class MAMIndexManager {
-
+    
     let directory: URL
     init(directory: URL) {
         self.directory = directory
@@ -19,8 +19,8 @@ class MAMIndexManager {
     func add(_ partition: MAMIndexPartition, for account: JID) throws {
         guard
             partition.stable == true
-            else { return }
-
+        else { return }
+        
         var index = try getIndex(for: account)
         index = index.add(partition)
         try setIndex(index, for: account)
@@ -43,8 +43,8 @@ class MAMIndexManager {
             
             guard
                 let index: MAMIndex = NSKeyedUnarchiver.unarchiveStructure(with: data)
-                else {
-                    return MAMIndex(partitions: [])
+            else {
+                return MAMIndex(partitions: [])
             }
             
             return index
@@ -55,9 +55,11 @@ class MAMIndexManager {
     
     private func setIndex(_ index: MAMIndex, for account: JID) throws {
         let url = indexFileURL(for: account)
-        try FileManager.default.createDirectory(at: url.deletingLastPathComponent(),
-                                                withIntermediateDirectories: true,
-                                                attributes: nil)
+        try FileManager.default.createDirectory(
+            at: url.deletingLastPathComponent(),
+            withIntermediateDirectories: true,
+            attributes: nil
+        )
         let data = NSKeyedArchiver.archivedData(withStructure: index)
         try data.write(to: url)
     }

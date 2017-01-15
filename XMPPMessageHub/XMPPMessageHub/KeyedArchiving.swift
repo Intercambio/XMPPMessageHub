@@ -17,13 +17,13 @@ extension NSKeyedUnarchiver {
     class func unarchiveStructure<T: Dictionariable>(with data: Data) -> T? {
         guard
             let encodedDict = NSKeyedUnarchiver.unarchiveObject(with: data) as? NSDictionary
-            else {return nil}
+        else { return nil }
         return T(dictionaryRepresentation: encodedDict)
     }
     class func unarchiveStructure<T: Dictionariable>(withFile path: String) -> T? {
         guard
             let encodedDict = NSKeyedUnarchiver.unarchiveObject(withFile: path) as? NSDictionary
-            else {return nil}
+        else { return nil }
         return T(dictionaryRepresentation: encodedDict)
     }
 }

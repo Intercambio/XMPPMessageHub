@@ -13,11 +13,11 @@ public protocol TransmissionError: Error, NSSecureCoding {
 }
 
 public enum MessageType: String {
-    case chat = "chat"
-    case error = "error"
-    case groupchat = "groupchat"
-    case headline = "headline"
-    case normal = "normal"
+    case chat
+    case error
+    case groupchat
+    case headline
+    case normal
 }
 
 public enum MessageDirection: String {
@@ -42,7 +42,7 @@ public struct MessageID: Equatable, Hashable {
     
     public let originID: String? // XEP-0359: unique-id
     public let stanzaID: String? // XEP-0359: stanza-id by the bare JID ot the account
-
+    
     public static func ==(lhs: MessageID, rhs: MessageID) -> Bool {
         return lhs.uuid == rhs.uuid
     }

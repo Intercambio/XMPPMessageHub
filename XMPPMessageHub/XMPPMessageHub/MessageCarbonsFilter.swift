@@ -22,22 +22,22 @@ class MessageCarbonsFilter: MessageFilter {
         self.direction = direction
     }
     
-    func apply(to message: MessageStanza, with metadata: Metadata, userInfo: [AnyHashable:Any]) throws -> MessageFilter.Result? {
-        let namespaces: [String:String] = [
-            "a":"jabber:client",
-            "b":"urn:xmpp:carbons:2",
-            "c":"urn:xmpp:forward:0"
+    func apply(to message: MessageStanza, with metadata: Metadata, userInfo: [AnyHashable: Any]) throws -> MessageFilter.Result? {
+        let namespaces: [String: String] = [
+            "a": "jabber:client",
+            "b": "urn:xmpp:carbons:2",
+            "c": "urn:xmpp:forward:0"
         ]
         
         let xpath = direction == .received ? "./b:received/c:forwarded/a:message" : "./b:sent/c:forwarded/a:message"
-
+        
         guard
             let envelopeFrom = message.from,
             let forwardedMessage = message.nodes(forXPath: xpath, usingNamespaces: namespaces).first as? MessageStanza,
             let jid = direction == .received ? forwardedMessage.to : forwardedMessage.from,
             jid.bare() == envelopeFrom.bare()
-            else { return nil }
-
+        else { return nil }
+        
         var newMetadata = metadata
         newMetadata.isCarbonCopy = true
         
