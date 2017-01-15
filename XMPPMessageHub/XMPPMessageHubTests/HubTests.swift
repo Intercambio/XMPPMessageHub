@@ -41,7 +41,7 @@ class HubTests: TestCase {
         
         // Dispatch the message
         
-        let stanza = MessageStanza.makeDocumentWithMessageStanza(from: JID("juliet@example.com")!, to: JID("romeo@example.com")!).root as! MessageStanza
+        let stanza = MessageStanza(from: JID("juliet@example.com")!, to: JID("romeo@example.com")!)
         stanza.type = .chat
         stanza.identifier = "456"
         
@@ -94,7 +94,7 @@ class HubTests: TestCase {
             completion?(nil)
         }
         
-        let stanza = MessageStanza.makeDocumentWithMessageStanza(from: JID("juliet@example.com")!, to: JID("romeo@example.com")!).root as! MessageStanza
+        let stanza = MessageStanza(from: JID("juliet@example.com")!, to: JID("romeo@example.com")!)
         stanza.type = .chat
         stanza.identifier = "456"
         
@@ -151,10 +151,7 @@ class HubTests: TestCase {
         dispatcher.IQHandler = {
             request, _, completion in
             
-            let response = IQStanza.makeDocumentWithIQStanza(from: request.to, to: request.from)
-            let iq = response.root as! IQStanza
-            iq.type = .result
-            
+            let iq = IQStanza(type: .result, from: request.to, to: request.from)
             let query = iq.add(withName: "fin", namespace: "urn:xmpp:mam:1", content: nil)!
             let rsm = query.add(withName: "set", namespace: "http://jabber.org/protocol/rsm", content: nil) as! XMPPResultSet
             rsm.first = "a"

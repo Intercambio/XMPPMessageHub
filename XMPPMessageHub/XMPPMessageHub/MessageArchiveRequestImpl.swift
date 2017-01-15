@@ -156,9 +156,7 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
     // MARK: - Helper
     
     private func makeRequest(before: MessageArchiveID?, limit: Int) -> IQStanza {
-        let document = IQStanza.makeDocumentWithIQStanza(from: nil, to: archive.account.bare())
-        let iq = document.root as! IQStanza
-        iq.type = .set
+        let iq = IQStanza(type: .set, from: nil, to: archive.account.bare())
         let query = iq.add(withName: "query", namespace: "urn:xmpp:mam:1", content: nil)!
         query.setValue(queryID, forAttribute: "queryid")
         query.addResultSet(withMax: 20, before: before ?? "")

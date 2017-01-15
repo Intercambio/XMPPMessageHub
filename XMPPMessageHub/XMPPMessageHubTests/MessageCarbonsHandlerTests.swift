@@ -24,9 +24,7 @@ class MessageCarbonsHandlerTests: HandlerTestCase {
         handler.delegate = delegate
         
         dispatcher.IQHandler = { request, _, complition in
-            let response = IQStanza.makeDocumentWithIQStanza(from: request.to, to: request.from)
-            let iq = response.root as! IQStanza
-            iq.type = .result
+            let iq = IQStanza(type: .result, from: request.to, to: request.from)
             complition?(iq, nil)
         }
         

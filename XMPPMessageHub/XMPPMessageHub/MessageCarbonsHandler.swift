@@ -67,11 +67,8 @@ class MessageCarbonsHandler: NSObject, ConnectionHandler {
     func didDisconnect(_: JID) {}
     
     private func makeRequest(for account: JID) -> IQStanza {
-        let request = IQStanza.makeDocumentWithIQStanza(from: account, to: account)
-        let iq = request.root as! IQStanza
-        iq.type = .set
+        let iq = IQStanza(type: .set, from: account, to: account)
         iq.add(withName: "enable", namespace: "urn:xmpp:carbons:2", content: nil)
-        
         return iq
     }
 }
