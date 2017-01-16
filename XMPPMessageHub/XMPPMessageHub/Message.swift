@@ -31,6 +31,14 @@ public struct Metadata {
     public var read: Date?
     public var error: TransmissionError?
     public var isCarbonCopy: Bool = false
+    
+    public init(created: Date? = nil, transmitted: Date? = nil, read: Date? = nil, error: TransmissionError? = nil, isCarbonCopy: Bool = false) {
+        self.created = created
+        self.transmitted = transmitted
+        self.read = read
+        self.error = error
+        self.isCarbonCopy = isCarbonCopy
+    }
 }
 
 public struct MessageID: Equatable, Hashable {
