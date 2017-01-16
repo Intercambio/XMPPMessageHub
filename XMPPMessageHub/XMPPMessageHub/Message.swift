@@ -59,9 +59,16 @@ public struct MessageID: Equatable, Hashable {
     }
 }
 
-public struct Message {
+public struct Message: Equatable, Hashable {
     public let messageID: MessageID
     public let metadata: Metadata
+    
+    public static func ==(lhs: Message, rhs: Message) -> Bool {
+        return lhs.messageID == rhs.messageID
+    }
+    public var hashValue: Int {
+        return messageID.hashValue
+    }
 }
 
 extension MessageID: CustomDebugStringConvertible {
