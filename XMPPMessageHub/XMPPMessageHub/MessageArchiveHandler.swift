@@ -13,6 +13,7 @@ import XMPPFoundation
 class MessageArchiveHandler: NSObject, Handler, MessageArchiveRequestDelegate, MessageArchiveManagement {
     
     private struct PendingRequest {
+        let request: MessageArchiveRequest
         let account: JID
         let completion: ((Error?) -> Void)?
     }
@@ -88,7 +89,7 @@ class MessageArchiveHandler: NSObject, Handler, MessageArchiveRequestDelegate, M
                     let request = MessageArchiveRequestImpl(dispatcher: self.dispatcher, archive: archive)
                     request.delegate = self
                     try request.performFetch(before: archvieID, limit: 20, timeout: 120.0)
-                    self.pendingRequests[request.queryID] = PendingRequest(account: account, completion: completion)
+                    self.pendingRequests[request.queryID] = PendingRequest(request: request, account: account, completion: completion)
                 } catch {
                     completion?(error)
                 }
