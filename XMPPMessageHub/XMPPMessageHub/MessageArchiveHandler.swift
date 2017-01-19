@@ -10,7 +10,7 @@ import Foundation
 import PureXML
 import XMPPFoundation
 
-class MessageArchiveHandler: NSObject, Handler, MessageArchiveRequestDelegate, MessageArchiveManagement {
+class MessageArchiveHandler: NSObject, Handler, ConnectionHandler, MessageArchiveRequestDelegate, MessageArchiveManagement {
     
     private struct PendingRequest {
         let request: MessageArchiveRequest
@@ -95,6 +95,25 @@ class MessageArchiveHandler: NSObject, Handler, MessageArchiveRequestDelegate, M
                 }
             }
         }
+    }
+    
+    // MARK: - ConnectionHandler
+    
+    func didConnect(_ JID: JID, resumed: Bool, features: [Feature]?) {
+        queue.async {
+            let mamFeature = Feature(identifier: "urn:xmpp:mam:1")
+            if resumed == false && (features == nil || features!.contains(mamFeature)) {
+                self.fetchMessages(for: JID, before: nil) { error in
+                    if error != nil {
+                        NSLog("Failed to load recent messages for account '\(JID)': \(error)")
+                    }
+                }
+            }
+        }
+    }
+    
+    func didDisconnect(_: JID) {
+        
     }
     
     // MARK: - MessageArchiveRequestDelegate
