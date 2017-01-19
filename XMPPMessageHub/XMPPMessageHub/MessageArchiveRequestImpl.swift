@@ -142,11 +142,25 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
                         return
                     }
                     
+                    let host = JID(user: nil, host: self.archive.account.host, resource: nil)
+                    
+                    guard
+                        (result.message.originID != nil) ||
+                        (result.message.stanzaID(by: self.archive.account) != nil) ||
+                        (result.message.stanzaID(by: host) != nil)
+                    else {
+                        NSLog("Dropping message for MAM request `\(self.queryID)`, because the message does not contain a origin-id or stanza-id which is needed for uniquing.")
+                        completion?(nil)
+                        return
+                    }
+                    
                     do {
-                        _ = try self.archive.insert(result.message, metadata: result.metadata)
+                        let message = try self.archive.insert(result.message, metadata: result.metadata)
                         archvieIDs.insert(archiveID)
+                        NSLog("Did archive message (\(archiveID)): \(message)")
                     } catch is MessageAlreadyExist {
                         archvieIDs.insert(archiveID)
+                        NSLog("Message already archived (\(archiveID)).")
                     }
                     
                     if timestamp == nil {
