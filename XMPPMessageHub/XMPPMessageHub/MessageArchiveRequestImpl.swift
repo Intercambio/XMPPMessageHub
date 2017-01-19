@@ -164,7 +164,7 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
                     }
                     
                     if timestamp == nil {
-                        timestamp = metadata.transmitted
+                        timestamp = result.metadata.transmitted
                     }
                     
                     self.state = .fetching(before: before, archvieIDs: archvieIDs, timestamp: timestamp)
