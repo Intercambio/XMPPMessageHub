@@ -169,6 +169,38 @@ class ArchiveTests: TestCase {
         }
     }
     
+    func testInsertDuplicateHostStanzaID() {
+        guard let archive = self.archive else { return }
+        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        
+        document.root.setValue("from@example.com", forAttribute: "from")
+        document.root.setValue("to@example.com", forAttribute: "to")
+        document.root.setValue("chat", forAttribute: "type")
+        document.root.setValue("123", forAttribute: "id")
+        
+        let stanzaId = document.root.add(withName: "stanza-id", namespace: "urn:xmpp:sid:0", content: nil)
+        stanzaId?.setValue("346", forAttribute: "id")
+        stanzaId?.setValue("example.com", forAttribute: "by")
+        
+        do {
+            
+            let metadata = Metadata()
+            let message = try archive.insert(document, metadata: metadata)
+            XCTAssertNotNil(message)
+            
+            XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) { error in
+                if let error = error as? MessageAlreadyExist {
+                    XCTAssertEqual(error.existingMessageID, message.messageID)
+                } else {
+                    XCTFail("Expecting 'MessageAlreadyExist'")
+                }
+            }
+            
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+    
     func testInsertInvalidDocument() {
         guard let archive = self.archive else { return }
         guard let document = PXDocument(elementName: "foo", namespace: "bar", prefix: nil) else { return }

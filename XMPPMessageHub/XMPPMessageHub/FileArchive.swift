@@ -520,11 +520,13 @@ public class FileArchive: Archive {
             account == from.bare() || account == to.bare()
         else { throw ArchiveError.accountMismatch }
         
+        let host = JID(user: nil, host: account.host, resource: nil)
+        
         let direction: MessageDirection = account.isEqual(from.bare()) ? .outbound : .inbound
         let counterpart = direction == .outbound ? to.bare() : from.bare()
         let type = message.type.messageType
         let originID = message.originID
-        let stanzaID = message.stanzaID(by: account.bare())
+        let stanzaID = message.stanzaID(by: account.bare()) ?? message.stanzaID(by: host)
         
         return MessageID(
             uuid: uuid,
