@@ -14,7 +14,7 @@ public enum ArchiveManagerError: Error {
     case deleted
 }
 
-public protocol ArchiveManager {
+public protocol ArchiveManager: class {
     func archive(for account: JID, create: Bool, completion: @escaping (Archive?, Error?) -> Void) -> Void
     func deleteArchive(for account: JID, completion: @escaping ((Error?) -> Void)) -> Void
 }

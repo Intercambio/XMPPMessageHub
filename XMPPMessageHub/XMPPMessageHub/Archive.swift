@@ -23,7 +23,7 @@ public struct MessageAlreadyExist: Error {
     public let existingMessageID: MessageID
 }
 
-public protocol Archive {
+public protocol Archive: class {
     var account: JID { get }
     
     func insert(_ stanza: MessageStanza, metadata: Metadata) throws -> Message
