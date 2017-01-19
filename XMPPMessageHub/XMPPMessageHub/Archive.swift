@@ -51,7 +51,7 @@ public protocol IncrementalArchive: Archive {
 
 extension Archive {
     public func insert(_ stanza: MessageStanza, metadata: Metadata) throws -> Message {
-        let document = PXDocument(element: stanza)!
+        let document = PXDocument(element: stanza)
         return try insert(document, metadata: metadata)
     }
 }

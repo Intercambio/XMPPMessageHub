@@ -152,7 +152,7 @@ class HubTests: TestCase {
             request, _, completion in
             
             let iq = IQStanza(type: .result, from: request.to, to: request.from)
-            let query = iq.add(withName: "fin", namespace: "urn:xmpp:mam:1", content: nil)!
+            let query = iq.add(withName: "fin", namespace: "urn:xmpp:mam:1", content: nil)
             let rsm = query.add(withName: "set", namespace: "http://jabber.org/protocol/rsm", content: nil) as! XMPPResultSet
             rsm.first = "a"
             rsm.last = "b"

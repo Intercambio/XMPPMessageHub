@@ -18,6 +18,8 @@
 		F60046B11E0BEE32005B5175 /* ISO8601.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F60046AE1E0BEE26005B5175 /* ISO8601.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F60492FA1E24118300D8AEC3 /* TestDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60492F91E24118300D8AEC3 /* TestDispatcher.swift */; };
 		F60492FB1E24118300D8AEC3 /* TestDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60492F91E24118300D8AEC3 /* TestDispatcher.swift */; };
+		F60D73851E310A5500D823FB /* xep_0313_message_invalid_ns.xml in Resources */ = {isa = PBXBuildFile; fileRef = F60D73841E310A5500D823FB /* xep_0313_message_invalid_ns.xml */; };
+		F60D73861E310A5500D823FB /* xep_0313_message_invalid_ns.xml in Resources */ = {isa = PBXBuildFile; fileRef = F60D73841E310A5500D823FB /* xep_0313_message_invalid_ns.xml */; };
 		F61361651E16B956007E7E86 /* HandlerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61361641E16B956007E7E86 /* HandlerTestCase.swift */; };
 		F61361661E16B956007E7E86 /* HandlerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61361641E16B956007E7E86 /* HandlerTestCase.swift */; };
 		F6159E331E2173BA0001B28F /* MessageArchivePartitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6159E321E2173BA0001B28F /* MessageArchivePartitionTests.swift */; };
@@ -157,6 +159,7 @@
 		F60046AB1E0BEDFC005B5175 /* ISO8601.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ISO8601.framework; path = ../Carthage/Build/iOS/ISO8601.framework; sourceTree = "<group>"; };
 		F60046AE1E0BEE26005B5175 /* ISO8601.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ISO8601.framework; path = ../Carthage/Build/Mac/ISO8601.framework; sourceTree = "<group>"; };
 		F60492F91E24118300D8AEC3 /* TestDispatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestDispatcher.swift; sourceTree = "<group>"; };
+		F60D73841E310A5500D823FB /* xep_0313_message_invalid_ns.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = xep_0313_message_invalid_ns.xml; sourceTree = "<group>"; };
 		F61361641E16B956007E7E86 /* HandlerTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandlerTestCase.swift; sourceTree = "<group>"; };
 		F6159E321E2173BA0001B28F /* MessageArchivePartitionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageArchivePartitionTests.swift; sourceTree = "<group>"; };
 		F6159E351E2174740001B28F /* MAMIndexPartition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MAMIndexPartition.swift; sourceTree = "<group>"; };
@@ -431,6 +434,7 @@
 				F66425341DF63AFF001F8F6E /* xep_0280_received.xml */,
 				F66425371DF645BC001F8F6E /* xep_0280_sent.xml */,
 				F60046A71E0BDF56005B5175 /* xep_0313_message.xml */,
+				F60D73841E310A5500D823FB /* xep_0313_message_invalid_ns.xml */,
 				F673D2011DE1C02D009B3C99 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -656,6 +660,7 @@
 				F66425351DF63AFF001F8F6E /* xep_0280_received.xml in Resources */,
 				F60046A91E0BDF5D005B5175 /* xep_0313_message.xml in Resources */,
 				F66425381DF645BC001F8F6E /* xep_0280_sent.xml in Resources */,
+				F60D73851E310A5500D823FB /* xep_0313_message_invalid_ns.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -673,6 +678,7 @@
 				F66425361DF63AFF001F8F6E /* xep_0280_received.xml in Resources */,
 				F60046AA1E0BDF5E005B5175 /* xep_0313_message.xml in Resources */,
 				F66425391DF645BC001F8F6E /* xep_0280_sent.xml in Resources */,
+				F60D73861E310A5500D823FB /* xep_0313_message_invalid_ns.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

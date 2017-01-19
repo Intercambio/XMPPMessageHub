@@ -1,4 +1,4 @@
 github "stephencelis/SQLite.swift" ~> 0.11.0
-github "Internetslum/PureXML" ~> 1.1
+github "Internetslum/PureXML" ~> 1.1.3
 github "Internetslum/XMPPFoundation" ~> 1.1
 github "anagromataf/iso-8601-date-formatter.git" "e3cd1805147c2b869eb1b2a659c221556ee6f01b"
