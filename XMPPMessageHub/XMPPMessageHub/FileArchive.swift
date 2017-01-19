@@ -72,7 +72,6 @@ public class FileArchive: Archive {
             let uuid = UUID()
             let messageID = try self.makeMessageID(for: document, with: uuid)
             
-            try store.write(document, with: uuid)
             try db.transaction {
                 
                 if let existingMessageID = try self.existingMessageID(matching: messageID) {
@@ -100,6 +99,8 @@ public class FileArchive: Archive {
                         Schema.metadata_is_carbon_copy <- metadata.isCarbonCopy
                     )
                 )
+                
+                try store.write(document, with: uuid)
             }
             
             let message = Message(messageID: messageID, metadata: metadata)
