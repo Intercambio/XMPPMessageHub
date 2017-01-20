@@ -50,11 +50,11 @@ class MessageArchiveRequestImplTests: HandlerTestCase {
         else { return }
         
         dispatcher.IQHandler = { request, _, complition in
-            let response = IQStanza.makeDocumentWithIQStanza(from: request.to, to: request.from)
-            let iq = response.root as! IQStanza
-            iq.type = .result
             
-            let query = iq.add(withName: "fin", namespace: "urn:xmpp:mam:1", content: nil)!
+            XCTAssertEqual(request.from, JID("romeo@example.com")!)
+            
+            let iq = IQStanza(type: .result, from: request.to, to: request.from)
+            let query = iq.add(withName: "fin", namespace: "urn:xmpp:mam:1", content: nil)
             let rsm = query.add(withName: "set", namespace: "http://jabber.org/protocol/rsm", content: nil) as! XMPPResultSet
             rsm.first = "123"
             rsm.last = "abc"

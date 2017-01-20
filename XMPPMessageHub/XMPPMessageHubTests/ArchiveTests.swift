@@ -60,7 +60,7 @@ class ArchiveTests: TestCase {
     
     func testInsert() {
         guard let archive = self.archive else { return }
-        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil)
         
         document.root.setValue("from@example.com", forAttribute: "from")
         document.root.setValue("to@example.com", forAttribute: "to")
@@ -68,11 +68,11 @@ class ArchiveTests: TestCase {
         document.root.setValue("123", forAttribute: "id")
         
         let originId = document.root.add(withName: "origin-id", namespace: "urn:xmpp:sid:0", content: nil)
-        originId?.setValue("1234566", forAttribute: "id")
+        originId.setValue("1234566", forAttribute: "id")
         
         let stanzaId = document.root.add(withName: "stanza-id", namespace: "urn:xmpp:sid:0", content: nil)
-        stanzaId?.setValue("346", forAttribute: "id")
-        stanzaId?.setValue("from@example.com", forAttribute: "by")
+        stanzaId.setValue("346", forAttribute: "id")
+        stanzaId.setValue("from@example.com", forAttribute: "by")
         
         do {
             expectation(
@@ -106,7 +106,7 @@ class ArchiveTests: TestCase {
     
     func testInsertDuplicateOriginID() {
         guard let archive = self.archive else { return }
-        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil)
         
         document.root.setValue("from@example.com", forAttribute: "from")
         document.root.setValue("to@example.com", forAttribute: "to")
@@ -116,7 +116,7 @@ class ArchiveTests: TestCase {
         let id = "1234566"
         
         let originId = document.root.add(withName: "origin-id", namespace: "urn:xmpp:sid:0", content: nil)
-        originId?.setValue(id, forAttribute: "id")
+        originId.setValue(id, forAttribute: "id")
         
         do {
             
@@ -139,7 +139,7 @@ class ArchiveTests: TestCase {
     
     func testInsertDuplicateStanzaID() {
         guard let archive = self.archive else { return }
-        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil)
         
         document.root.setValue("from@example.com", forAttribute: "from")
         document.root.setValue("to@example.com", forAttribute: "to")
@@ -147,8 +147,40 @@ class ArchiveTests: TestCase {
         document.root.setValue("123", forAttribute: "id")
         
         let stanzaId = document.root.add(withName: "stanza-id", namespace: "urn:xmpp:sid:0", content: nil)
-        stanzaId?.setValue("346", forAttribute: "id")
-        stanzaId?.setValue("from@example.com", forAttribute: "by")
+        stanzaId.setValue("346", forAttribute: "id")
+        stanzaId.setValue("from@example.com", forAttribute: "by")
+        
+        do {
+            
+            let metadata = Metadata()
+            let message = try archive.insert(document, metadata: metadata)
+            XCTAssertNotNil(message)
+            
+            XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) { error in
+                if let error = error as? MessageAlreadyExist {
+                    XCTAssertEqual(error.existingMessageID, message.messageID)
+                } else {
+                    XCTFail("Expecting 'MessageAlreadyExist'")
+                }
+            }
+            
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+    
+    func testInsertDuplicateHostStanzaID() {
+        guard let archive = self.archive else { return }
+        let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil)
+        
+        document.root.setValue("from@example.com", forAttribute: "from")
+        document.root.setValue("to@example.com", forAttribute: "to")
+        document.root.setValue("chat", forAttribute: "type")
+        document.root.setValue("123", forAttribute: "id")
+        
+        let stanzaId = document.root.add(withName: "stanza-id", namespace: "urn:xmpp:sid:0", content: nil)
+        stanzaId.setValue("346", forAttribute: "id")
+        stanzaId.setValue("example.com", forAttribute: "by")
         
         do {
             
@@ -171,7 +203,7 @@ class ArchiveTests: TestCase {
     
     func testInsertInvalidDocument() {
         guard let archive = self.archive else { return }
-        guard let document = PXDocument(elementName: "foo", namespace: "bar", prefix: nil) else { return }
+        let document = PXDocument(elementName: "foo", namespace: "bar", prefix: nil)
         
         let metadata = Metadata()
         XCTAssertThrowsError(try archive.insert(document, metadata: metadata)) { error in
@@ -181,7 +213,7 @@ class ArchiveTests: TestCase {
     
     func testInsertMissingFromJID() {
         guard let archive = self.archive else { return }
-        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil)
         
         document.root.setValue("b@example.com", forAttribute: "to")
         
@@ -193,7 +225,7 @@ class ArchiveTests: TestCase {
     
     func testInsertMissingToJID() {
         guard let archive = self.archive else { return }
-        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil)
         
         document.root.setValue("b@example.com", forAttribute: "from")
         
@@ -205,7 +237,7 @@ class ArchiveTests: TestCase {
     
     func testInsertAccountMismatch() {
         guard let archive = self.archive else { return }
-        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil)
         
         document.root.setValue("a@example.com", forAttribute: "from")
         document.root.setValue("b@example.com", forAttribute: "to")
@@ -220,7 +252,7 @@ class ArchiveTests: TestCase {
     
     func testUpdateMetadata() {
         guard let archive = self.archive else { return }
-        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil)
         
         document.root.setValue("from@example.com", forAttribute: "from")
         document.root.setValue("to@example.com", forAttribute: "to")
@@ -273,7 +305,7 @@ class ArchiveTests: TestCase {
     
     func testGetMessage() {
         guard let archive = self.archive else { return }
-        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil)
         
         document.root.setValue("from@example.com", forAttribute: "from")
         document.root.setValue("to@example.com", forAttribute: "to")
@@ -314,7 +346,7 @@ class ArchiveTests: TestCase {
     
     func testSortOrder() {
         guard let archive = self.archive else { return }
-        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil)
         
         document.root.setValue("from@example.com", forAttribute: "from")
         document.root.setValue("to@example.com", forAttribute: "to")
@@ -364,7 +396,7 @@ class ArchiveTests: TestCase {
     
     func testConversation() {
         guard let archive = self.archive else { return }
-        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil)
         
         document.root.setValue("from@example.com", forAttribute: "from")
         
@@ -396,7 +428,7 @@ class ArchiveTests: TestCase {
     
     func testRecent() {
         guard let archive = self.archive else { return }
-        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil)
         
         document.root.setValue("from@example.com", forAttribute: "from")
         
@@ -432,7 +464,7 @@ class ArchiveTests: TestCase {
     
     func _testAccessPerformance() {
         guard let archive = self.archive else { return }
-        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil)
         
         document.root.setValue("from@example.com", forAttribute: "from")
         
@@ -465,7 +497,7 @@ class ArchiveTests: TestCase {
     
     func testDelete() {
         guard let archive = self.archive else { return }
-        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil)
         
         document.root.setValue("from@example.com", forAttribute: "from")
         document.root.setValue("to@example.com", forAttribute: "to")

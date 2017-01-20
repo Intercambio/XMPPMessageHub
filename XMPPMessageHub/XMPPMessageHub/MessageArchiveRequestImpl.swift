@@ -55,6 +55,15 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
     
     func performFetch(before: MessageArchiveID? = nil, limit: Int = 20, timeout: TimeInterval = 120.0) throws {
         try queue.sync {
+            
+            // WORKAROUND: The argument timeout needs to be "used" before the guard statement to
+            // work around a swift compiler bug. If the argument is used directly in
+            //
+            //    self.dispatcher.handleIQRequest(request, timeout: timeout)
+            //
+            // below, the compiler will fail with "Segmentation fault: 11" if archiving.
+            _ = timeout
+            
             guard
                 case .intitalized = self.state
             else { throw MessageArchiveRequestError.alreadyRunning }
@@ -133,15 +142,29 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
                         return
                     }
                     
+                    let host = JID(user: nil, host: self.archive.account.host, resource: nil)
+                    
+                    guard
+                        (result.message.originID != nil) ||
+                        (result.message.stanzaID(by: self.archive.account) != nil) ||
+                        (result.message.stanzaID(by: host) != nil)
+                    else {
+                        NSLog("Dropping message for MAM request `\(self.queryID)`, because the message does not contain a origin-id or stanza-id which is needed for uniquing.")
+                        completion?(nil)
+                        return
+                    }
+                    
                     do {
-                        _ = try self.archive.insert(result.message, metadata: result.metadata)
+                        let message = try self.archive.insert(result.message, metadata: result.metadata)
                         archvieIDs.insert(archiveID)
+                        NSLog("Did archive message (\(archiveID)): \(message)")
                     } catch is MessageAlreadyExist {
                         archvieIDs.insert(archiveID)
+                        NSLog("Message already archived (\(archiveID)).")
                     }
                     
                     if timestamp == nil {
-                        timestamp = metadata.transmitted
+                        timestamp = result.metadata.transmitted
                     }
                     
                     self.state = .fetching(before: before, archvieIDs: archvieIDs, timestamp: timestamp)
@@ -156,12 +179,10 @@ class MessageArchiveRequestImpl: MessageArchiveRequest, MessageHandler {
     // MARK: - Helper
     
     private func makeRequest(before: MessageArchiveID?, limit: Int) -> IQStanza {
-        let document = IQStanza.makeDocumentWithIQStanza(from: nil, to: archive.account.bare())
-        let iq = document.root as! IQStanza
-        iq.type = .set
-        let query = iq.add(withName: "query", namespace: "urn:xmpp:mam:1", content: nil)!
+        let iq = IQStanza(type: .set, from: archive.account.bare(), to: archive.account.bare())
+        let query = iq.add(withName: "query", namespace: "urn:xmpp:mam:1", content: nil)
         query.setValue(queryID, forAttribute: "queryid")
-        query.addResultSet(withMax: 20, before: before ?? "")
+        query.addResultSet(withMax: limit, before: before ?? "")
         return iq
     }
 }

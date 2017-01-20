@@ -23,16 +23,18 @@ class FileArchiveFileDocumentStore: ArchiveDocumentStore {
     }
     
     func write(_ document: PXDocument, with uuid: UUID) throws {
-        if let data = document.data() {
-            try data.write(to: path(with: uuid))
-        } else {
-            throw ArchiveError.internalError
-        }
+        let data = document.data()
+        try data.write(to: path(with: uuid))
     }
     
     func read(documentWith uuid: UUID) throws -> PXDocument {
         let data = try Data(contentsOf: path(with: uuid))
-        return PXDocument(data: data)
+        guard
+            let document = PXDocument(data: data)
+        else {
+            throw ArchiveError.internalError
+        }
+        return document
     }
     
     func delete(documentWith uuid: UUID) throws {

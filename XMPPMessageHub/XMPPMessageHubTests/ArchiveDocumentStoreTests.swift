@@ -14,7 +14,7 @@ class ArchiveDocumentStoreTests: TestCase {
     
     func test() {
         guard let directory = self.directory else { return }
-        guard let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil) else { return }
+        let document = PXDocument(elementName: "message", namespace: "jabber:client", prefix: nil)
         document.root.setValue("123", forAttribute: "id")
         
         do {

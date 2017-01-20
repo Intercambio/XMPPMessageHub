@@ -9,6 +9,7 @@
 import Foundation
 import XMPPFoundation
 import ISO8601
+import PureXML
 
 class MessageArchiveManagementFilter: MessageFilter {
     
