@@ -45,22 +45,29 @@ class OutboundMessageHandler {
                         self.messagesBeeingTransmitted.remove(at: idx)
                     }
                     do {
-                        let now = Date()
-                        let message = try archive.update(
-                            transmitted: error == nil ? now : nil,
-                            error: error as? TransmissionError,
-                            for: message.messageID
-                        )
-                        
-                        if let error = error {
-                            self.delegate?.outboundMessageHandler(self, failedToSend: message, with: error)
+                        if let transmissionError = error as? NSError {
+                            var updatedMessage = message
+                            if transmissionError.domain != DispatcherErrorDomain &&
+                                transmissionError.code != DispatcherErrorCode.noRoute.rawValue {
+                                updatedMessage = try archive.update(
+                                    transmitted: nil,
+                                    error: transmissionError,
+                                    for: message.messageID
+                                )
+                            }
+                            self.delegate?.outboundMessageHandler(self, failedToSend: updatedMessage, with: transmissionError)
                         } else {
+                            let message = try archive.update(
+                                transmitted: Date(),
+                                error: nil,
+                                for: message.messageID
+                            )
                             self.delegate?.outboundMessageHandler(self, didSent: message)
                         }
-                        
                     } catch {
                         NSLog("Failed to update message metadata: \(error)")
                     }
+                    
                 }
             }
         }
