@@ -16,6 +16,7 @@ class OutboundMessageHandlerTests: HandlerTestCase {
     func testDispatchMessage() {
         guard
             let dispatcher = self.dispatcher,
+            let archvieManager = self.archiveManager,
             let account = JID("romeo@example.com"),
             let archive = archive(for: account)
         else {
@@ -30,7 +31,7 @@ class OutboundMessageHandlerTests: HandlerTestCase {
             let message = try archive.insert(stanza, metadata: metadata)
             let document = try archive.document(for: message.messageID)
             
-            let handler = OutboundMessageHandler(dispatcher: dispatcher)
+            let handler = OutboundMessageHandler(dispatcher: dispatcher, archvieManager: archvieManager)
             
             let expectation = self.expectation(description: "Dispatch Message")
             dispatcher.messageHandler = { _, comletion in
@@ -55,6 +56,7 @@ class OutboundMessageHandlerTests: HandlerTestCase {
     func testNoRouteError() {
         guard
             let dispatcher = self.dispatcher,
+            let archvieManager = self.archiveManager,
             let account = JID("romeo@example.com"),
             let archive = archive(for: account)
         else {
@@ -69,7 +71,7 @@ class OutboundMessageHandlerTests: HandlerTestCase {
             let message = try archive.insert(stanza, metadata: metadata)
             let document = try archive.document(for: message.messageID)
             
-            let handler = OutboundMessageHandler(dispatcher: dispatcher)
+            let handler = OutboundMessageHandler(dispatcher: dispatcher, archvieManager: archvieManager)
             
             let expectation = self.expectation(description: "Dispatch Message")
             dispatcher.messageHandler = { _, comletion in
@@ -95,4 +97,36 @@ class OutboundMessageHandlerTests: HandlerTestCase {
         }
     }
     
+    func testResendPendingMessages() {
+        guard
+            let dispatcher = self.dispatcher,
+            let archvieManager = self.archiveManager,
+            let account = JID("romeo@example.com"),
+            let archive = archive(for: account)
+        else {
+            XCTFail()
+            return
+        }
+        
+        do {
+            let stanza = MessageStanza(from: JID("romeo@example.com")!, to: JID("juliet@example.com")!)
+            let metadata = Metadata()
+            _ = try archive.insert(stanza, metadata: metadata)
+            
+            let handler = OutboundMessageHandler(dispatcher: dispatcher, archvieManager: archvieManager)
+            
+            let expectation = self.expectation(description: "Dispatch Message")
+            dispatcher.messageHandler = { _, comletion in
+                comletion?(nil)
+                expectation.fulfill()
+            }
+            
+            handler.didConnect(JID("romeo@example.com")!, resumed: false, features: nil)
+            
+            waitForExpectations(timeout: 1.0, handler: nil)
+            
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
 }

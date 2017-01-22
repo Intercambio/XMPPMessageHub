@@ -15,16 +15,18 @@ protocol OutboundMessageHandlerDelegate: class {
     func outboundMessageHandler(_ handler: OutboundMessageHandler, failedToSend message: Message, with error: Error) -> Void
 }
 
-class OutboundMessageHandler {
+class OutboundMessageHandler: ConnectionHandler {
     
     public weak var delegate: OutboundMessageHandlerDelegate?
     
     private var messagesBeeingTransmitted: [MessageID] = []
     private let queue: DispatchQueue
     private let dispatcher: Dispatcher
+    private let archvieManager: ArchiveManager
     
-    required init(dispatcher: Dispatcher) {
+    required init(dispatcher: Dispatcher, archvieManager: ArchiveManager) {
         self.dispatcher = dispatcher
+        self.archvieManager = archvieManager
         queue = DispatchQueue(
             label: "OutboundMessageHandler",
             attributes: []
@@ -71,5 +73,35 @@ class OutboundMessageHandler {
                 }
             }
         }
+    }
+    
+    func resendPendignMessages(for account: JID) {
+        queue.async {
+            self.archvieManager.archive(for: account, create: false) { archive, error in
+                guard
+                    let accountArchvie = archive
+                else {
+                    return
+                }
+                do {
+                    for message in try accountArchvie.pending() {
+                        let document = try accountArchvie.document(for: message.messageID)
+                        self.send(message, with: document, in: accountArchvie)
+                    }
+                } catch {
+                    NSLog("Failed to resend pending messages: \(error)")
+                }
+            }
+        }
+    }
+    
+    // MARK: - ConnectionHandler
+    
+    func didConnect(_ JID: JID, resumed _: Bool, features _: [Feature]?) {
+        resendPendignMessages(for: JID)
+    }
+    
+    func didDisconnect(_: JID) {
+        
     }
 }
