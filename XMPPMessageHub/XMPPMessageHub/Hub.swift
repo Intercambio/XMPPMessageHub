@@ -33,7 +33,7 @@ public class Hub: NSObject, ArchiveManager {
         indexManager = MAMIndexManager(directory: mamDirectory)
         
         inboundMessageHandler = InboundMesageHandler(dispatcher: dispatcher, archvieManager: archvieManager)
-        outboundMessageHandler = OutboundMessageHandler(dispatcher: dispatcher)
+        outboundMessageHandler = OutboundMessageHandler(dispatcher: dispatcher, archvieManager: archvieManager)
         messageCarbonsHandler = MessageCarbonsHandler(dispatcher: dispatcher)
         messageArchiveHandler = MessageArchiveHandler(dispatcher: dispatcher, archvieManager: archvieManager, indexManager: indexManager)
         

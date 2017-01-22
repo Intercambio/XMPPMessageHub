@@ -15,16 +15,18 @@ protocol OutboundMessageHandlerDelegate: class {
     func outboundMessageHandler(_ handler: OutboundMessageHandler, failedToSend message: Message, with error: Error) -> Void
 }
 
-class OutboundMessageHandler {
+class OutboundMessageHandler: ConnectionHandler {
     
     public weak var delegate: OutboundMessageHandlerDelegate?
     
     private var messagesBeeingTransmitted: [MessageID] = []
     private let queue: DispatchQueue
     private let dispatcher: Dispatcher
+    private let archvieManager: ArchiveManager
     
-    required init(dispatcher: Dispatcher) {
+    required init(dispatcher: Dispatcher, archvieManager: ArchiveManager) {
         self.dispatcher = dispatcher
+        self.archvieManager = archvieManager
         queue = DispatchQueue(
             label: "OutboundMessageHandler",
             attributes: []
@@ -45,24 +47,61 @@ class OutboundMessageHandler {
                         self.messagesBeeingTransmitted.remove(at: idx)
                     }
                     do {
-                        let now = Date()
-                        let message = try archive.update(
-                            transmitted: error == nil ? now : nil,
-                            error: error as? TransmissionError,
-                            for: message.messageID
-                        )
-                        
-                        if let error = error {
-                            self.delegate?.outboundMessageHandler(self, failedToSend: message, with: error)
+                        if let transmissionError = error as? NSError {
+                            var updatedMessage = message
+                            if transmissionError.domain != DispatcherErrorDomain &&
+                                transmissionError.code != DispatcherErrorCode.noRoute.rawValue {
+                                updatedMessage = try archive.update(
+                                    transmitted: nil,
+                                    error: transmissionError,
+                                    for: message.messageID
+                                )
+                            }
+                            self.delegate?.outboundMessageHandler(self, failedToSend: updatedMessage, with: transmissionError)
                         } else {
+                            let message = try archive.update(
+                                transmitted: Date(),
+                                error: nil,
+                                for: message.messageID
+                            )
                             self.delegate?.outboundMessageHandler(self, didSent: message)
                         }
-                        
                     } catch {
                         NSLog("Failed to update message metadata: \(error)")
                     }
+                    
                 }
             }
         }
+    }
+    
+    func resendPendignMessages(for account: JID) {
+        queue.async {
+            self.archvieManager.archive(for: account, create: false) { archive, error in
+                guard
+                    let accountArchvie = archive
+                else {
+                    return
+                }
+                do {
+                    for message in try accountArchvie.pending() {
+                        let document = try accountArchvie.document(for: message.messageID)
+                        self.send(message, with: document, in: accountArchvie)
+                    }
+                } catch {
+                    NSLog("Failed to resend pending messages: \(error)")
+                }
+            }
+        }
+    }
+    
+    // MARK: - ConnectionHandler
+    
+    func didConnect(_ JID: JID, resumed _: Bool, features _: [Feature]?) {
+        resendPendignMessages(for: JID)
+    }
+    
+    func didDisconnect(_: JID) {
+        
     }
 }
