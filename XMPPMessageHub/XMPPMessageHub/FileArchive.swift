@@ -319,9 +319,10 @@ public class FileArchive: Archive {
     
     public func pending() throws -> [Message] {
         return try queue.sync {
-            let filters = [
+            let filters: [SQLite.Expression<Bool?>] = [
                 Schema.metadata[Schema.metadata_transmitted] == nil,
-                Schema.metadata[Schema.metadata_error] == nil
+                Schema.metadata[Schema.metadata_error] == nil,
+                Expression<Bool?>(Schema.message[Schema.message_direction] == .outbound)
             ]
             return try messages(filter: filters)
         }

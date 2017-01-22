@@ -521,4 +521,74 @@ class ArchiveTests: TestCase {
             XCTFail("\(error)")
         }
     }
+    
+    func testPendingOutboundMessages() {
+        guard
+            let archive = self.archive
+        else {
+            return
+        }
+        
+        do {
+            let stanza = MessageStanza(from: JID("from@example.com")!, to: JID("juliet@example.com")!)
+            let metadata = Metadata()
+            let message = try archive.insert(stanza, metadata: metadata)
+            XCTAssertTrue(try archive.pending().contains(message))
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+    
+    func testPendingInboundMessages() {
+        guard
+            let archive = self.archive
+        else {
+            return
+        }
+        
+        do {
+            let stanza = MessageStanza(from: JID("juliet@example.com")!, to: JID("from@example.com")!)
+            let metadata = Metadata()
+            let message = try archive.insert(stanza, metadata: metadata)
+            XCTAssertFalse(try archive.pending().contains(message))
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+    
+    func testPendingMessagesError() {
+        guard
+            let archive = self.archive
+        else {
+            return
+        }
+        
+        do {
+            let stanza = MessageStanza(from: JID("from@example.com")!, to: JID("juliet@example.com")!)
+            var metadata = Metadata()
+            metadata.error = NSError(domain: "Test", code: 123, userInfo: nil)
+            let message = try archive.insert(stanza, metadata: metadata)
+            XCTAssertFalse(try archive.pending().contains(message))
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
+    
+    func testPendingMessagesTransmitted() {
+        guard
+            let archive = self.archive
+        else {
+            return
+        }
+        
+        do {
+            let stanza = MessageStanza(from: JID("from@example.com")!, to: JID("juliet@example.com")!)
+            var metadata = Metadata()
+            metadata.transmitted = Date()
+            let message = try archive.insert(stanza, metadata: metadata)
+            XCTAssertFalse(try archive.pending().contains(message))
+        } catch {
+            XCTFail("\(error)")
+        }
+    }
 }
