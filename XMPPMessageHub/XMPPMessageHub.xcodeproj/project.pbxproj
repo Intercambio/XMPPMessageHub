@@ -20,6 +20,8 @@
 		F60492FB1E24118300D8AEC3 /* TestDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60492F91E24118300D8AEC3 /* TestDispatcher.swift */; };
 		F60D73851E310A5500D823FB /* xep_0313_message_invalid_ns.xml in Resources */ = {isa = PBXBuildFile; fileRef = F60D73841E310A5500D823FB /* xep_0313_message_invalid_ns.xml */; };
 		F60D73861E310A5500D823FB /* xep_0313_message_invalid_ns.xml in Resources */ = {isa = PBXBuildFile; fileRef = F60D73841E310A5500D823FB /* xep_0313_message_invalid_ns.xml */; };
+		F60D73881E3512B600D823FB /* OutboundMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60D73871E3512B600D823FB /* OutboundMessageHandlerTests.swift */; };
+		F60D73891E3512B600D823FB /* OutboundMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60D73871E3512B600D823FB /* OutboundMessageHandlerTests.swift */; };
 		F61361651E16B956007E7E86 /* HandlerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61361641E16B956007E7E86 /* HandlerTestCase.swift */; };
 		F61361661E16B956007E7E86 /* HandlerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F61361641E16B956007E7E86 /* HandlerTestCase.swift */; };
 		F6159E331E2173BA0001B28F /* MessageArchivePartitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6159E321E2173BA0001B28F /* MessageArchivePartitionTests.swift */; };
@@ -160,6 +162,7 @@
 		F60046AE1E0BEE26005B5175 /* ISO8601.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ISO8601.framework; path = ../Carthage/Build/Mac/ISO8601.framework; sourceTree = "<group>"; };
 		F60492F91E24118300D8AEC3 /* TestDispatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestDispatcher.swift; sourceTree = "<group>"; };
 		F60D73841E310A5500D823FB /* xep_0313_message_invalid_ns.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = xep_0313_message_invalid_ns.xml; sourceTree = "<group>"; };
+		F60D73871E3512B600D823FB /* OutboundMessageHandlerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutboundMessageHandlerTests.swift; sourceTree = "<group>"; };
 		F61361641E16B956007E7E86 /* HandlerTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandlerTestCase.swift; sourceTree = "<group>"; };
 		F6159E321E2173BA0001B28F /* MessageArchivePartitionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageArchivePartitionTests.swift; sourceTree = "<group>"; };
 		F6159E351E2174740001B28F /* MAMIndexPartition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MAMIndexPartition.swift; sourceTree = "<group>"; };
@@ -297,6 +300,7 @@
 			isa = PBXGroup;
 			children = (
 				F6FAE86F1DFDF0890039EE7A /* MessageCarbonsHandlerTests.swift */,
+				F60D73871E3512B600D823FB /* OutboundMessageHandlerTests.swift */,
 				F6134F9C1E113BD2007EC90B /* MAM */,
 			);
 			name = Handler;
@@ -747,6 +751,7 @@
 				F625A54A1DF44F2B0005AFD3 /* HubTests.swift in Sources */,
 				F60492FA1E24118300D8AEC3 /* TestDispatcher.swift in Sources */,
 				F6FCE9751DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */,
+				F60D73881E3512B600D823FB /* OutboundMessageHandlerTests.swift in Sources */,
 				F6159E331E2173BA0001B28F /* MessageArchivePartitionTests.swift in Sources */,
 				F6FCE96C1DE1C87F0088A662 /* TestCase.swift in Sources */,
 				F69A25801DF441A9007D5C35 /* FileArchvieManagerTests.swift in Sources */,
@@ -801,6 +806,7 @@
 				F625A54B1DF44F2B0005AFD3 /* HubTests.swift in Sources */,
 				F60492FB1E24118300D8AEC3 /* TestDispatcher.swift in Sources */,
 				F6FCE9761DE3B1F20088A662 /* ArchiveSetupTests.swift in Sources */,
+				F60D73891E3512B600D823FB /* OutboundMessageHandlerTests.swift in Sources */,
 				F6159E341E2173BA0001B28F /* MessageArchivePartitionTests.swift in Sources */,
 				F6FCE96D1DE1C87F0088A662 /* TestCase.swift in Sources */,
 				F69A25811DF441A9007D5C35 /* FileArchvieManagerTests.swift in Sources */,
