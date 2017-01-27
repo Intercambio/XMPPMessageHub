@@ -1,5 +1,5 @@
 //
-//  Hub.swift
+//  MessageHub.swift
 //  XMPPMessageHub
 //
 //  Created by Tobias Kraentzer on 04.12.16.
@@ -10,7 +10,7 @@ import Foundation
 import XMPPFoundation
 import PureXML
 
-public class Hub: NSObject, ArchiveManager {
+public class MessageHub: NSObject, ArchiveManager {
     
     fileprivate let inboundMessageHandler: InboundMesageHandler
     fileprivate let outboundMessageHandler: OutboundMessageHandler
@@ -81,7 +81,7 @@ public class Hub: NSObject, ArchiveManager {
     }
 }
 
-extension Hub: ArchiveProxyDelegate, InboundMesageHandlerDelegate, OutboundMessageHandlerDelegate, MessageCarbonsHandlerDelegate {
+extension MessageHub: ArchiveProxyDelegate, InboundMesageHandlerDelegate, OutboundMessageHandlerDelegate, MessageCarbonsHandlerDelegate {
     
     // MARK: - ArchiveProxyDelegate
     

@@ -14,7 +14,7 @@ import XMPPFoundation
 
 class HubTests: TestCase {
     
-    var hub: Hub?
+    var hub: MessageHub?
     
     override func setUp() {
         super.setUp()
@@ -23,7 +23,7 @@ class HubTests: TestCase {
             let dispatcher = self.dispatcher
         else { return }
         
-        self.hub = Hub(dispatcher: dispatcher, directory: directory)
+        self.hub = MessageHub(dispatcher: dispatcher, directory: directory)
     }
     
     override func tearDown() {

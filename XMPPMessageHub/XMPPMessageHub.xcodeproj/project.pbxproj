@@ -74,8 +74,8 @@
 		F673D23C1DE1C352009B3C99 /* ArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */; };
 		F688F46F1DF304E400B4D3B4 /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = F688F46E1DF304E400B4D3B4 /* Archive.swift */; };
 		F688F4701DF304E400B4D3B4 /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = F688F46E1DF304E400B4D3B4 /* Archive.swift */; };
-		F69A25771DF43470007D5C35 /* Hub.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69A25761DF43470007D5C35 /* Hub.swift */; };
-		F69A25781DF43470007D5C35 /* Hub.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69A25761DF43470007D5C35 /* Hub.swift */; };
+		F69A25771DF43470007D5C35 /* MessageHub.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69A25761DF43470007D5C35 /* MessageHub.swift */; };
+		F69A25781DF43470007D5C35 /* MessageHub.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69A25761DF43470007D5C35 /* MessageHub.swift */; };
 		F69A257A1DF436AD007D5C35 /* ArchiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69A25791DF436AD007D5C35 /* ArchiveManager.swift */; };
 		F69A257B1DF436AD007D5C35 /* ArchiveManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69A25791DF436AD007D5C35 /* ArchiveManager.swift */; };
 		F69A257D1DF440F2007D5C35 /* FileArchvieManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F69A257C1DF440F2007D5C35 /* FileArchvieManager.swift */; };
@@ -194,7 +194,7 @@
 		F673D2201DE1C2AA009B3C99 /* PureXML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PureXML.framework; path = ../Carthage/Build/Mac/PureXML.framework; sourceTree = "<group>"; };
 		F673D23A1DE1C352009B3C99 /* ArchiveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveTests.swift; sourceTree = "<group>"; };
 		F688F46E1DF304E400B4D3B4 /* Archive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Archive.swift; sourceTree = "<group>"; };
-		F69A25761DF43470007D5C35 /* Hub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hub.swift; sourceTree = "<group>"; };
+		F69A25761DF43470007D5C35 /* MessageHub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageHub.swift; sourceTree = "<group>"; };
 		F69A25791DF436AD007D5C35 /* ArchiveManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveManager.swift; sourceTree = "<group>"; };
 		F69A257C1DF440F2007D5C35 /* FileArchvieManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileArchvieManager.swift; sourceTree = "<group>"; };
 		F69A257F1DF441A9007D5C35 /* FileArchvieManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileArchvieManagerTests.swift; sourceTree = "<group>"; };
@@ -468,7 +468,7 @@
 		F69A25751DF4345F007D5C35 /* Hub */ = {
 			isa = PBXGroup;
 			children = (
-				F69A25761DF43470007D5C35 /* Hub.swift */,
+				F69A25761DF43470007D5C35 /* MessageHub.swift */,
 				F625A54C1DF4624E0005AFD3 /* ArchiveProxy.swift */,
 			);
 			name = Hub;
@@ -713,7 +713,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F69A25771DF43470007D5C35 /* Hub.swift in Sources */,
+				F69A25771DF43470007D5C35 /* MessageHub.swift in Sources */,
 				F664252C1DF6371C001F8F6E /* MessageFilter.swift in Sources */,
 				F664252F1DF638DF001F8F6E /* MessageCarbonsFilter.swift in Sources */,
 				F625A54D1DF4624E0005AFD3 /* ArchiveProxy.swift in Sources */,
@@ -768,7 +768,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F69A25781DF43470007D5C35 /* Hub.swift in Sources */,
+				F69A25781DF43470007D5C35 /* MessageHub.swift in Sources */,
 				F664252D1DF6371C001F8F6E /* MessageFilter.swift in Sources */,
 				F66425301DF638DF001F8F6E /* MessageCarbonsFilter.swift in Sources */,
 				F625A54E1DF4624E0005AFD3 /* ArchiveProxy.swift in Sources */,
