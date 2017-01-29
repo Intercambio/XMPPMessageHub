@@ -953,7 +953,7 @@
 				INFOPLIST_FILE = XMPPMessageHub/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = im.internetslum.XMPPMessageHub;
+				PRODUCT_BUNDLE_IDENTIFIER = im.intercambio.XMPPMessageHub;
 				PRODUCT_NAME = XMPPMessageHub;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -976,7 +976,7 @@
 				INFOPLIST_FILE = XMPPMessageHub/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = im.internetslum.XMPPMessageHub;
+				PRODUCT_BUNDLE_IDENTIFIER = im.intercambio.XMPPMessageHub;
 				PRODUCT_NAME = XMPPMessageHub;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
@@ -1031,7 +1031,7 @@
 				INFOPLIST_FILE = XMPPMessageHub/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = im.internetslum.XMPPMessageHub;
+				PRODUCT_BUNDLE_IDENTIFIER = im.intercambio.XMPPMessageHub;
 				PRODUCT_NAME = XMPPMessageHub;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -1057,7 +1057,7 @@
 				INFOPLIST_FILE = XMPPMessageHub/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = im.internetslum.XMPPMessageHub;
+				PRODUCT_BUNDLE_IDENTIFIER = im.intercambio.XMPPMessageHub;
 				PRODUCT_NAME = XMPPMessageHub;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
