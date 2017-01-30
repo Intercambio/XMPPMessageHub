@@ -38,7 +38,7 @@ import Foundation
 import XMPPFoundation
 import PureXML
 
-public class MessageHub: NSObject, ArchiveManager {
+public class MessageHub: NSObject {
     
     fileprivate let inboundMessageHandler: InboundMesageHandler
     fileprivate let outboundMessageHandler: OutboundMessageHandler
@@ -76,16 +76,14 @@ public class MessageHub: NSObject, ArchiveManager {
         messageCarbonsHandler.delegate = self
     }
     
-    // MARK: - ArchvieManager
-    
-    public func archive(for account: JID, create: Bool, completion: @escaping (Archive?, Error?) -> Void) {
+    public func archive(for account: JID, completion: @escaping (Archive?, Error?) -> Void) {
         queue.async(flags: [.barrier]) {
             if let archive = self.archiveByAccount[account] {
                 let proxy = ArchiveProxy(archive: archive, mam: self.messageArchiveHandler)
                 proxy.delegate = self
                 completion(proxy, nil)
             } else {
-                self.archvieManager.archive(for: account, create: create) {
+                self.archvieManager.archive(for: account, create: true) {
                     archive, error in
                     self.archiveByAccount[account] = archive
                     
@@ -101,10 +99,13 @@ public class MessageHub: NSObject, ArchiveManager {
         }
     }
     
-    public func deleteArchive(for account: JID, completion: @escaping ((Error?) -> Void)) {
-        queue.async(flags: [.barrier]) {
+    public func deleteResources(for account: JID, completion: ((Error?) -> Void)?) {
+        queue.async {
             self.archiveByAccount[account] = nil
-            self.archvieManager.deleteArchive(for: account, completion: completion)
+            self.indexManager.deleteIndex(for: account)
+            self.archvieManager.deleteArchive(for: account) { (error) in
+                completion?(error)
+            }
         }
     }
 }

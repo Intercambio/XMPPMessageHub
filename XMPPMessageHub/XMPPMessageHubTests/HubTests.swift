@@ -76,7 +76,7 @@ class HubTests: TestCase {
         var requestedArchive: Archive?
         
         let getArchiveExp = expectation(description: "Get Archive")
-        hub.archive(for: JID("romeo@example.com")!, create: true) {
+        hub.archive(for: JID("romeo@example.com")!) {
             archive, error in
             XCTAssertNil(error)
             XCTAssertNotNil(archive)
@@ -129,7 +129,7 @@ class HubTests: TestCase {
         var requestedArchive: Archive?
         
         let getArchiveExp = expectation(description: "Get Archive")
-        hub.archive(for: JID("romeo@example.com")!, create: true) {
+        hub.archive(for: JID("romeo@example.com")!) {
             archive, error in
             XCTAssertNil(error)
             XCTAssertNotNil(archive)
@@ -191,7 +191,7 @@ class HubTests: TestCase {
         
         var requestedArchive: IncrementalArchive?
         let getArchiveExp = expectation(description: "Get Archive")
-        hub.archive(for: JID("romeo@example.com")!, create: true) {
+        hub.archive(for: JID("romeo@example.com")!) {
             archive, error in
             XCTAssertNil(error)
             requestedArchive = archive as? IncrementalArchive
@@ -212,5 +212,59 @@ class HubTests: TestCase {
             loadRecentExp.fulfill()
         }
         waitForExpectations(timeout: 1.0, handler: nil)
+    }
+    
+    func testDeleteResources() {
+        
+        guard
+            let directory = self.directory,
+            let dispatcher = self.dispatcher,
+            let hub = self.hub
+            else { XCTFail(); return }
+
+        dispatcher.IQHandler = {
+            request, _, completion in
+            let iq = IQStanza(type: .result, from: request.to, to: request.from)
+            let query = iq.add(withName: "fin", namespace: "urn:xmpp:mam:1", content: nil)
+            let rsm = query.add(withName: "set", namespace: "http://jabber.org/protocol/rsm", content: nil) as! XMPPResultSet
+            rsm.first = "a"
+            rsm.last = "b"
+            rsm.count = 1
+            completion?(iq, nil)
+        }
+        
+        let archiveDirectory = directory.appendingPathComponent("archive/romeo@example.com", isDirectory: true)
+        let mamDirectory = directory.appendingPathComponent("mam/romeo@example.com", isDirectory: true)
+        let fileManager = FileManager.default
+        
+        XCTAssertFalse(fileManager.fileExists(atPath: archiveDirectory.path))
+        XCTAssertFalse(fileManager.fileExists(atPath: mamDirectory.path))
+        
+        let getArchiveExp = expectation(description: "Get Archive")
+        hub.archive(for: JID("romeo@example.com")!) {
+            archive, error in
+            XCTAssertNil(error)
+            if let incrementalArchive = archive as? IncrementalArchive {
+                incrementalArchive.loadRecentMessages(completion: { (error) in
+                    XCTAssertNil(error)
+                    getArchiveExp.fulfill()
+                })
+            }
+        }
+        waitForExpectations(timeout: 1.0, handler: nil)
+        
+        
+        XCTAssertTrue(fileManager.fileExists(atPath: archiveDirectory.path))
+        XCTAssertTrue(fileManager.fileExists(atPath: mamDirectory.path))
+        
+        let deleteExp = expectation(description: "Delete Resources")
+        hub.deleteResources(for: JID("romeo@example.com")!) { (error) in
+            XCTAssertNil(error)
+            deleteExp.fulfill()
+        }
+        waitForExpectations(timeout: 1.0, handler: nil)
+        
+        XCTAssertFalse(fileManager.fileExists(atPath: archiveDirectory.path))
+        XCTAssertFalse(fileManager.fileExists(atPath: mamDirectory.path))
     }
 }
