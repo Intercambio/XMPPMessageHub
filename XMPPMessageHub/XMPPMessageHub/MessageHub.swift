@@ -76,6 +76,16 @@ public class MessageHub: NSObject, ArchiveManager {
         messageCarbonsHandler.delegate = self
     }
     
+    public func deleteResources(for account: JID, completion: ((Error?) -> Void)?) {
+        queue.async {
+            self.archiveByAccount[account] = nil
+            self.indexManager.deleteIndex(for: account)
+            self.archvieManager.deleteArchive(for: account) { (error) in
+                completion?(error)
+            }
+        }
+    }
+    
     // MARK: - ArchvieManager
     
     public func archive(for account: JID, create: Bool, completion: @escaping (Archive?, Error?) -> Void) {
