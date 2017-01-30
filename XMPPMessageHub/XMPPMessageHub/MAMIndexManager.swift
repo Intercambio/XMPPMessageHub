@@ -44,6 +44,15 @@ class MAMIndexManager {
         self.directory = directory
     }
     
+    func deleteIndex(for account: JID) {
+        do {
+            let url = indexFileURL(for: account)
+            try FileManager.default.removeItem(at: url.deletingLastPathComponent())
+        } catch {
+            NSLog("Failed to delete mam index of account '\(account)': \(error)")
+        }
+    }
+    
     func add(_ partition: MAMIndexPartition, for account: JID) throws {
         guard
             partition.stable == true
