@@ -76,7 +76,7 @@ class HubTests: TestCase {
         var requestedArchive: Archive?
         
         let getArchiveExp = expectation(description: "Get Archive")
-        hub.archive(for: JID("romeo@example.com")!, create: true) {
+        hub.archive(for: JID("romeo@example.com")!) {
             archive, error in
             XCTAssertNil(error)
             XCTAssertNotNil(archive)
@@ -129,7 +129,7 @@ class HubTests: TestCase {
         var requestedArchive: Archive?
         
         let getArchiveExp = expectation(description: "Get Archive")
-        hub.archive(for: JID("romeo@example.com")!, create: true) {
+        hub.archive(for: JID("romeo@example.com")!) {
             archive, error in
             XCTAssertNil(error)
             XCTAssertNotNil(archive)
@@ -191,7 +191,7 @@ class HubTests: TestCase {
         
         var requestedArchive: IncrementalArchive?
         let getArchiveExp = expectation(description: "Get Archive")
-        hub.archive(for: JID("romeo@example.com")!, create: true) {
+        hub.archive(for: JID("romeo@example.com")!) {
             archive, error in
             XCTAssertNil(error)
             requestedArchive = archive as? IncrementalArchive
@@ -241,7 +241,7 @@ class HubTests: TestCase {
         XCTAssertFalse(fileManager.fileExists(atPath: mamDirectory.path))
         
         let getArchiveExp = expectation(description: "Get Archive")
-        hub.archive(for: JID("romeo@example.com")!, create: true) {
+        hub.archive(for: JID("romeo@example.com")!) {
             archive, error in
             XCTAssertNil(error)
             if let incrementalArchive = archive as? IncrementalArchive {
